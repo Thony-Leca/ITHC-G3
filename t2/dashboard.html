@@ -1,14 +1,382 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mi progreso | LingoFlow</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"><style>body{background:#f8faff;color:#233144;font-family:system-ui,sans-serif}.navbar,.card{border:1px solid #cbd5e1}.stat{height:100%}.chart{height:260px;position:relative}.pendiente{border-left:4px solid #2563eb}.completo{border-left:4px solid #16803c}.access{position:fixed;right:20px;bottom:20px;z-index:10}.high-contrast{background:#000!important;color:#fff!important}.high-contrast .card,.high-contrast nav,.high-contrast .offcanvas{background:#111!important;color:#fff!important;border-color:#ff0!important}</style></head>
-<body><nav class="navbar navbar-expand-lg bg-white sticky-top"><div class="container-xl"><a class="navbar-brand fw-bold text-primary" href="index.html"><i class="bi bi-book-half me-2"></i>LingoFlow</a><button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="menu"><ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link active" href="dashboard.html">Mi progreso</a></li><li class="nav-item"><a class="nav-link" href="leccion.html">Lección</a></li><li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li></ul><div class="d-flex gap-2 align-items-center"><label for="usuarioDemo" class="small">Cuenta de prueba</label><select id="usuarioDemo" class="form-select form-select-sm" aria-label="Cambiar cuenta demo"></select><button class="btn btn-outline-primary btn-sm" id="salir">Salir</button></div></div></div></nav>
-<main class="container-xl py-4 py-lg-5"><div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"><div><span class="text-uppercase small fw-bold text-secondary">Tu espacio de aprendizaje</span><h1 class="h2 fw-bold mt-2" id="saludo"></h1><p class="text-secondary">Continúa tu meta diaria de 10 minutos.</p></div><a class="btn btn-primary" href="leccion.html"><i class="bi bi-play-fill me-1"></i>Continuar lección</a></div><div class="row g-3 mb-4"><div class="col-6 col-lg-3"><div class="card stat p-3"><span class="small text-secondary">Vidas</span><strong class="h3 mt-2"><i class="bi bi-heart-fill text-danger"></i> <span id="vidas"></span><small class="fs-6 text-secondary"> / 5</small></strong></div></div><div class="col-6 col-lg-3"><div class="card stat p-3"><span class="small text-secondary">Racha diaria</span><strong class="h3 mt-2"><i class="bi bi-fire text-warning"></i> <span id="racha"></span> días</strong></div></div><div class="col-6 col-lg-3"><div class="card stat p-3"><span class="small text-secondary">Puntos XP</span><strong class="h3 mt-2"><i class="bi bi-lightning-charge text-primary"></i> <span id="xp"></span></strong></div></div><div class="col-6 col-lg-3"><div class="card stat p-3"><span class="small text-secondary">Curso completado</span><strong class="h3 mt-2"><i class="bi bi-mortarboard text-primary"></i> <span id="avance"></span>%</strong></div></div></div>
-<div class="row g-4 mb-5"><div class="col-lg-5"><section class="card p-3 p-lg-4 h-100"><h2 class="h5 fw-bold">Avance del curso</h2><p class="small text-secondary">Tu ruta de inglés básico A1</p><div class="chart"><canvas id="graficoAvance" aria-label="Avance global del curso" role="img"></canvas></div></section></div><div class="col-lg-7"><section class="card p-3 p-lg-4 h-100"><h2 class="h5 fw-bold">Minutos de práctica</h2><p class="small text-secondary">Meta diaria: 10 minutos · Esta semana</p><div class="chart"><canvas id="graficoMinutos" aria-label="Minutos estudiados de lunes a domingo" role="img"></canvas></div></section></div></div>
-<section class="mb-5"><h2 class="h4 fw-bold">Módulos pendientes y en progreso</h2><div class="row g-3 mt-1" id="modulosPendientes"></div></section><section><h2 class="h4 fw-bold">Módulos completados</h2><div class="row g-3 mt-1" id="modulosCompletos"></div></section></main>
-<button class="btn btn-primary rounded-circle access" data-bs-toggle="offcanvas" data-bs-target="#accesibilidad" aria-label="Abrir accesibilidad"><i class="bi bi-universal-access fs-4"></i></button><div class="offcanvas offcanvas-end" id="accesibilidad"><div class="offcanvas-header"><h2 class="h5">Accesibilidad</h2><button class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body"><button id="contraste" class="btn btn-outline-primary w-100 mb-2">Alto contraste</button><div class="btn-group w-100"><button id="menos" class="btn btn-outline-secondary">A−</button><button id="mas" class="btn btn-outline-secondary">A+</button></div><button id="foco" class="btn btn-outline-secondary w-100 mt-2">Foco de teclado</button><button id="leer" class="btn btn-outline-secondary w-100 mt-2">Leer pantalla</button></div></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script><script>
-// Selección del estudiante y datos guardados en el navegador
-const llave='lingo-usuarios';let usuarios=JSON.parse(localStorage.getItem(llave)||'null')||[{id:'carlos',nombre:'Carlos Mendoza',correo:'carlos@lingoflow.test',clave:'demo123',carrera:'Estudiante de Ingeniería',xp:450,racha:7,vidas:5,avance:60,minutos:[8,12,10,7,14,5,0],habilidades:[85,75,65,90],palabras:[['hello','hola',true],['good morning','buenos días',true],['student','estudiante',true],['to practice','practicar',false]]},{id:'lucia',nombre:'Lucía Torres',correo:'lucia@lingoflow.test',clave:'demo123',carrera:'Estudiante de Administración',xp:280,racha:3,vidas:4,avance:35,minutos:[10,6,8,12,0,4,0],habilidades:[65,55,72,60],palabras:[['please','por favor',true],['thank you','gracias',true],['to order','pedir',false]]},{id:'mateo',nombre:'Mateo Rojas',correo:'mateo@lingoflow.test',clave:'demo123',carrera:'Estudiante de Diseño',xp:720,racha:12,vidas:5,avance:82,minutos:[15,10,13,11,9,16,8],habilidades:[92,84,78,88],palabras:[['welcome','bienvenido',true],['to understand','entender',true],['sentence','oración',true],['careful','cuidadoso',false]]}];localStorage.setItem(llave,JSON.stringify(usuarios));let activo=localStorage.getItem('lingo-usuario-activo')||'carlos';if(!usuarios.some(u=>u.id===activo))activo='carlos';let donut,barras;const guardar=()=>localStorage.setItem(llave,JSON.stringify(usuarios));
-function dibujarDashboard(){const u=usuarios.find(x=>x.id===activo);document.querySelector('#saludo').textContent='¡Hola, '+u.nombre.split(' ')[0]+'! 👋';document.querySelector('#vidas').textContent=u.vidas;document.querySelector('#racha').textContent=u.racha;document.querySelector('#xp').textContent=u.xp;document.querySelector('#avance').textContent=u.avance;document.querySelector('#modulosPendientes').innerHTML=['Saludos y presentaciones','Verbos cotidianos','En el restaurante'].map((m,i)=>'<div class="col-md-6 col-lg-4"><article class="card pendiente p-4 h-100"><span class="badge text-bg-primary align-self-start">'+(i===0?'En progreso':'Pendiente')+' · A1</span><h3 class="h5 mt-3">'+m+'</h3><p class="text-secondary small">Aprende expresiones útiles y practica con ejercicios breves.</p><a href="leccion.html" class="btn btn-primary mt-auto">'+(i===0?'Continuar lección':'Empezar módulo')+'</a></article></div>').join('');document.querySelector('#modulosCompletos').innerHTML=Array.from({length:Math.max(1,Math.floor(u.avance/20))},(_,i)=>'<div class="col-md-6 col-lg-4"><article class="card completo p-4 h-100"><span class="badge text-bg-success align-self-start">Completado · A1</span><h3 class="h5 mt-3">'+['Primeros pasos','Saludos básicos','Números y horarios','Vocabulario esencial'][i%4]+'</h3><a href="perfil.html" class="btn btn-outline-success mt-auto">Repasar vocabulario</a></article></div>').join('');if(donut)donut.destroy();if(barras)barras.destroy();donut=new Chart(document.querySelector('#graficoAvance'),{type:'doughnut',data:{labels:['Completado','Pendiente'],datasets:[{data:[u.avance,100-u.avance],backgroundColor:['#2563eb','#e2e8f0'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{position:'bottom'}}}});barras=new Chart(document.querySelector('#graficoMinutos'),{type:'bar',data:{labels:['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],datasets:[{label:'Minutos',data:u.minutos,backgroundColor:u.minutos.map(n=>n>=10?'#16803c':'#60a5fa'),borderRadius:7,maxBarThickness:34}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,suggestedMax:16,ticks:{stepSize:5}},x:{grid:{display:false}}}}})}
-const selector=document.querySelector('#usuarioDemo');selector.innerHTML=usuarios.slice(0,3).map(u=>'<option value="'+u.id+'">'+u.nombre.split(' ')[0]+'</option>').join('');selector.value=activo;selector.onchange=()=>{activo=selector.value;localStorage.setItem('lingo-usuario-activo',activo);dibujarDashboard()};document.querySelector('#salir').onclick=()=>{localStorage.removeItem('lingo-usuario-activo');location.href='index.html'};dibujarDashboard();
-// Panel sencillo de accesibilidad reutilizado en la pantalla
-const pref=JSON.parse(localStorage.getItem('lingo-accesibilidad')||'{}');if(pref.contraste)document.body.classList.add('high-contrast');if(pref.foco)document.body.classList.add('keyboard-focus');document.querySelector('#contraste').onclick=()=>{document.body.classList.toggle('high-contrast');pref.contraste=document.body.classList.contains('high-contrast');localStorage.setItem('lingo-accesibilidad',JSON.stringify(pref))};document.querySelector('#foco').onclick=()=>{document.body.classList.toggle('keyboard-focus');pref.foco=document.body.classList.contains('keyboard-focus');localStorage.setItem('lingo-accesibilidad',JSON.stringify(pref))};document.querySelector('#mas').onclick=()=>tamano(15);document.querySelector('#menos').onclick=()=>tamano(-15);function tamano(n){pref.fuente=Math.max(100,Math.min(130,(pref.fuente||100)+n));document.documentElement.style.fontSize=pref.fuente+'%';localStorage.setItem('lingo-accesibilidad',JSON.stringify(pref))}document.querySelector('#leer').onclick=()=>{const voz=new SpeechSynthesisUtterance(document.querySelector('main').innerText);voz.lang='es-ES';speechSynthesis.speak(voz)};
-</script><style>.keyboard-focus :focus-visible{outline:3px solid #f97316!important;outline-offset:3px}</style></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mi progreso | LingoFlow</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f8faff;
+        color: #233144;
+        font-family: system-ui, sans-serif;
+      }
+      .navbar,
+      .card {
+        border: 1px solid #cbd5e1;
+      }
+      .stat {
+        height: 100%;
+      }
+      .chart {
+        height: 260px;
+        position: relative;
+      }
+      .pendiente {
+        border-left: 4px solid #2563eb;
+      }
+      .completo {
+        border-left: 4px solid #16803c;
+      }
+      .access {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 10;
+      }
+      .high-contrast {
+        background: #000 !important;
+        color: #fff !important;
+      }
+      .high-contrast .card,
+      .high-contrast nav,
+      .high-contrast .offcanvas {
+        background: #111 !important;
+        color: #fff !important;
+        border-color: #ff0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-white sticky-top">
+      <div class="container-xl">
+        <a class="navbar-brand fw-bold text-primary" href="index.html"
+          ><i class="bi bi-book-half me-2"></i>LingoFlow</a
+        ><button
+          class="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-label="Abrir menú"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="dashboard.html">Mi progreso</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="leccion.html">Lección</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="perfil.html">Perfil</a>
+            </li>
+          </ul>
+          <div class="d-flex gap-2 align-items-center">
+            <label for="usuarioDemo" class="small">Cuenta de prueba</label
+            ><select
+              id="usuarioDemo"
+              class="form-select form-select-sm"
+              aria-label="Cambiar cuenta demo"
+            ></select
+            ><button class="btn btn-outline-primary btn-sm" id="salir">
+              Salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main class="container-xl py-4 py-lg-5">
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"
+      >
+        <div>
+          <span class="text-uppercase small fw-bold text-secondary"
+            >Tu espacio de aprendizaje</span
+          >
+          <h1 class="h2 fw-bold mt-2" id="saludo"></h1>
+          <p class="text-secondary">Continúa tu meta diaria de 10 minutos.</p>
+        </div>
+        <a class="btn btn-primary" href="leccion.html"
+          ><i class="bi bi-play-fill me-1"></i>Continuar lección</a
+        >
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+          <div class="card stat p-3">
+            <span class="small text-secondary">Vidas</span
+            ><strong class="h3 mt-2"
+              ><i class="bi bi-heart-fill text-danger"></i>
+              <span id="vidas"></span
+              ><small class="fs-6 text-secondary"> / 5</small></strong
+            >
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card stat p-3">
+            <span class="small text-secondary">Racha diaria</span
+            ><strong class="h3 mt-2"
+              ><i class="bi bi-fire text-warning"></i>
+              <span id="racha"></span> días</strong
+            >
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card stat p-3">
+            <span class="small text-secondary">Puntos XP</span
+            ><strong class="h3 mt-2"
+              ><i class="bi bi-lightning-charge text-primary"></i>
+              <span id="xp"></span
+            ></strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card stat p-3">
+            <span class="small text-secondary">Curso completado</span
+            ><strong class="h3 mt-2"
+              ><i class="bi bi-mortarboard text-primary"></i>
+              <span id="avance"></span>%</strong
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row g-4 mb-5">
+        <div class="col-lg-5">
+          <section class="card p-3 p-lg-4 h-100">
+            <h2 class="h5 fw-bold">Avance del curso</h2>
+            <p class="small text-secondary">Tu ruta de inglés básico A1</p>
+            <div class="chart">
+              <canvas
+                id="graficoAvance"
+                aria-label="Avance global del curso"
+                role="img"
+              ></canvas>
+            </div>
+          </section>
+        </div>
+        <div class="col-lg-7">
+          <section class="card p-3 p-lg-4 h-100">
+            <h2 class="h5 fw-bold">Minutos de práctica</h2>
+            <p class="small text-secondary">
+              Meta diaria: 10 minutos · Esta semana
+            </p>
+            <div class="chart">
+              <canvas
+                id="graficoMinutos"
+                aria-label="Minutos estudiados de lunes a domingo"
+                role="img"
+              ></canvas>
+            </div>
+          </section>
+        </div>
+      </div>
+      <section class="mb-5">
+        <h2 class="h4 fw-bold">Módulos pendientes y en progreso</h2>
+        <div class="row g-3 mt-1" id="modulosPendientes"></div>
+      </section>
+      <section>
+        <h2 class="h4 fw-bold">Módulos completados</h2>
+        <div class="row g-3 mt-1" id="modulosCompletos"></div>
+      </section>
+    </main>
+    <button
+      class="btn btn-primary rounded-circle access"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#accesibilidad"
+      aria-label="Abrir accesibilidad"
+    >
+      <i class="bi bi-universal-access fs-4"></i>
+    </button>
+    <div class="offcanvas offcanvas-end" id="accesibilidad">
+      <div class="offcanvas-header">
+        <h2 class="h5">Accesibilidad</h2>
+        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <button id="contraste" class="btn btn-outline-primary w-100 mb-2">
+          Alto contraste
+        </button>
+        <div class="btn-group w-100">
+          <button id="menos" class="btn btn-outline-secondary">A−</button
+          ><button id="mas" class="btn btn-outline-secondary">A+</button>
+        </div>
+        <button id="foco" class="btn btn-outline-secondary w-100 mt-2">
+          Foco de teclado</button
+        ><button id="leer" class="btn btn-outline-secondary w-100 mt-2">
+          Leer pantalla
+        </button>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+fetch('data.json').then(respuesta=>respuesta.json()).then(datos=>{
+
+      // Selección del estudiante y datos guardados en el navegador
+      const llave = "lingo-usuarios";
+      let usuarios = JSON.parse(localStorage.getItem(llave) || "null") ||datos.usuarios;localStorage.setItem(llave,JSON.stringify(usuarios));
+      let activo = localStorage.getItem("lingo-usuario-activo") || "carlos";
+      if (!usuarios.some((u) => u.id === activo)) activo = "carlos";
+      let donut, barras;
+      const guardar = () =>
+        localStorage.setItem(llave, JSON.stringify(usuarios));
+      function dibujarDashboard() {
+        const u = usuarios.find((x) => x.id === activo);
+        document.querySelector("#saludo").textContent =
+          "¡Hola, " + u.nombre.split(" ")[0] + "! 👋";
+        document.querySelector("#vidas").textContent = u.vidas;
+        document.querySelector("#racha").textContent = u.racha;
+        document.querySelector("#xp").textContent = u.xp;
+        document.querySelector("#avance").textContent = u.avance;
+        document.querySelector("#modulosPendientes").innerHTML = [
+          "Saludos y presentaciones",
+          "Verbos cotidianos",
+          "En el restaurante",
+        ]
+          .map(
+            (m, i) =>
+              '<div class="col-md-6 col-lg-4"><article class="card pendiente p-4 h-100"><span class="badge text-bg-primary align-self-start">' +
+              (i === 0 ? "En progreso" : "Pendiente") +
+              ' · A1</span><h3 class="h5 mt-3">' +
+              m +
+              '</h3><p class="text-secondary small">Aprende expresiones útiles y practica con ejercicios breves.</p><a href="leccion.html" class="btn btn-primary mt-auto">' +
+              (i === 0 ? "Continuar lección" : "Empezar módulo") +
+              "</a></article></div>",
+          )
+          .join("");
+        document.querySelector("#modulosCompletos").innerHTML = Array.from(
+          { length: Math.max(1, Math.floor(u.avance / 20)) },
+          (_, i) =>
+            '<div class="col-md-6 col-lg-4"><article class="card completo p-4 h-100"><span class="badge text-bg-success align-self-start">Completado · A1</span><h3 class="h5 mt-3">' +
+            [
+              "Primeros pasos",
+              "Saludos básicos",
+              "Números y horarios",
+              "Vocabulario esencial",
+            ][i % 4] +
+            '</h3><a href="perfil.html" class="btn btn-outline-success mt-auto">Repasar vocabulario</a></article></div>',
+        ).join("");
+        if (donut) donut.destroy();
+        if (barras) barras.destroy();
+        donut = new Chart(document.querySelector("#graficoAvance"), {
+          type: "doughnut",
+          data: {
+            labels: ["Completado", "Pendiente"],
+            datasets: [
+              {
+                data: [u.avance, 100 - u.avance],
+                backgroundColor: ["#2563eb", "#e2e8f0"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "72%",
+            plugins: { legend: { position: "bottom" } },
+          },
+        });
+        barras = new Chart(document.querySelector("#graficoMinutos"), {
+          type: "bar",
+          data: {
+            labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+            datasets: [
+              {
+                label: "Minutos",
+                data: u.minutos,
+                backgroundColor: u.minutos.map((n) =>
+                  n >= 10 ? "#16803c" : "#60a5fa",
+                ),
+                borderRadius: 7,
+                maxBarThickness: 34,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: {
+                beginAtZero: true,
+                suggestedMax: 16,
+                ticks: { stepSize: 5 },
+              },
+              x: { grid: { display: false } },
+            },
+          },
+        });
+      }
+      const selector = document.querySelector("#usuarioDemo");
+      selector.innerHTML = usuarios
+        .slice(0, 3)
+        .map(
+          (u) =>
+            '<option value="' +
+            u.id +
+            '">' +
+            u.nombre.split(" ")[0] +
+            "</option>",
+        )
+        .join("");
+      selector.value = activo;
+      selector.onchange = () => {
+        activo = selector.value;
+        localStorage.setItem("lingo-usuario-activo", activo);
+        dibujarDashboard();
+      };
+      document.querySelector("#salir").onclick = () => {
+        localStorage.removeItem("lingo-usuario-activo");
+        location.href = "index.html";
+      };
+      dibujarDashboard();
+      // Panel sencillo de accesibilidad reutilizado en la pantalla
+      const pref = JSON.parse(
+        localStorage.getItem("lingo-accesibilidad") || "{}",
+      );
+      if (pref.contraste) document.body.classList.add("high-contrast");
+      if (pref.foco) document.body.classList.add("keyboard-focus");
+      document.querySelector("#contraste").onclick = () => {
+        document.body.classList.toggle("high-contrast");
+        pref.contraste = document.body.classList.contains("high-contrast");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#foco").onclick = () => {
+        document.body.classList.toggle("keyboard-focus");
+        pref.foco = document.body.classList.contains("keyboard-focus");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#mas").onclick = () => tamano(15);
+      document.querySelector("#menos").onclick = () => tamano(-15);
+      function tamano(n) {
+        pref.fuente = Math.max(100, Math.min(130, (pref.fuente || 100) + n));
+        document.documentElement.style.fontSize = pref.fuente + "%";
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      }
+      document.querySelector("#leer").onclick = () => {
+        const voz = new SpeechSynthesisUtterance(
+          document.querySelector("main").innerText,
+        );
+        voz.lang = "es-ES";
+        speechSynthesis.speak(voz);
+      };
+    
+}).catch(error=>{console.error(error);alert('No se pudo cargar data.json. Usa Live Server.')});
+</script>
+    <style>
+      .keyboard-focus :focus-visible {
+        outline: 3px solid #f97316 !important;
+        outline-offset: 3px;
+      }
+    </style>
+  </body>
+</html>
+

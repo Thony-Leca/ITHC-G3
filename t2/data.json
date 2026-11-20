@@ -1,0 +1,60 @@
+{
+  "usuarios": [
+    {
+      "id": "carlos",
+      "nombre": "Carlos Mendoza",
+      "correo": "carlos@lingoflow.test",
+      "clave": "demo123",
+      "carrera": "Estudiante de Ingeniería",
+      "xp": 450,
+      "racha": 7,
+      "vidas": 5,
+      "avance": 60,
+      "minutos": [8, 12, 10, 7, 14, 5, 0],
+      "habilidades": [85, 75, 65, 90],
+      "palabras": [
+        ["hello", "hola", true],
+        ["good morning", "buenos días", true],
+        ["student", "estudiante", true],
+        ["to practice", "practicar", false]
+      ]
+    },
+    {
+      "id": "lucia",
+      "nombre": "Lucía Torres",
+      "correo": "lucia@lingoflow.test",
+      "clave": "demo123",
+      "carrera": "Estudiante de Administración",
+      "xp": 280,
+      "racha": 3,
+      "vidas": 4,
+      "avance": 35,
+      "minutos": [10, 6, 8, 12, 0, 4, 0],
+      "habilidades": [65, 55, 72, 60],
+      "palabras": [
+        ["please", "por favor", true],
+        ["thank you", "gracias", true],
+        ["to order", "pedir", false]
+      ]
+    },
+    {
+      "id": "mateo",
+      "nombre": "Mateo Rojas",
+      "correo": "mateo@lingoflow.test",
+      "clave": "demo123",
+      "carrera": "Estudiante de Diseño",
+      "xp": 720,
+      "racha": 12,
+      "vidas": 5,
+      "avance": 82,
+      "minutos": [15, 10, 13, 11, 9, 16, 8],
+      "habilidades": [92, 84, 78, 88],
+      "palabras": [
+        ["welcome", "bienvenido", true],
+        ["to understand", "entender", true],
+        ["sentence", "oración", true],
+        ["careful", "cuidadoso", false]
+      ]
+    }
+  ]
+}
