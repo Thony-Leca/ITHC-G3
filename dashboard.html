@@ -1,191 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Completo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 1rem;
-            min-height: 100vh;
-        }
-        #dashboard {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .chart-container {
-            height: 100%;
-            background-color: #fafafa;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .chart-container h2 {
-            margin: 0;
-            font-size: 18px;
-        }
-        .chart-container p {
-            margin: 5px 0 15px 0;
-            font-size: 14px;
-            color: #666;
-        }
-        canvas {
-            width: 100% !important;
-            max-height: 300px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Analítico - Turismo en Perú</title>
+
+  <!-- Hoja de estilos principal de tu proyecto -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- CSS oficial de DC.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+
+  <!-- Bibliotecas de gráficos: Google Charts + D3 + Crossfilter + DC.js -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter2/1.5.4/crossfilter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/dc.min.js"></script>
 </head>
-<body>
-    <div id="dashboard" class="container-fluid">
-        <h1 class="h3 text-center mb-4">Dashboard de turismo</h1>
-        <div class="row g-3">
-        <div class="col-12 col-md-6">
-            <div class="chart-container">
-            <h2>Gráfico de Barras</h2>
-            <p>Distribución de visitas por Ciudad</p>
-            <canvas id="bar-chart"></canvas>
-            </div>
-        </div>
-        <div class="col-12 col-md-6">
-            <div class="chart-container">
-            <h2>Gráfico de Líneas</h2>
-            <p>Ventas mensuales</p>
-            <canvas id="line-chart"></canvas>
-            </div>
-        </div>
-        <div class="col-12 col-md-6">
-            <div class="chart-container">
-            <h2>Gráfico de Pastel</h2>
-            <p>Visitas por Ciudad</p>
-            <canvas id="pie-chart"></canvas>
-            </div>
-        </div>
-        <div class="col-12 col-md-6">
-            <div class="chart-container">
-            <h2>Gráfico de Radar</h2>
-            <p>Comparación de actividades</p>
-            <canvas id="radar-chart"></canvas>
-            </div>
-        </div>
-        </div>
+<body class="dashboard-body">
+
+  <!-- Banner Principal -->
+  <header class="top-banner">
+    TURISMO EN PERU
+  </header>
+
+  <!-- Barra de Navegación integrada con los demás módulos -->
+  <nav class="main-nav">
+    <a href="machu.html">Machu Picchu</a>
+    <a href="caral.html">Caral</a>
+    <a href="nazca.html">Líneas de Nazca</a>
+    <a href="tablas.html">Tablas y Tarifas</a>
+    <a href="dashboard.html" class="active">Dashboard Marketing</a>
+  </nav>
+
+  <!-- Indicadores Rápidos (KPIs) -->
+  <section class="kpi-bar">
+    <div class="kpi-card">
+      <span class="kpi-title">Visitas Web (Mes)</span>
+      <span class="kpi-value">12,500</span>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Gráfico de Barras
-            var ctxBar = document.getElementById('bar-chart').getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Machu Picchu', 'Lineas de Nazca', 'Caral'],
-                    datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)'
-                            
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)'
-                            
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+    <div class="kpi-card">
+      <span class="kpi-title">Conversión Final</span>
+      <span class="kpi-value kpi-success">7.0% (875)</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-title">Destino Líder</span>
+      <span class="kpi-value">Machu Picchu</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-title">Ingresos Campaña</span>
+      <span class="kpi-value">$148,500</span>
+    </div>
+  </section>
 
-            // Gráfico de Líneas
-            var ctxLine = document.getElementById('line-chart').getContext('2d');
-            new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                    datasets: [{
-                        label: 'Sales',
-                        data: [65, 59, 80, 81, 56, 55, 40],
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                }
-            });
+  <!-- Cuadrícula 2x2: 4 gráficos en una sola pantalla -->
+  <main class="dashboard-grid">
 
-            // Gráfico de Pastel
-            var ctxPie = document.getElementById('pie-chart').getContext('2d');
-            new Chart(ctxPie, {
-                type: 'pie',
-                data: {
-                    labels: ['Machu Picchu', 'Lineas de Nazca', 'Caral'],
-                    datasets: [{
-                        label: 'Votes',
-                        data: [300, 50, 100],
-                        backgroundColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                }
-            });
+    <!-- GRÁFICO 1: CONVERSIÓN DE CLIENTES (Google Charts) -->
+    <article class="chart-card">
+      <div class="chart-header">
+        <h3>1. Embudo de Conversión de Clientes (Web &rarr; Reserva)</h3>
+        <span class="badge-lib">Google Charts</span>
+      </div>
+      <div id="chart_conversion" class="chart-container"></div>
+    </article>
 
-            // Gráfico de Radar
-            var ctxRadar = document.getElementById('radar-chart').getContext('2d');
-            new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
-                    datasets: [{
-                        label: 'My First Dataset',
-                        data: [65, 59, 90, 81, 56, 55, 40],
-                        fill: true,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        pointBackgroundColor: 'rgb(255, 99, 132)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgb(255, 99, 132)'
-                    }, {
-                        label: 'My Second Dataset',
-                        data: [28, 48, 40, 19, 96, 27, 100],
-                        fill: true,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgb(54, 162, 235)',
-                        pointBackgroundColor: 'rgb(54, 162, 235)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgb(54, 162, 235)'
-                    }]
-                },
-                options: {
-                    elements: {
-                        line: {
-                            borderWidth: 3
-                        }
-                    }
-                }
-            });
-        });
-    </script>
+    <!-- GRÁFICO 2: ESTACIONALIDAD DE RESERVAS (Google Charts) -->
+    <article class="chart-card">
+      <div class="chart-header">
+        <h3>2. Tendencia Mensual de Turistas (Nacionales vs. Extranjeros)</h3>
+        <span class="badge-lib">Google Charts</span>
+      </div>
+      <div id="chart_tendencia" class="chart-container"></div>
+    </article>
+
+    <!-- GRÁFICO 3: DEMANDA POR DESTINO TURÍSTICO (DC.js - Interactivo) -->
+    <article class="chart-card">
+      <div class="chart-header">
+        <h3>3. Reservas por Destino (Clic para filtrar canales)</h3>
+        <div>
+          <span class="badge-lib badge-dc">DC.js</span>
+          <button id="btn_reset_dc" class="btn-reset" type="button">Reiniciar</button>
+        </div>
+      </div>
+      <div id="chart_destinos_dc" class="chart-container"></div>
+    </article>
+
+    <!-- GRÁFICO 4: INGRESOS POR CANAL DE MARKETING (DC.js - Vinculado) -->
+    <article class="chart-card">
+      <div class="chart-header">
+        <h3>4. Ingresos (USD) por Canal de Marketing Digital</h3>
+        <span class="badge-lib badge-dc">DC.js</span>
+      </div>
+      <div id="chart_canales_dc" class="chart-container"></div>
+    </article>
+
+  </main>
+
+  <!-- Lógica de los gráficos -->
+  <script src="script.js"></script>
 </body>
 </html>
