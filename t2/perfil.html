@@ -1,18 +1,670 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Perfil | LingoFlow</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"><style>body{background:#f8faff;color:#233144;font-family:system-ui,sans-serif}.navbar,.card{border:1px solid #cbd5e1}.grafico{height:290px;position:relative}.access{position:fixed;right:20px;bottom:20px;z-index:10}.high-contrast{background:#000!important;color:#fff!important}.high-contrast .card,.high-contrast nav,.high-contrast .offcanvas{background:#111!important;color:#fff!important;border-color:#ff0!important}.high-contrast input,.high-contrast select{background:#111!important;color:#fff!important}</style></head><body>
-<nav class="navbar navbar-expand-lg bg-white sticky-top"><div class="container-xl"><a class="navbar-brand fw-bold text-primary" href="index.html"><i class="bi bi-book-half me-2"></i>LingoFlow</a><button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button><div id="menu" class="collapse navbar-collapse"><ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="dashboard.html">Mi progreso</a></li><li class="nav-item"><a class="nav-link" href="leccion.html">Lección</a></li><li class="nav-item"><a class="nav-link active" href="perfil.html">Perfil</a></li></ul><a class="btn btn-outline-primary btn-sm" href="login.html">Cambiar cuenta</a></div></div></nav>
-<main class="container-xl py-4 py-lg-5"><span class="small text-uppercase fw-bold text-secondary">Tu aprendizaje en detalle</span><h1 class="h2 fw-bold mt-2 mb-4">Mi perfil y estadísticas</h1><div class="row g-4"><div class="col-lg-4"><section class="card p-4 h-100"><div class="d-flex align-items-center gap-3 mb-4"><div id="iniciales" class="rounded-circle bg-primary text-white d-grid fw-bold" style="width:64px;height:64px;place-items:center;font-size:1.2rem"></div><div><h2 class="h5 fw-bold mb-1" id="nombre"></h2><p class="text-secondary small mb-0" id="carrera"></p></div></div><dl class="row small"><dt class="col-5 text-secondary">Nivel</dt><dd class="col-7">Básico A1</dd><dt class="col-5 text-secondary">Correo</dt><dd class="col-7 text-break" id="correo"></dd><dt class="col-5 text-secondary">Puntos XP</dt><dd class="col-7" id="xp"></dd><dt class="col-5 text-secondary">Racha actual</dt><dd class="col-7" id="racha"></dd></dl></section></div><div class="col-lg-8"><section class="card p-3 p-lg-4 h-100"><h2 class="h5 fw-bold">Dominio por competencia</h2><p class="small text-secondary">Tu nivel de práctica en cada habilidad.</p><div class="grafico"><canvas id="graficoHabilidades" aria-label="Dominio en vocabulario, comprensión auditiva, gramática y lectura" role="img"></canvas></div></section></div></div>
-<section class="card p-3 p-lg-4 mt-4"><div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3"><div><h2 class="h5 fw-bold mb-1">Mi vocabulario</h2><p class="small text-secondary mb-0">Palabras aprendidas y marcadas para repasar.</p></div><div class="d-flex gap-2"><label class="visually-hidden" for="buscar">Buscar palabras</label><input id="buscar" class="form-control" placeholder="Buscar palabra o traducción"><label class="visually-hidden" for="filtro">Filtrar por estado</label><select id="filtro" class="form-select"><option value="todos">Todos los estados</option><option value="aprendida">Aprendidas</option><option value="repasar">Para repasar</option></select></div></div><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Inglés</th><th>Español</th><th>Estado</th><th><span class="visually-hidden">Audio</span></th></tr></thead><tbody id="filas"></tbody></table></div></section></main>
-<button class="btn btn-primary rounded-circle access" data-bs-toggle="offcanvas" data-bs-target="#accesibilidad" aria-label="Abrir accesibilidad"><i class="bi bi-universal-access fs-4"></i></button><div class="offcanvas offcanvas-end" id="accesibilidad"><div class="offcanvas-header"><h2 class="h5">Accesibilidad</h2><button class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body"><button id="contraste" class="btn btn-outline-primary w-100 mb-2">Alto contraste</button><div class="btn-group w-100"><button id="menos" class="btn btn-outline-secondary">A−</button><button id="mas" class="btn btn-outline-secondary">A+</button></div><button id="foco" class="btn btn-outline-secondary w-100 mt-2">Foco de teclado</button><button id="leer" class="btn btn-outline-secondary w-100 mt-2">Leer pantalla</button></div></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script><script>
-fetch('data.json').then(respuesta=>respuesta.json()).then(datos=>{
-
-// Estadísticas y vocabulario de prueba para cada estudiante
-const llave='lingo-usuarios';let usuarios=JSON.parse(localStorage.getItem(llave)||'null')||datos.usuarios;localStorage.setItem(llave,JSON.stringify(usuarios));const id=localStorage.getItem('lingo-usuario-activo')||'carlos';const usuario=usuarios.find(u=>u.id===id)||usuarios[0];document.querySelector('#nombre').textContent=usuario.nombre;document.querySelector('#iniciales').textContent=usuario.nombre.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();document.querySelector('#carrera').textContent=usuario.carrera;document.querySelector('#correo').textContent=usuario.correo;document.querySelector('#xp').textContent=usuario.xp;document.querySelector('#racha').textContent=usuario.racha+' días';
-// Gráfico de barras horizontal creado con Chart.js
-new Chart(document.querySelector('#graficoHabilidades'),{type:'bar',data:{labels:['Vocabulario','Comprensión auditiva','Gramática básica','Lectura'],datasets:[{label:'Dominio (%)',data:usuario.habilidades,backgroundColor:['#2563eb','#60a5fa','#d97706','#16803c'],borderRadius:6,maxBarThickness:28}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}});
-function dibujarPalabras(){const texto=document.querySelector('#buscar').value.toLowerCase(),estado=document.querySelector('#filtro').value,palabras=usuario.palabras.filter(p=>((p[0]+' '+p[1]).toLowerCase().includes(texto))&&(estado==='todos'||(estado==='aprendida'&&p[2])||(estado==='repasar'&&!p[2])));document.querySelector('#filas').innerHTML=palabras.length?palabras.map(p=>'<tr><td class="fw-semibold">'+p[0]+'</td><td>'+p[1]+'</td><td><span class="badge '+(p[2]?'text-bg-success':'text-bg-warning')+'">'+(p[2]?'Aprendida':'Para repasar')+'</span></td><td><button class="btn btn-sm btn-outline-primary" data-audio="'+p[0]+'" aria-label="Escuchar '+p[0]+'"><i class="bi bi-volume-up"></i></button></td></tr>').join(''):'<tr><td colspan="4" class="text-center text-secondary py-4">No hay palabras que coincidan.</td></tr>';document.querySelectorAll('[data-audio]').forEach(b=>b.onclick=()=>{const voz=new SpeechSynthesisUtterance(b.dataset.audio);voz.lang='en-US';speechSynthesis.speak(voz)})}document.querySelector('#buscar').oninput=dibujarPalabras;document.querySelector('#filtro').onchange=dibujarPalabras;dibujarPalabras();
-const pref=JSON.parse(localStorage.getItem('lingo-accesibilidad')||'{}');if(pref.contraste)document.body.classList.add('high-contrast');if(pref.foco)document.body.classList.add('keyboard-focus');document.querySelector('#contraste').onclick=()=>{document.body.classList.toggle('high-contrast');pref.contraste=document.body.classList.contains('high-contrast');localStorage.setItem('lingo-accesibilidad',JSON.stringify(pref))};document.querySelector('#foco').onclick=()=>{document.body.classList.toggle('keyboard-focus');pref.foco=document.body.classList.contains('keyboard-focus');localStorage.setItem('lingo-accesibilidad',JSON.stringify(pref))};document.querySelector('#mas').onclick=()=>tamano(15);document.querySelector('#menos').onclick=()=>tamano(-15);function tamano(n){pref.fuente=Math.max(100,Math.min(130,(pref.fuente||100)+n));document.documentElement.style.fontSize=pref.fuente+'%';localStorage.setItem('lingo-accesibilidad',JSON.stringify(pref))}document.querySelector('#leer').onclick=()=>{const voz=new SpeechSynthesisUtterance(document.querySelector('main').innerText);voz.lang='es-ES';speechSynthesis.speak(voz)};
-
-}).catch(error=>{console.error(error);alert('No se pudo cargar data.json. Usa Live Server.')});
-</script><style>.keyboard-focus :focus-visible{outline:3px solid #f97316!important;outline-offset:3px}</style></body></html>
-
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perfil y estadísticas | LingoFlow</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f7f9fc;
+        color: #172b4d;
+        font-family: system-ui, sans-serif;
+      }
+      .navbar {
+        background: #fff;
+        border-bottom: 1px solid #dbe3ef;
+      }
+      .card,
+      .panel {
+        border: 1px solid #dbe3ef;
+        box-shadow: 0 3px 12px #16345b08;
+      }
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+        display: inline-grid;
+        place-items: center;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 9px;
+      }
+      .radar {
+        height: 310px;
+      }
+      .avatar {
+        height: 68px;
+        width: 68px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #2563eb;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .tag {
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+      }
+      .access {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 10;
+      }
+      .high-contrast {
+        background: #000 !important;
+        color: #fff !important;
+      }
+      .high-contrast .card,
+      .high-contrast nav,
+      .high-contrast .offcanvas {
+        background: #111 !important;
+        color: #fff !important;
+        border-color: #ff0 !important;
+      }
+      .high-contrast input,
+      .high-contrast select {
+        background: #111 !important;
+        color: #fff !important;
+      }
+      .keyboard-focus :focus-visible {
+        outline: 3px solid #2563eb !important;
+        outline-offset: 2px;
+      }
+      @media print {
+        nav,
+        .access,
+        .offcanvas,
+        #preferencias,
+        #accionesPerfil {
+          display: none !important;
+        }
+        body {
+          background: #fff;
+        }
+        .card {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container-xl">
+        <a
+          class="navbar-brand fw-bold d-flex align-items-center gap-2"
+          href="dashboard.html"
+          ><span class="brand-icon"><i class="bi bi-book-half"></i></span
+          >LingoFlow</a
+        ><button
+          class="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-label="Abrir navegación"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.html">Mi progreso</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="perfil.html">Perfil</a>
+            </li>
+          </ul>
+          <span class="badge text-bg-light me-2"
+            >🔥 <span id="rachaNav">7</span>d</span
+          ><span class="badge text-bg-primary"
+            ><span id="xpNav">450</span> XP</span
+          >
+        </div>
+      </div>
+    </nav>
+    <main class="container-xl py-4 py-lg-5">
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"
+      >
+        <div>
+          <span class="text-uppercase small fw-bold text-secondary"
+            >Panel de alumno · Punto 4.3</span
+          >
+          <h1 class="h2 fw-bold mt-2 mb-0">Perfil y estadísticas</h1>
+          <p class="text-secondary mb-0">
+            Métricas consolidadas de tus sesiones de aprendizaje.
+          </p>
+        </div>
+        <div id="accionesPerfil">
+          <button class="btn btn-outline-primary" onclick="window.print()">
+            <i class="bi bi-file-earmark-pdf me-1"></i>Reporte académico
+          </button>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <section class="card p-4 h-100">
+            <div class="d-flex gap-3 align-items-center">
+              <div id="avatar" class="avatar">C</div>
+              <div>
+                <h2 id="nombre" class="h5 fw-bold mb-1">Carlos Mendoza</h2>
+                <div id="carrera" class="small text-secondary">
+                  Estudiante de Ingeniería
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between small">
+              <span class="text-secondary">Edad</span
+              ><strong id="edad">21 años</strong>
+            </div>
+            <div class="d-flex justify-content-between small mt-2">
+              <span class="text-secondary">Correo</span
+              ><strong id="correo" class="text-break ms-3"
+                >carlos.mendoza@universidad.edu.pe</strong
+              >
+            </div>
+            <div class="d-flex justify-content-between small mt-2">
+              <span class="text-secondary">Nivel actual</span
+              ><strong id="nivel">A1 Inicial</strong>
+            </div>
+            <div class="d-flex justify-content-between small mt-2">
+              <span class="text-secondary">Racha activa</span
+              ><strong
+                ><i class="bi bi-fire text-warning"></i>
+                <span id="racha">7 días</span></strong
+              >
+            </div>
+            <div class="d-flex justify-content-between small mt-2">
+              <span class="text-secondary">Puntos acumulados</span
+              ><strong
+                ><i class="bi bi-lightning-charge text-primary"></i>
+                <span id="xp">450</span> XP</strong
+              >
+            </div>
+            <hr />
+            <h3 class="h6 fw-bold">Medallas obtenidas</h3>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge rounded-pill text-bg-warning"
+                >🔥 Racha de 7 días</span
+              ><span class="badge rounded-pill text-bg-success"
+                >📚 Primer módulo</span
+              ><span class="badge rounded-pill text-bg-primary"
+                >🎧 Audio activo</span
+              >
+            </div>
+          </section>
+        </div>
+        <div class="col-lg-8">
+          <section class="card p-3 p-lg-4 h-100">
+            <div class="d-flex justify-content-between">
+              <div>
+                <span class="badge text-bg-light tag">CHART.JS · RADAR</span>
+                <h2 class="h5 fw-bold mt-2">
+                  Estadísticas de competencias lingüísticas
+                </h2>
+                <p class="small text-secondary">
+                  Vocabulario, pronunciación, gramática y comprensión auditiva.
+                </p>
+              </div>
+              <span class="small text-secondary">Últimas 14 sesiones</span>
+            </div>
+            <div class="radar">
+              <canvas
+                id="graficoRadar"
+                role="img"
+                aria-label="Gráfico radar de competencias lingüísticas"
+              ></canvas>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="row g-3 mt-1">
+        <div class="col-6 col-lg-3">
+          <div class="card p-3 h-100">
+            <div class="small text-secondary">Vocabulario</div>
+            <strong class="h3 mb-0" id="valorVocabulario">85%</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card p-3 h-100">
+            <div class="small text-secondary">Pronunciación</div>
+            <strong class="h3 mb-0" id="valorPronunciacion">75%</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card p-3 h-100">
+            <div class="small text-secondary">Auditiva</div>
+            <strong class="h3 mb-0" id="valorAuditiva">70%</strong>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card p-3 h-100">
+            <div class="small text-secondary">Gramática básica</div>
+            <strong class="h3 mb-0" id="valorGramatica">65%</strong>
+          </div>
+        </div>
+      </div>
+      <section class="card p-3 p-lg-4 mt-4 border-primary-subtle">
+        <div class="d-flex gap-3">
+          <i class="bi bi-lightbulb-fill fs-3 text-warning"></i>
+          <div>
+            <span class="text-uppercase small fw-bold text-primary"
+              >Recomendación de refuerzo personalizada</span
+            >
+            <p class="mb-0 mt-1" id="recomendacion">
+              Tu vocabulario destaca. Dedica tus próximas micro sesiones a
+              reforzar gramática.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="card p-3 p-lg-4 mt-4">
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3"
+        >
+          <div>
+            <span class="badge text-bg-light tag"
+              >BANCO DE PALABRAS Y LÉXICO ACTIVO</span
+            >
+            <h2 class="h5 fw-bold mt-2 mb-1">Vocabulario aprendido</h2>
+            <p class="small text-secondary mb-0">
+              Práctica de retención y repetición auditiva.
+            </p>
+          </div>
+          <div class="d-flex gap-2">
+            <label class="visually-hidden" for="buscar"
+              >Buscar vocabulario</label
+            ><input
+              id="buscar"
+              class="form-control"
+              placeholder="Buscar palabra…"
+            /><label class="visually-hidden" for="filtro"
+              >Estado del vocabulario</label
+            ><select id="filtro" class="form-select">
+              <option value="todos">Todos (64)</option>
+              <option value="dominadas">Dominadas</option>
+              <option value="repasar">Por repasar</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Palabra (inglés)</th>
+                <th>Significado (español)</th>
+                <th>Nivel</th>
+                <th>Estado</th>
+                <th><span class="visually-hidden">Audio</span></th>
+              </tr>
+            </thead>
+            <tbody id="filas"></tbody>
+          </table>
+        </div>
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center small text-secondary"
+        >
+          <span id="contadorPalabras">Mostrando términos de tu glosario</span>
+          <nav aria-label="Paginación de vocabulario">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item">
+                <button class="page-link" id="anterior">Anterior</button>
+              </li>
+              <li class="page-item active"><span class="page-link">1</span></li>
+              <li class="page-item">
+                <button class="page-link" id="siguiente">Siguiente</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+      <section id="preferencias" class="card p-3 p-lg-4 mt-4">
+        <h2 class="h5 fw-bold">Ajustes y personalización del estudiante</h2>
+        <div class="row g-3 mt-1">
+          <div class="col-md-6">
+            <label for="horaPractica" class="form-label"
+              >Recordatorio diario</label
+            >
+            <div class="input-group">
+              <input
+                id="horaPractica"
+                type="time"
+                class="form-control"
+                value="18:00"
+              /><span class="input-group-text">Meta · 10 min</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="velocidadAudio" class="form-label"
+              >Velocidad de audio TTS</label
+            ><select id="velocidadAudio" class="form-select">
+              <option value="0.75">0.75× · Lento</option>
+              <option value="1" selected>1× · Estándar</option>
+              <option value="1.25">1.25× · Rápido</option>
+            </select>
+          </div>
+        </div>
+      </section>
+    </main>
+    <button
+      class="btn btn-primary rounded-circle access"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#accesibilidad"
+      aria-label="Menú de Accesibilidad"
+    >
+      <i class="bi bi-universal-access fs-4"></i>
+    </button>
+    <div class="offcanvas offcanvas-end" id="accesibilidad">
+      <div class="offcanvas-header">
+        <h2 class="h5">Accesibilidad</h2>
+        <button
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <button id="contraste" class="btn btn-outline-primary w-100 mb-2">
+          Modo alto contraste
+        </button>
+        <div class="btn-group w-100">
+          <button id="menos" class="btn btn-outline-secondary">A−</button
+          ><button id="normal" class="btn btn-outline-secondary">Normal</button
+          ><button id="mas" class="btn btn-outline-secondary">A+</button>
+        </div>
+        <button id="leer" class="btn btn-outline-secondary w-100 mt-2">
+          Lector de voz</button
+        ><button id="foco" class="btn btn-outline-secondary w-100 mt-2">
+          Foco de teclado</button
+        ><button id="oscuro" class="btn btn-outline-secondary w-100 mt-2">
+          Modo oscuro ergonómico
+        </button>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+      fetch("data.json")
+        .then((r) => r.json())
+        .then((datos) => {
+          if (!localStorage.getItem("lingo-usuario-activo")) {
+            location.href = "login.html";
+            return;
+          }
+          // Carga del perfil demo activo y sus estadísticas individuales
+          const clave = "lingo-usuarios";
+          let usuarios =
+            JSON.parse(localStorage.getItem(clave) || "null") || datos.usuarios;
+          localStorage.setItem(clave, JSON.stringify(usuarios));
+          const id = localStorage.getItem("lingo-usuario-activo") || "carlos";
+          const usuario = usuarios.find((u) => u.id === id) || usuarios[0];
+          document.querySelector("#nombre").textContent = usuario.nombre;
+          document.querySelector("#avatar").textContent = usuario.nombre
+            .split(" ")
+            .map((x) => x[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
+          document.querySelector("#carrera").textContent = usuario.carrera;
+          document.querySelector("#edad").textContent =
+            (usuario.edad || 21) + " años";
+          document.querySelector("#correo").textContent = usuario.correo;
+          document.querySelector("#nivel").textContent =
+            usuario.nivel || "A1 Inicial";
+          document.querySelector("#racha").textContent =
+            usuario.racha + " días";
+          document.querySelector("#rachaNav").textContent = usuario.racha;
+          document.querySelector("#xp").textContent = usuario.xp;
+          document.querySelector("#xpNav").textContent = usuario.xp;
+          const habilidades = usuario.habilidades || [85, 75, 65, 70];
+          const valores = [
+            habilidades[0],
+            habilidades[1],
+            habilidades[3] ?? 70,
+            habilidades[2] ?? 0,
+          ];
+          [
+            "#valorVocabulario",
+            "#valorPronunciacion",
+            "#valorAuditiva",
+            "#valorGramatica",
+          ].forEach(
+            (sel, i) =>
+              (document.querySelector(sel).textContent = valores[i] + "%"),
+          );
+          const nombres = [
+            "Vocabulario",
+            "Pronunciación",
+            "Comprensión auditiva",
+            "Gramática básica",
+          ];
+          const bajo = valores.indexOf(Math.min(...valores));
+          document.querySelector("#recomendacion").textContent =
+            "Tu " +
+            nombres[bajo].toLowerCase() +
+            " está en " +
+            valores[bajo] +
+            "%. Dedica tus próximas micro sesiones de 10 minutos a reforzar esta habilidad para avanzar con confianza.";
+          new Chart(document.querySelector("#graficoRadar"), {
+            type: "radar",
+            data: {
+              labels: nombres,
+              datasets: [
+                {
+                  label: "Dominio (%)",
+                  data: valores,
+                  backgroundColor: "rgba(37,99,235,.18)",
+                  borderColor: "#2563eb",
+                  pointBackgroundColor: "#2563eb",
+                  pointRadius: 4,
+                  borderWidth: 2,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  min: 0,
+                  max: 100,
+                  ticks: { stepSize: 20, backdropColor: "transparent" },
+                  pointLabels: { font: { size: 12, weight: "600" } },
+                  grid: { color: "#dbe3ef" },
+                  angleLines: { color: "#dbe3ef" },
+                },
+              },
+              plugins: { legend: { position: "bottom" } },
+            },
+          });
+          const conocidas = new Map(
+            (usuario.palabras || []).map((p) => [p[0].toLowerCase(), p]),
+          );
+          const palabras = [
+            ...(usuario.palabras || []).map((p) => ({
+              palabra: p[0],
+              significado: p[1],
+              nivel: "A1",
+              aprendida: p[2],
+            })),
+            ...datos.vocabulario
+              .filter((v) => !conocidas.has(v.palabra.toLowerCase()))
+              .map((v) => ({
+                ...v,
+                aprendida:
+                  datos.vocabulario.indexOf(v) <
+                  Math.round(
+                    ((usuario.avance || 0) / 100) * datos.vocabulario.length,
+                  ),
+              })),
+          ].slice(0, 64);
+          let pagina = 0;
+          const porPagina = 5;
+          function renderPalabras() {
+            const filtro = document.querySelector("#filtro").value,
+              term = document.querySelector("#buscar").value.toLowerCase();
+            const filtradas = palabras.filter(
+              (p) =>
+                (p.palabra + " " + p.significado)
+                  .toLowerCase()
+                  .includes(term) &&
+                (filtro === "todos" ||
+                  (filtro === "dominadas" && p.aprendida) ||
+                  (filtro === "repasar" && !p.aprendida)),
+            );
+            const paginas = Math.max(
+              1,
+              Math.ceil(filtradas.length / porPagina),
+            );
+            pagina = Math.min(pagina, paginas - 1);
+            const visibles = filtradas.slice(
+              pagina * porPagina,
+              (pagina + 1) * porPagina,
+            );
+            document.querySelector("#filas").innerHTML = visibles.length
+              ? visibles
+                  .map(
+                    (p) =>
+                      "<tr><td><strong>" +
+                      p.palabra +
+                      '</strong><div class="small text-secondary">' +
+                      (p.fonetica || "") +
+                      "</div></td><td>" +
+                      p.significado +
+                      '</td><td><span class="badge text-bg-light">' +
+                      p.nivel +
+                      '</span></td><td><span class="badge ' +
+                      (p.aprendida ? "text-bg-success" : "text-bg-warning") +
+                      '">' +
+                      (p.aprendida ? "Dominada" : "Por repasar") +
+                      '</span></td><td><button class="btn btn-sm btn-outline-primary" data-audio="' +
+                      p.palabra +
+                      '" aria-label="Escuchar ' +
+                      p.palabra +
+                      '"><i class="bi bi-volume-up"></i></button></td></tr>',
+                  )
+                  .join("")
+              : '<tr><td colspan="5" class="text-center text-secondary py-4">No hay términos que coincidan con los filtros.</td></tr>';
+            document.querySelector("#contadorPalabras").textContent =
+              "Mostrando " +
+              (visibles.length ? pagina * porPagina + 1 : 0) +
+              "–" +
+              (pagina * porPagina + visibles.length) +
+              " de " +
+              filtradas.length +
+              " términos";
+            document.querySelectorAll("[data-audio]").forEach(
+              (b) =>
+                (b.onclick = () => {
+                  const voz = new SpeechSynthesisUtterance(b.dataset.audio);
+                  voz.lang = "en-US";
+                  voz.rate = Number(
+                    document.querySelector("#velocidadAudio").value,
+                  );
+                  speechSynthesis.speak(voz);
+                }),
+            );
+            document.querySelector("#anterior").disabled = pagina === 0;
+            document.querySelector("#siguiente").disabled =
+              pagina >= paginas - 1;
+          }
+          document.querySelector("#buscar").oninput = () => {
+            pagina = 0;
+            renderPalabras();
+          };
+          document.querySelector("#filtro").onchange = () => {
+            pagina = 0;
+            renderPalabras();
+          };
+          document.querySelector("#anterior").onclick = () => {
+            pagina--;
+            renderPalabras();
+          };
+          document.querySelector("#siguiente").onclick = () => {
+            pagina++;
+            renderPalabras();
+          };
+          renderPalabras();
+          document.querySelector("#horaPractica").onchange = (e) =>
+            localStorage.setItem("lingo-hora-practica", e.target.value);
+          // Controles transversales de accesibilidad
+          const pref = JSON.parse(
+            localStorage.getItem("lingo-accesibilidad") || "{}",
+          );
+          let fuente = pref.fuente || 100;
+          if (pref.contraste) document.body.classList.add("high-contrast");
+          if (pref.foco) document.body.classList.add("keyboard-focus");
+          if (pref.oscuro) document.body.classList.add("modo-oscuro");
+          document.documentElement.style.fontSize = fuente + "%";
+          document.querySelector("#contraste").onclick = () => {
+            document.body.classList.toggle("high-contrast");
+            pref.contraste = document.body.classList.contains("high-contrast");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#foco").onclick = () => {
+            document.body.classList.toggle("keyboard-focus");
+            pref.foco = document.body.classList.contains("keyboard-focus");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#oscuro").onclick = () => {
+            document.body.classList.toggle("modo-oscuro");
+            pref.oscuro = document.body.classList.contains("modo-oscuro");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#mas").onclick = () => cambiar(10);
+          document.querySelector("#menos").onclick = () => cambiar(-10);
+          document.querySelector("#normal").onclick = () => {
+            fuente = 100;
+            guardarFuente();
+          };
+          function cambiar(n) {
+            fuente = Math.max(100, Math.min(150, fuente + n));
+            guardarFuente();
+          }
+          function guardarFuente() {
+            document.documentElement.style.fontSize = fuente + "%";
+            pref.fuente = fuente;
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          }
+          document.querySelector("#leer").onclick = () => {
+            const voz = new SpeechSynthesisUtterance(
+              document.querySelector("main").innerText,
+            );
+            voz.lang = "es-ES";
+            speechSynthesis.speak(voz);
+          };
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(
+            "No se pudo cargar data.json. Abre la carpeta con Live Server.",
+          );
+        });
+    </script>
+    <style>
+      .modo-oscuro {
+        background: #0f172a !important;
+        color: #fff !important;
+      }
+      .modo-oscuro .card,
+      .modo-oscuro nav,
+      .modo-oscuro .offcanvas {
+        background: #1e293b !important;
+        color: #fff !important;
+        border-color: #475569 !important;
+      }
+      .modo-oscuro .text-secondary {
+        color: #cbd5e1 !important;
+      }
+    </style>
+  </body>
+</html>

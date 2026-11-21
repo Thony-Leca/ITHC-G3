@@ -2,6 +2,8 @@
   "usuarios": [
     {
       "id": "carlos",
+      "edad": 21,
+      "nivel": "A1 Inicial",
       "nombre": "Carlos Mendoza",
       "correo": "carlos@lingoflow.test",
       "clave": "demo123",
@@ -11,7 +13,7 @@
       "vidas": 5,
       "avance": 60,
       "minutos": [8, 12, 10, 7, 14, 5, 0],
-      "habilidades": [85, 75, 65, 90],
+      "habilidades": [85, 75, 65, 70],
       "palabras": [
         ["hello", "hola", true],
         ["good morning", "buenos días", true],
@@ -21,6 +23,8 @@
     },
     {
       "id": "lucia",
+      "edad": 20,
+      "nivel": "A1 Inicial",
       "nombre": "Lucía Torres",
       "correo": "lucia@lingoflow.test",
       "clave": "demo123",
@@ -39,6 +43,8 @@
     },
     {
       "id": "mateo",
+      "edad": 22,
+      "nivel": "A2 Inicial",
       "nombre": "Mateo Rojas",
       "correo": "mateo@lingoflow.test",
       "clave": "demo123",
@@ -56,5 +62,789 @@
         ["careful", "cuidadoso", false]
       ]
     }
-  ]
+  ],
+  "niveles": [
+    {
+      "id": "A1",
+      "nombre": "Básico A1",
+      "descripcion": "Primeros pasos para comunicarte en situaciones cotidianas.",
+      "modulos": [
+        {
+          "id": "a1-m01",
+          "numero": "Módulo 01",
+          "titulo": "Saludos y presentaciones",
+          "descripcion": "Saluda, deletrea tu nombre y comparte información personal.",
+          "xpRequerido": 0,
+          "lecciones": [
+            "Hello!",
+            "My name is…",
+            "Nice to meet you",
+            "Personal details",
+            "Repaso: presentaciones"
+          ]
+        },
+        {
+          "id": "a1-m02",
+          "numero": "Módulo 02",
+          "titulo": "Verbos y rutinas diarias",
+          "descripcion": "Describe tu día, tus horarios y las actividades de la universidad.",
+          "xpRequerido": 0,
+          "lecciones": [
+            "A busy day",
+            "My class schedule",
+            "Everyday verbs",
+            "At the university",
+            "Repaso: mi rutina"
+          ]
+        },
+        {
+          "id": "a1-m03",
+          "numero": "Módulo 03",
+          "titulo": "Pedir comida y bebidas",
+          "descripcion": "Practica pedidos, precios y expresiones de cortesía en una cafetería.",
+          "xpRequerido": 500,
+          "lecciones": [
+            "At the café",
+            "Drinks and snacks",
+            "Can I have…?",
+            "How much is it?",
+            "Repaso: mi pedido"
+          ]
+        },
+        {
+          "id": "a1-m04",
+          "numero": "Módulo 04",
+          "titulo": "Direcciones y lugares",
+          "descripcion": "Pregunta y da indicaciones en el campus y la ciudad.",
+          "xpRequerido": 800,
+          "lecciones": [
+            "Places on campus",
+            "Where is the library?",
+            "Turn left or right",
+            "Getting around town",
+            "Repaso: direcciones"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "A2",
+      "nombre": "Preintermedio A2",
+      "descripcion": "Amplía tus conversaciones y habla de experiencias y planes.",
+      "modulos": [
+        {
+          "id": "a2-m01",
+          "numero": "Módulo 05",
+          "titulo": "Pasado y tiempo libre",
+          "descripcion": "Cuenta qué hiciste y conversa sobre tus pasatiempos.",
+          "xpRequerido": 1000,
+          "lecciones": [
+            "Last weekend",
+            "My favorite hobby",
+            "A day out",
+            "Past experiences",
+            "Repaso: tiempo libre"
+          ]
+        },
+        {
+          "id": "a2-m02",
+          "numero": "Módulo 06",
+          "titulo": "Servicios y vida universitaria",
+          "descripcion": "Resuelve situaciones comunes en la universidad y la comunidad.",
+          "xpRequerido": 1100,
+          "lecciones": [
+            "At the student office",
+            "Borrowing a book",
+            "Making an appointment",
+            "Asking for help",
+            "Repaso: servicios"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B1",
+      "nombre": "Intermedio B1",
+      "descripcion": "Expresa opiniones, explica motivos y participa en conversaciones más largas.",
+      "modulos": [
+        {
+          "id": "b1-m01",
+          "numero": "Módulo 07",
+          "titulo": "Opiniones y trabajo en equipo",
+          "descripcion": "Comparte ideas, acuerdos y sugerencias en un proyecto grupal.",
+          "xpRequerido": 1200,
+          "lecciones": [
+            "Sharing an opinion",
+            "I agree because…",
+            "Planning a project",
+            "Giving suggestions",
+            "Repaso: trabajo en equipo"
+          ]
+        },
+        {
+          "id": "b1-m02",
+          "numero": "Módulo 08",
+          "titulo": "Experiencias y entrevistas",
+          "descripcion": "Habla de tus logros, habilidades y metas profesionales.",
+          "xpRequerido": 1400,
+          "lecciones": [
+            "Tell me about yourself",
+            "Skills and strengths",
+            "A first interview",
+            "Future goals",
+            "Repaso: entrevista"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B2",
+      "nombre": "Avanzado B2",
+      "descripcion": "Desarrolla fluidez para el estudio, el trabajo y los temas complejos.",
+      "modulos": [
+        {
+          "id": "b2-m01",
+          "numero": "Módulo 09",
+          "titulo": "Ideas y argumentos académicos",
+          "descripcion": "Organiza argumentos y sustenta una postura con claridad.",
+          "xpRequerido": 1600,
+          "lecciones": [
+            "Building an argument",
+            "Evidence and examples",
+            "Connecting ideas",
+            "A short presentation",
+            "Repaso: argumentos"
+          ]
+        },
+        {
+          "id": "b2-m02",
+          "numero": "Módulo 10",
+          "titulo": "Comunicación profesional",
+          "descripcion": "Participa en reuniones, presenta propuestas y negocia acuerdos.",
+          "xpRequerido": 1800,
+          "lecciones": [
+            "Leading a meeting",
+            "Presenting a proposal",
+            "Handling questions",
+            "Finding an agreement",
+            "Repaso: comunicación"
+          ]
+        }
+      ]
+    }
+  ],
+  "retoBonus": {
+    "id": "reto-bonus",
+    "titulo": "Reto relámpago",
+    "descripcion": "Un desafío de vocabulario para consolidar lo aprendido.",
+    "xpRequerido": 600
+  },
+  "vocabulario": [
+    {
+      "palabra": "schedule",
+      "significado": "horario / cronograma",
+      "fonetica": "/ˈskedʒuːl/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "daily routine",
+      "significado": "rutina diaria",
+      "fonetica": "/ˈdeɪli ruːˈtiːn/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "engineering",
+      "significado": "ingeniería",
+      "fonetica": "/ˌendʒɪˈnɪrɪŋ/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "breakfast",
+      "significado": "desayuno",
+      "fonetica": "/ˈbrekfəst/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "introduce",
+      "significado": "presentar / introducir",
+      "fonetica": "/ˌɪntrəˈduːs/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "borrow",
+      "significado": "pedir prestado",
+      "fonetica": "/ˈbɑːroʊ/",
+      "nivel": "A2"
+    },
+    {
+      "palabra": "appointment",
+      "significado": "cita",
+      "fonetica": "/əˈpɔɪntmənt/",
+      "nivel": "A2"
+    },
+    {
+      "palabra": "weekend",
+      "significado": "fin de semana",
+      "fonetica": "/ˌwiːkˈend/",
+      "nivel": "A2"
+    },
+    {
+      "palabra": "strength",
+      "significado": "fortaleza",
+      "fonetica": "/streŋθ/",
+      "nivel": "B1"
+    },
+    {
+      "palabra": "suggestion",
+      "significado": "sugerencia",
+      "fonetica": "/səˈdʒestʃən/",
+      "nivel": "B1"
+    },
+    {
+      "palabra": "evidence",
+      "significado": "evidencia",
+      "fonetica": "/ˈevɪdəns/",
+      "nivel": "B2"
+    },
+    {
+      "palabra": "nevertheless",
+      "significado": "sin embargo",
+      "fonetica": "/ˌnevərðəˈles/",
+      "nivel": "B2"
+    },
+    {
+      "palabra": "classmate",
+      "significado": "compañero de clase",
+      "fonetica": "/ˈklæsmeɪt/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "cafeteria",
+      "significado": "cafetería",
+      "fonetica": "/ˌkæfəˈtɪriə/",
+      "nivel": "A1"
+    },
+    {
+      "palabra": "improve",
+      "significado": "mejorar",
+      "fonetica": "/ɪmˈpruːv/",
+      "nivel": "A2"
+    },
+    {
+      "palabra": "research",
+      "significado": "investigación",
+      "fonetica": "/ˈriːsɜːrtʃ/",
+      "nivel": "B1"
+    },
+    { "palabra": "student", "significado": "estudiante", "nivel": "A1" },
+    { "palabra": "classroom", "significado": "aula", "nivel": "A1" },
+    { "palabra": "teacher", "significado": "docente", "nivel": "A1" },
+    { "palabra": "homework", "significado": "tarea", "nivel": "A1" },
+    { "palabra": "notebook", "significado": "cuaderno", "nivel": "A1" },
+    { "palabra": "question", "significado": "pregunta", "nivel": "A1" },
+    { "palabra": "answer", "significado": "respuesta", "nivel": "A1" },
+    { "palabra": "understand", "significado": "entender", "nivel": "A1" },
+    { "palabra": "repeat", "significado": "repetir", "nivel": "A1" },
+    { "palabra": "listen", "significado": "escuchar", "nivel": "A1" },
+    { "palabra": "speak", "significado": "hablar", "nivel": "A1" },
+    { "palabra": "read", "significado": "leer", "nivel": "A1" },
+    { "palabra": "travel", "significado": "viajar", "nivel": "A2" },
+    { "palabra": "ticket", "significado": "boleto", "nivel": "A2" },
+    { "palabra": "station", "significado": "estación", "nivel": "A2" },
+    { "palabra": "luggage", "significado": "equipaje", "nivel": "A2" },
+    { "palabra": "reservation", "significado": "reserva", "nivel": "A2" },
+    { "palabra": "entrance", "significado": "entrada", "nivel": "A2" },
+    {
+      "palabra": "turn left",
+      "significado": "gira a la izquierda",
+      "nivel": "A2"
+    },
+    { "palabra": "opposite", "significado": "enfrente de", "nivel": "A2" },
+    { "palabra": "next to", "significado": "al lado de", "nivel": "A2" },
+    { "palabra": "across from", "significado": "frente a", "nivel": "A2" },
+    { "palabra": "check in", "significado": "registrarse", "nivel": "A2" },
+    {
+      "palabra": "departure",
+      "significado": "salida / partida",
+      "nivel": "A2"
+    },
+    { "palabra": "deadline", "significado": "fecha límite", "nivel": "B1" },
+    {
+      "palabra": "feedback",
+      "significado": "retroalimentación",
+      "nivel": "B1"
+    },
+    { "palabra": "solution", "significado": "solución", "nivel": "B1" },
+    { "palabra": "opportunity", "significado": "oportunidad", "nivel": "B1" },
+    { "palabra": "experience", "significado": "experiencia", "nivel": "B1" },
+    { "palabra": "responsible", "significado": "responsable", "nivel": "B1" },
+    { "palabra": "confident", "significado": "seguro de sí", "nivel": "B1" },
+    { "palabra": "challenge", "significado": "desafío", "nivel": "B1" },
+    { "palabra": "achieve", "significado": "lograr", "nivel": "B1" },
+    { "palabra": "discuss", "significado": "debatir", "nivel": "B1" },
+    {
+      "palabra": "teamwork",
+      "significado": "trabajo en equipo",
+      "nivel": "B1"
+    },
+    { "palabra": "colleague", "significado": "colega", "nivel": "B1" },
+    { "palabra": "argument", "significado": "argumento", "nivel": "B2" },
+    { "palabra": "outcome", "significado": "resultado", "nivel": "B2" },
+    { "palabra": "approach", "significado": "enfoque", "nivel": "B2" },
+    { "palabra": "significant", "significado": "significativo", "nivel": "B2" },
+    { "palabra": "whereas", "significado": "mientras que", "nivel": "B2" },
+    {
+      "palabra": "consequently",
+      "significado": "en consecuencia",
+      "nivel": "B2"
+    },
+    { "palabra": "furthermore", "significado": "además", "nivel": "B2" },
+    { "palabra": "reliable", "significado": "confiable", "nivel": "B2" },
+    { "palabra": "implement", "significado": "implementar", "nivel": "B2" },
+    { "palabra": "evaluate", "significado": "evaluar", "nivel": "B2" },
+    {
+      "palabra": "trade-off",
+      "significado": "compensación entre opciones",
+      "nivel": "B2"
+    },
+    { "palabra": "sustainable", "significado": "sostenible", "nivel": "B2" }
+  ],
+  "ejerciciosPorNivel": {
+    "A1": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha y elige la traducción correcta.",
+        "frase": "Nice to meet you!",
+        "opciones": [
+          "Tengo 21 años.",
+          "¡Mucho gusto!",
+          "Buenos días, profesor."
+        ],
+        "correcta": 1,
+        "pista": "Esta expresión se usa cuando conoces a alguien por primera vez.",
+        "transcripcion": "Nice to meet you!"
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa la frase: My name ___ Carlos.",
+        "prefijo": "My name ",
+        "sufijo": " Carlos.",
+        "correcta": "is",
+        "traduccion": "Mi nombre es Carlos.",
+        "pista": "En tercera persona singular, el verbo to be es is."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Ordena las palabras para preguntar el nombre de alguien.",
+        "palabras": ["your", "What", "name", "is"],
+        "correcta": "What is your name",
+        "traduccion": "¿Cómo te llamas?",
+        "pista": "Empieza con la palabra interrogativa What."
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Empareja cada saludo con su significado.",
+        "pares": [
+          ["Good morning", "Buenos días"],
+          ["Good evening", "Buenas tardes"],
+          ["See you later", "Hasta luego"]
+        ],
+        "pista": "Piensa en el momento del día de cada saludo."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "¿Qué respondes a “How are you?”",
+        "opciones": [
+          "I'm fine, thanks.",
+          "My name is Ana.",
+          "See you tomorrow."
+        ],
+        "correcta": 0,
+        "traduccion": "Estoy bien, gracias.",
+        "pista": "La pregunta consulta cómo te sientes."
+      }
+    ],
+    "A2": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha y elige qué hizo la persona ayer.",
+        "frase": "I visited my grandparents yesterday.",
+        "opciones": [
+          "Visitó a sus abuelos.",
+          "Estudió en la biblioteca.",
+          "Preparó la cena."
+        ],
+        "correcta": 0,
+        "pista": "Presta atención al verbo visited.",
+        "transcripcion": "I visited my grandparents yesterday."
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa en pasado: We ___ a movie last night.",
+        "prefijo": "We ",
+        "sufijo": " a movie last night.",
+        "correcta": "watched",
+        "traduccion": "Vimos una película anoche.",
+        "pista": "El pasado regular de watch termina en -ed."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Ordena para contar una experiencia pasada.",
+        "palabras": ["the museum", "visited", "We", "on Saturday"],
+        "correcta": "We visited the museum on Saturday",
+        "traduccion": "Visitamos el museo el sábado.",
+        "pista": "Usa primero sujeto, luego verbo en pasado."
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Empareja el verbo base con su pasado.",
+        "pares": [
+          ["go", "went"],
+          ["have", "had"],
+          ["see", "saw"]
+        ],
+        "pista": "Estos verbos tienen formas irregulares en pasado."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "Elige la respuesta más natural: What did you do on Sunday?",
+        "opciones": [
+          "I went hiking with my friends.",
+          "I go to class every day.",
+          "I am at home now."
+        ],
+        "correcta": 0,
+        "traduccion": "Fui de excursión con mis amigos.",
+        "pista": "La pregunta está en pasado: did you do."
+      }
+    ],
+    "B1": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha la opinión y elige su motivo.",
+        "frase": "I prefer group projects because we can share ideas.",
+        "opciones": [
+          "Pueden compartir ideas.",
+          "Terminan antes de clase.",
+          "No tienen que presentar."
+        ],
+        "correcta": 0,
+        "pista": "Busca la razón que aparece después de because.",
+        "transcripcion": "I prefer group projects because we can share ideas."
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa: I agree ___ your suggestion because it is practical.",
+        "prefijo": "I agree ",
+        "sufijo": " your suggestion because it is practical.",
+        "correcta": "with",
+        "traduccion": "Estoy de acuerdo con tu sugerencia porque es práctica.",
+        "pista": "La expresión es agree with someone or something."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Organiza una opinión con su argumento.",
+        "palabras": ["because", "teamwork", "I", "helps us learn", "prefer"],
+        "correcta": "I prefer teamwork because it helps us learn",
+        "traduccion": "Prefiero el trabajo en equipo porque nos ayuda a aprender.",
+        "pista": "Presenta primero tu opinión y después la razón con because."
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Empareja la frase con su función comunicativa.",
+        "pares": [
+          ["In my opinion…", "Dar una opinión"],
+          ["I see your point.", "Mostrar comprensión"],
+          ["How about…?", "Proponer una idea"]
+        ],
+        "pista": "Identifica si la frase expresa, comprende o propone."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "¿Qué conector introduce una razón?",
+        "opciones": ["Although", "Because", "However"],
+        "correcta": 1,
+        "traduccion": "Because introduce una razón.",
+        "pista": "El conector empieza una explicación del motivo."
+      }
+    ],
+    "B2": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha el argumento y reconoce la evidencia.",
+        "frase": "The survey found that 72 percent of students prefer flexible study hours.",
+        "opciones": [
+          "Una encuesta a estudiantes.",
+          "Una opinión personal sin datos.",
+          "Un horario fijo de clases."
+        ],
+        "correcta": 0,
+        "pista": "El hablante menciona un resultado medible de una encuesta.",
+        "transcripcion": "The survey found that 72 percent of students prefer flexible study hours."
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa el conector: The plan is affordable; ___, it can be implemented this term.",
+        "prefijo": "The plan is affordable; ",
+        "sufijo": ", it can be implemented this term.",
+        "correcta": "moreover",
+        "traduccion": "El plan es asequible; además, puede implementarse este ciclo.",
+        "pista": "El conector añade otro argumento que refuerza la propuesta."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Ordena la propuesta y su justificación.",
+        "palabras": [
+          "therefore",
+          "we should",
+          "Based on the results,",
+          "extend the program"
+        ],
+        "correcta": "Based on the results, we should therefore extend the program",
+        "traduccion": "Según los resultados, por lo tanto, deberíamos ampliar el programa.",
+        "pista": "Abre con la evidencia y usa therefore para introducir la conclusión."
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Empareja cada conector con su uso.",
+        "pares": [
+          ["Nevertheless", "Contrastar una idea"],
+          ["Consequently", "Indicar un resultado"],
+          ["Furthermore", "Añadir evidencia"]
+        ],
+        "pista": "Observa si el conector contrasta, concluye o suma información."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "Elige la conclusión académica más precisa.",
+        "opciones": [
+          "The results may suggest a link, although further research is needed.",
+          "This proves everything is always true.",
+          "I liked the result, so it must be correct."
+        ],
+        "correcta": 0,
+        "traduccion": "Los resultados pueden sugerir una relación, aunque se necesita más investigación.",
+        "pista": "Una conclusión precisa expresa cautela y reconoce límites."
+      }
+    ]
+  },
+  "ejerciciosComplementarios": {
+    "A1": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha y elige la despedida correcta.",
+        "frase": "See you tomorrow.",
+        "opciones": ["Hasta mañana.", "Buenas tardes.", "Mucho gusto."],
+        "correcta": 0,
+        "pista": "Tomorrow significa mañana.",
+        "transcripcion": "See you tomorrow."
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa el saludo: How ___ you?",
+        "prefijo": "How ",
+        "sufijo": " you?",
+        "correcta": "are",
+        "traduccion": "¿Cómo estás?",
+        "pista": "Con you usamos are."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Forma una presentación breve.",
+        "palabras": ["classmate", "is", "This", "my"],
+        "correcta": "This is my classmate",
+        "traduccion": "Este es mi compañero de clase.",
+        "pista": "Empieza con This is…"
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Relaciona cada expresión de cortesía.",
+        "pares": [
+          ["Please", "Por favor"],
+          ["Thank you", "Gracias"],
+          ["You're welcome", "De nada"]
+        ],
+        "pista": "Son frases que acompañan una petición o agradecimiento."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "¿Cuál es una forma amable de pedir agua?",
+        "opciones": [
+          "Water now!",
+          "Can I have some water, please?",
+          "I water am."
+        ],
+        "correcta": 1,
+        "traduccion": "¿Me das un poco de agua, por favor?",
+        "pista": "Una petición amable puede usar Can I have… please?"
+      }
+    ],
+    "A2": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha y reconoce el plan para el fin de semana.",
+        "frase": "We are going to visit the old town.",
+        "opciones": [
+          "Visitarán el centro histórico.",
+          "Irán a una entrevista.",
+          "Estudiarán toda la noche."
+        ],
+        "correcta": 0,
+        "pista": "Going to expresa un plan futuro.",
+        "transcripcion": "We are going to visit the old town."
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa el plan: She is going ___ meet her classmates.",
+        "prefijo": "She is going ",
+        "sufijo": " meet her classmates.",
+        "correcta": "to",
+        "traduccion": "Ella va a reunirse con sus compañeros.",
+        "pista": "La estructura de futuro es be going to + verbo."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Ordena una invitación para el sábado.",
+        "palabras": ["Would", "like", "you", "to join us", "on Saturday?"],
+        "correcta": "Would you like to join us on Saturday?",
+        "traduccion": "¿Te gustaría acompañarnos el sábado?",
+        "pista": "La invitación comienza con Would you like…?"
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Empareja cada frase con su intención.",
+        "pares": [
+          ["Could you help me?", "Pedir ayuda"],
+          ["I'd like to book a table.", "Hacer una reserva"],
+          ["How do I get there?", "Pedir direcciones"]
+        ],
+        "pista": "Identifica qué situación resuelve cada pregunta."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "¿Qué expresión usarías para pedir una cita?",
+        "opciones": [
+          "I'd like to make an appointment.",
+          "I appointment yesterday.",
+          "Where is your hobby?"
+        ],
+        "correcta": 0,
+        "traduccion": "Me gustaría solicitar una cita.",
+        "pista": "Usa I'd like to… para hacer una solicitud cortés."
+      }
+    ],
+    "B1": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha la sugerencia para organizar el proyecto.",
+        "frase": "Why don't we divide the tasks equally?",
+        "opciones": [
+          "Propone repartir las tareas por igual.",
+          "Quiere cancelar el proyecto.",
+          "Sugiere trabajar sin equipo."
+        ],
+        "correcta": 0,
+        "pista": "Why don't we… introduce una sugerencia.",
+        "transcripcion": "Why don't we divide the tasks equally?"
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa: If we plan ahead, we ___ meet the deadline.",
+        "prefijo": "If we plan ahead, we ",
+        "sufijo": " meet the deadline.",
+        "correcta": "can",
+        "traduccion": "Si planificamos con tiempo, podemos cumplir el plazo.",
+        "pista": "Can expresa posibilidad o capacidad."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Ordena la propuesta para la reunión.",
+        "palabras": ["could", "we", "start", "with the budget?"],
+        "correcta": "Could we start with the budget?",
+        "traduccion": "¿Podríamos empezar por el presupuesto?",
+        "pista": "Formula la propuesta como pregunta: Could we…?"
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Une cada expresión con la respuesta adecuada.",
+        "pares": [
+          ["Could you clarify that?", "Of course, I mean…"],
+          ["What do you think?", "In my opinion…"],
+          ["I agree with you.", "Thanks for your support."]
+        ],
+        "pista": "Busca la respuesta que mantiene el tema de conversación."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "El equipo no está de acuerdo. ¿Qué frase ayuda a negociar?",
+        "opciones": [
+          "Let's compare the advantages of both ideas.",
+          "Your idea is useless.",
+          "I will not listen."
+        ],
+        "correcta": 0,
+        "traduccion": "Comparemos las ventajas de ambas ideas.",
+        "pista": "Una negociación constructiva invita a revisar las dos opciones."
+      }
+    ],
+    "B2": [
+      {
+        "tipo": "audio",
+        "enunciado": "Escucha la conclusión de la presentación.",
+        "frase": "Overall, the findings support a gradual implementation.",
+        "opciones": [
+          "Los hallazgos respaldan una implementación gradual.",
+          "Los resultados no se revisaron.",
+          "La propuesta debe abandonarse de inmediato."
+        ],
+        "correcta": 0,
+        "pista": "Overall resume la conclusión general.",
+        "transcripcion": "Overall, the findings support a gradual implementation."
+      },
+      {
+        "tipo": "escritura",
+        "enunciado": "Completa: The sample was small; ___, the results should be interpreted cautiously.",
+        "prefijo": "The sample was small; ",
+        "sufijo": ", the results should be interpreted cautiously.",
+        "correcta": "therefore",
+        "traduccion": "La muestra fue pequeña; por lo tanto, los resultados deben interpretarse con cautela.",
+        "pista": "El segundo enunciado es una consecuencia del primero."
+      },
+      {
+        "tipo": "orden",
+        "enunciado": "Organiza la recomendación profesional.",
+        "palabras": [
+          "In light of the evidence,",
+          "we recommend",
+          "a gradual rollout",
+          "across departments"
+        ],
+        "correcta": "In light of the evidence, we recommend a gradual rollout across departments",
+        "traduccion": "A la luz de la evidencia, recomendamos una implementación gradual en las áreas.",
+        "pista": "Presenta la evidencia antes de formular la recomendación."
+      },
+      {
+        "tipo": "parejas",
+        "enunciado": "Empareja la estrategia con su objetivo retórico.",
+        "pares": [
+          ["To begin with", "Introducir un argumento"],
+          ["That said", "Matizar o contrastar"],
+          ["As a result", "Presentar una consecuencia"]
+        ],
+        "pista": "Reconoce cómo se conectan dos ideas en un argumento."
+      },
+      {
+        "tipo": "opcion",
+        "enunciado": "Elige la respuesta más profesional a una objeción.",
+        "opciones": [
+          "That's a valid concern; let's review the available evidence.",
+          "You are completely wrong.",
+          "We don't need to discuss it."
+        ],
+        "correcta": 0,
+        "traduccion": "Es una preocupación válida; revisemos la evidencia disponible.",
+        "pista": "Reconoce la inquietud y plantea analizar evidencia."
+      }
+    ]
+  }
 }

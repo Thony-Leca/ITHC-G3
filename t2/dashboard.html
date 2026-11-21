@@ -52,12 +52,51 @@
         color: #fff !important;
         border-color: #ff0 !important;
       }
+      .modo-oscuro {
+        background: #0f172a !important;
+        color: #fff !important;
+      }
+      .modo-oscuro .card,
+      .modo-oscuro nav,
+      .modo-oscuro .offcanvas {
+        background: #1e293b !important;
+        color: #fff !important;
+        border-color: #475569 !important;
+      }
+      .modo-oscuro .text-secondary {
+        color: #cbd5e1 !important;
+      }
+      .grafico-competencia {
+        min-height: 290px;
+      }
+      .tarjeta-competencia {
+        cursor: pointer;
+        border: 2px solid transparent !important;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .tarjeta-competencia:hover {
+        transform: translateY(-2px);
+      }
+      .tarjeta-competencia.seleccionada {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.12);
+      }
+      .tarjeta-competencia:focus-visible {
+        outline: 3px solid #f59e0b;
+        outline-offset: 2px;
+      }
+      .texto-grafico {
+        fill: #64748b;
+        font-size: 12px;
+      }
     </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-white sticky-top">
       <div class="container-xl">
-        <a class="navbar-brand fw-bold text-primary" href="index.html"
+        <a class="navbar-brand fw-bold text-primary" href="dashboard.html"
           ><i class="bi bi-book-half me-2"></i>LingoFlow</a
         ><button
           class="navbar-toggler"
@@ -73,19 +112,14 @@
               <a class="nav-link active" href="dashboard.html">Mi progreso</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="leccion.html">Lección</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="perfil.html">Perfil</a>
             </li>
           </ul>
-          <div class="d-flex gap-2 align-items-center">
-            <label for="usuarioDemo" class="small">Cuenta de prueba</label
-            ><select
-              id="usuarioDemo"
-              class="form-select form-select-sm"
-              aria-label="Cambiar cuenta demo"
-            ></select
+          <div class="d-flex align-items-center gap-2">
+            <span
+              id="saludoCabecera"
+              class="small fw-semibold text-secondary"
+            ></span
             ><button class="btn btn-outline-primary btn-sm" id="salir">
               Salir
             </button>
@@ -102,14 +136,17 @@
             >Tu espacio de aprendizaje</span
           >
           <h1 class="h2 fw-bold mt-2" id="saludo"></h1>
-          <p class="text-secondary">Continúa tu meta diaria de 10 minutos.</p>
+          <p class="text-secondary">
+            Mantén tu constancia con el método GDALA 1/2. Tu meta de hoy está a
+            un paso.
+          </p>
         </div>
-        <a class="btn btn-primary" href="leccion.html"
+        <a class="btn btn-primary" href="#catalogo"
           ><i class="bi bi-play-fill me-1"></i>Continuar lección</a
         >
       </div>
       <div class="row g-3 mb-4">
-        <div class="col-6 col-lg-3">
+        <div class="col-6 col-lg">
           <div class="card stat p-3">
             <span class="small text-secondary">Vidas</span
             ><strong class="h3 mt-2"
@@ -119,7 +156,7 @@
             >
           </div>
         </div>
-        <div class="col-6 col-lg-3">
+        <div class="col-6 col-lg">
           <div class="card stat p-3">
             <span class="small text-secondary">Racha diaria</span
             ><strong class="h3 mt-2"
@@ -128,7 +165,7 @@
             >
           </div>
         </div>
-        <div class="col-6 col-lg-3">
+        <div class="col-6 col-lg">
           <div class="card stat p-3">
             <span class="small text-secondary">Puntos XP</span
             ><strong class="h3 mt-2"
@@ -137,7 +174,7 @@
             ></strong>
           </div>
         </div>
-        <div class="col-6 col-lg-3">
+        <div class="col-6 col-lg">
           <div class="card stat p-3">
             <span class="small text-secondary">Curso completado</span
             ><strong class="h3 mt-2"
@@ -146,7 +183,42 @@
             >
           </div>
         </div>
+        <div class="col-6 col-lg">
+          <div class="card stat p-3">
+            <span class="small text-secondary">Nivel</span>
+            <strong class="h3 mt-2"
+              ><i class="bi bi-award text-warning"></i>
+              <span id="nivelUsuario"></span
+            ></strong>
+          </div>
+        </div>
       </div>
+      <section class="card p-3 p-lg-4 mb-4 border-primary-subtle">
+        <div class="row align-items-center g-3">
+          <div class="col-lg-8">
+            <span class="badge text-bg-primary mb-2">META DE HOY · 10 MIN</span>
+            <h2 class="h5 fw-bold mb-1">Tu sesión diaria está a un paso</h2>
+            <p class="text-secondary small mb-2">
+              Completa 3 a 4 micro-lecciones para cumplir la meta y sumar un día
+              a tu racha.
+            </p>
+            <div class="progress" style="height: 10px">
+              <div id="barraMeta" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="small text-secondary mt-1">
+              <span id="minutosHoy">0</span> / 10 min ·
+              <span id="leccionesHoy">0</span> de 3–4 lecciones ·
+              <span id="diasMeta">0</span> de 7 días cumplidos · Hoy:
+              <span id="nombreDia">Dom</span>
+            </div>
+          </div>
+          <div class="col-lg-4 text-lg-end">
+            <a id="iniciarMeta" class="btn btn-primary btn-lg" href="#catalogo"
+              ><i class="bi bi-play-fill me-1"></i>Iniciar sesión de 10 min</a
+            >
+          </div>
+        </div>
+      </section>
       <div class="row g-4 mb-5">
         <div class="col-lg-5">
           <section class="card p-3 p-lg-4 h-100">
@@ -168,22 +240,88 @@
               Meta diaria: 10 minutos · Esta semana
             </p>
             <div class="chart">
-              <canvas
+              <div
                 id="graficoMinutos"
-                aria-label="Minutos estudiados de lunes a domingo"
+                aria-label="Minutos estudiados de lunes a domingo frente a la meta de 10 minutos"
                 role="img"
-              ></canvas>
+                style="width: 100%; height: 100%"
+              ></div>
             </div>
           </section>
         </div>
       </div>
-      <section class="mb-5">
-        <h2 class="h4 fw-bold">Módulos pendientes y en progreso</h2>
-        <div class="row g-3 mt-1" id="modulosPendientes"></div>
+      <section class="card p-3 p-lg-4 mb-5" aria-labelledby="tituloAnalisis">
+        <div class="mb-3">
+          <span class="small text-uppercase fw-bold text-secondary"
+            >Seguimiento personal</span
+          >
+          <h2 class="h4 fw-bold mt-1 mb-1" id="tituloAnalisis">
+            Análisis interactivo por competencia y módulo
+          </h2>
+          <p class="small text-secondary mb-0">
+            Selecciona una habilidad para filtrar tu precisión por módulo y su
+            evolución.
+          </p>
+        </div>
+        <div
+          class="row g-3 mb-4"
+          id="tarjetasCompetencias"
+          aria-label="Filtrar análisis por competencia"
+        ></div>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <article class="border rounded p-3 h-100">
+              <h3 class="h6 fw-bold">Rendimiento por módulo</h3>
+              <p class="small text-secondary" id="subtituloModulos">
+                Porcentaje de aciertos en los módulos de tu nivel.
+              </p>
+              <div
+                id="graficoModulos"
+                class="grafico-competencia"
+                role="img"
+                aria-label="Rendimiento por módulo"
+              ></div>
+            </article>
+          </div>
+          <div class="col-lg-6">
+            <article class="border rounded p-3 h-100">
+              <h3 class="h6 fw-bold">Evolución en las últimas 5 sesiones</h3>
+              <p class="small text-secondary" id="subtituloEvolucion"></p>
+              <div
+                id="graficoEvolucion"
+                class="grafico-competencia"
+                role="img"
+                aria-label="Evolución de precisión y minutos"
+              ></div>
+              <div class="small text-secondary" id="notaHistorial"></div>
+            </article>
+          </div>
+        </div>
+        <div class="alert alert-light border mt-3 mb-0">
+          <strong id="tituloRepaso">Para repasar</strong>
+          <div id="listaRepaso" class="small mt-1"></div>
+        </div>
       </section>
-      <section>
-        <h2 class="h4 fw-bold">Módulos completados</h2>
-        <div class="row g-3 mt-1" id="modulosCompletos"></div>
+      <section class="mb-5">
+        <div
+          id="catalogo"
+          class="d-flex justify-content-between align-items-end mb-3"
+        >
+          <div>
+            <span class="small text-uppercase fw-bold text-secondary"
+              >Plan de estudios</span
+            >
+            <h2 class="h4 fw-bold mt-1">Explora tus niveles y módulos</h2>
+          </div>
+          <span class="badge text-bg-light">5 lecciones por módulo</span>
+        </div>
+        <ul
+          class="nav nav-pills gap-2 mb-4"
+          id="nivelesTabs"
+          role="tablist"
+        ></ul>
+        <div class="tab-content" id="nivelesContenido"></div>
+        <div class="card p-3 mt-4 border-warning-subtle" id="retoBonus"></div>
       </section>
     </main>
     <button
@@ -209,6 +347,8 @@
         </div>
         <button id="foco" class="btn btn-outline-secondary w-100 mt-2">
           Foco de teclado</button
+        ><button id="oscuro" class="btn btn-outline-secondary w-100 mt-2">
+          Modo oscuro</button
         ><button id="leer" class="btn btn-outline-secondary w-100 mt-2">
           Leer pantalla
         </button>
@@ -216,167 +356,768 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
     <script>
-fetch('data.json').then(respuesta=>respuesta.json()).then(datos=>{
+      fetch("data.json")
+        .then((respuesta) => respuesta.json())
+        .then((datos) => {
+          if (!localStorage.getItem("lingo-usuario-activo")) {
+            location.href = "login.html";
+            return;
+          }
+          // Selección del estudiante y datos guardados en el navegador
+          const llave = "lingo-usuarios";
+          let usuarios =
+            JSON.parse(localStorage.getItem(llave) || "null") || datos.usuarios;
+          localStorage.setItem(llave, JSON.stringify(usuarios));
+          let activo = localStorage.getItem("lingo-usuario-activo") || "carlos";
+          if (!usuarios.some((u) => u.id === activo)) activo = "carlos";
+          let donut, barras;
+          let competenciaActiva = "Todas";
+          const guardar = () =>
+            localStorage.setItem(llave, JSON.stringify(usuarios));
+          function tarjetasModule(nivel, modulo, u) {
+            const progreso = u.modulos[modulo.id] || 0;
+            const desbloqueado = u.xp >= modulo.xpRequerido;
+            const completo = progreso >= 100;
+            const lecciones = modulo.lecciones
+              .map(
+                (titulo, i) =>
+                  '<a class="list-group-item list-group-item-action" href="leccion.html?modulo=' +
+                  modulo.id +
+                  "&leccion=" +
+                  (i + 1) +
+                  '"><span class="badge text-bg-light me-2">' +
+                  (i + 1) +
+                  "</span>" +
+                  titulo +
+                  '<i class="bi bi-arrow-right float-end"></i></a>',
+              )
+              .join("");
+            return (
+              '<div class="col-lg-6"><article class="card ' +
+              (completo ? "completo" : "pendiente") +
+              ' p-4 h-100"><div class="d-flex justify-content-between"><span class="badge ' +
+              (completo
+                ? "text-bg-success"
+                : desbloqueado
+                  ? "text-bg-primary"
+                  : "text-bg-secondary") +
+              '">' +
+              modulo.numero +
+              " · " +
+              (completo
+                ? "Completado"
+                : desbloqueado
+                  ? "Disponible"
+                  : "Bloqueado") +
+              '</span><span class="badge text-bg-light">' +
+              nivel.id +
+              '</span></div><h4 class="h5 mt-3">' +
+              modulo.titulo +
+              '</h4><p class="text-secondary small">' +
+              modulo.descripcion +
+              '</p><div class="d-flex justify-content-between small"><span>' +
+              (desbloqueado
+                ? "Progreso del módulo"
+                : "Desbloquea al alcanzar " + modulo.xpRequerido + " XP") +
+              "</span><strong>" +
+              (desbloqueado ? progreso + "%" : "🔒") +
+              '</strong></div><div class="progress my-2" style="height:8px"><div class="progress-bar ' +
+              (completo ? "bg-success" : "") +
+              '" style="width:' +
+              (desbloqueado ? progreso : 0) +
+              '%"></div></div><p class="small text-secondary">5 lecciones · 10–15 min</p>' +
+              (desbloqueado
+                ? '<div class="accordion accordion-flush"><div class="accordion-item"><h5 class="accordion-header"><button class="accordion-button collapsed py-2" data-bs-toggle="collapse" data-bs-target="#lecciones-' +
+                  modulo.id +
+                  '">Ver las 5 lecciones</button></h5><div id="lecciones-' +
+                  modulo.id +
+                  '" class="accordion-collapse collapse"><div class="list-group list-group-flush">' +
+                  lecciones +
+                  "</div></div></div></div>"
+                : '<div class="alert alert-light small mb-0">Te faltan ' +
+                  Math.max(0, modulo.xpRequerido - u.xp) +
+                  " XP para desbloquear.</div>") +
+              "</article></div>"
+            );
+          }
+          function dibujarDashboard() {
+            const u = usuarios.find((x) => x.id === activo);
+            const claveVida = "lingo-ultima-vida-" + u.id;
+            const ahora = Date.now();
+            let marcaVida = Number(localStorage.getItem(claveVida)) || ahora;
+            const vidasRecuperadas = Math.floor((ahora - marcaVida) / 900000);
+            if (vidasRecuperadas > 0) {
+              u.vidas = Math.min(5, u.vidas + vidasRecuperadas);
+              marcaVida += vidasRecuperadas * 900000;
+              localStorage.setItem(claveVida, String(marcaVida));
+              guardar();
+            } else if (!localStorage.getItem(claveVida))
+              localStorage.setItem(claveVida, String(ahora));
+            if (!u.modulos)
+              u.modulos = {
+                "a1-m01": 100,
+                "a1-m02": u.avance,
+                "a1-m03": 0,
+                "a1-m04": 0,
+              };
+            document.querySelector("#saludo").textContent =
+              "¡Hola, " +
+              u.nombre.split(" ")[0] +
+              "! Listo para practicar hoy?";
+            document.querySelector("#saludoCabecera").textContent =
+              "Hola, " + u.nombre.split(" ")[0];
+            document.querySelector("#vidas").textContent = u.vidas;
+            document.querySelector("#racha").textContent = u.racha;
+            document.querySelector("#xp").textContent = u.xp;
+            document.querySelector("#nivelUsuario").textContent =
+              Math.floor((Number(u.xp) || 0) / 250) + 1;
+            document.querySelector("#avance").textContent = u.avance;
+            const hoy = (new Date().getDay() + 6) % 7;
+            const minutosHoy = u.minutos[hoy] || 0;
+            document.querySelector("#minutosHoy").textContent = minutosHoy;
+            document.querySelector("#diasMeta").textContent = u.minutos.filter(
+              (n) => n >= 10,
+            ).length;
+            document.querySelector("#nombreDia").textContent = [
+              "Lun",
+              "Mar",
+              "Mié",
+              "Jue",
+              "Vie",
+              "Sáb",
+              "Dom",
+            ][hoy];
+            document.querySelector("#leccionesHoy").textContent = Math.min(
+              4,
+              Math.floor(minutosHoy / 3),
+            );
+            document.querySelector("#barraMeta").style.width =
+              Math.min(100, minutosHoy * 10) + "%";
+            document.querySelector("#iniciarMeta").href =
+              "leccion.html?modulo=a1-m02&leccion=1";
+            const tabs = document.querySelector("#nivelesTabs");
+            const contenido = document.querySelector("#nivelesContenido");
+            tabs.innerHTML = datos.niveles
+              .map(
+                (nivel, i) =>
+                  '<li class="nav-item"><button class="nav-link ' +
+                  (i === 0 ? "active" : "") +
+                  '" data-bs-toggle="pill" data-bs-target="#nivel-' +
+                  nivel.id +
+                  '" type="button">' +
+                  nivel.id +
+                  " · " +
+                  nivel.nombre +
+                  "</button></li>",
+              )
+              .join("");
+            contenido.innerHTML = datos.niveles
+              .map((nivel, ni) => {
+                const modules = nivel.modulos;
+                const pending = modules.filter(
+                  (m) => (u.modulos[m.id] || 0) < 100,
+                );
+                const done = modules.filter(
+                  (m) => (u.modulos[m.id] || 0) >= 100,
+                );
+                return (
+                  '<div class="tab-pane fade ' +
+                  (ni === 0 ? "show active" : "") +
+                  '" id="nivel-' +
+                  nivel.id +
+                  '"><p class="text-secondary">' +
+                  nivel.descripcion +
+                  '</p><section class="mb-4"><h3 class="h5 fw-bold">Pendientes / En curso</h3><div class="row g-3">' +
+                  (pending.length
+                    ? pending.map((m) => tarjetasModule(nivel, m, u)).join("")
+                    : '<p class="text-secondary">¡Completaste este nivel!</p>') +
+                  '</div></section><section><h3 class="h5 fw-bold">Completados</h3><div class="row g-3">' +
+                  (done.length
+                    ? done.map((m) => tarjetasModule(nivel, m, u)).join("")
+                    : '<p class="text-secondary">Los módulos completados aparecerán aquí.</p>') +
+                  "</div></section></div>"
+                );
+              })
+              .join("");
+            const reto = datos.retoBonus;
+            document.querySelector("#retoBonus").innerHTML =
+              '<div class="d-flex flex-wrap justify-content-between align-items-center gap-3"><div><span class="badge text-bg-warning">RETO BONUS · 600 XP</span><h3 class="h5 mt-2 mb-1">' +
+              reto.titulo +
+              '</h3><p class="text-secondary small mb-0">' +
+              reto.descripcion +
+              "</p></div>" +
+              (u.xp >= reto.xpRequerido
+                ? '<a class="btn btn-warning" href="leccion.html?modulo=bonus&leccion=1">Empezar reto</a>'
+                : '<button class="btn btn-outline-secondary" disabled>Desbloquea con ' +
+                  reto.xpRequerido +
+                  " XP</button>") +
+              "</div>";
+            if (donut) donut.destroy();
+            if (barras) barras.destroy();
+            donut = new Chart(document.querySelector("#graficoAvance"), {
+              type: "doughnut",
+              data: {
+                labels: ["Completado", "Pendiente"],
+                datasets: [
+                  {
+                    data: [u.avance, 100 - u.avance],
+                    backgroundColor: ["#2563eb", "#e2e8f0"],
+                    borderWidth: 0,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "72%",
+                plugins: { legend: { position: "bottom" } },
+              },
+            });
+            if (google.visualization) dibujarActividadSemanal(u);
+            dibujarAnalisisCompetencias(u);
+          }
+          function dibujarAnalisisCompetencias(u) {
+            const h = u.habilidades || [85, 75, 65, 70];
+            const valores = {
+              Vocabulario: h[0] ?? 85,
+              Pronunciación: h[1] ?? 75,
+              "Comprensión auditiva": h[3] ?? 70,
+              "Gramática básica": h[2] ?? 65,
+            };
+            const habilidades = [
+              {
+                id: "Vocabulario",
+                icono: "bi-book",
+                detalle: (datos.vocabulario || []).length + " palabras",
+              },
+              {
+                id: "Comprensión auditiva",
+                icono: "bi-headphones",
+                detalle: "18 audios de práctica",
+              },
+              {
+                id: "Gramática básica",
+                icono: "bi-braces",
+                detalle:
+                  valores["Gramática básica"] <= 65
+                    ? "Requiere refuerzo"
+                    : "En progreso",
+              },
+              {
+                id: "Pronunciación",
+                icono: "bi-mic",
+                detalle: "Práctica oral",
+              },
+            ];
+            const promedio = Math.round(
+              Object.values(valores).reduce((a, b) => a + Number(b), 0) / 4,
+            );
+            const tarjetas = [
+              {
+                id: "Todas",
+                icono: "bi-grid",
+                valor: promedio,
+                detalle: "Promedio global",
+              },
+              ...habilidades.map((x) => ({
+                ...x,
+                valor: Number(valores[x.id]),
+              })),
+            ];
+            const contenedor = d3.select("#tarjetasCompetencias");
+            contenedor.selectAll("*").remove();
+            const cols = contenedor
+              .selectAll(".competencia-col")
+              .data(tarjetas)
+              .enter()
+              .append("div")
+              .attr("class", "col-6 col-lg");
+            const card = cols
+              .append("div")
+              .attr(
+                "class",
+                (d) =>
+                  "card tarjeta-competencia p-3 h-100 " +
+                  (d.id === competenciaActiva ? "seleccionada" : ""),
+              )
+              .attr("role", "button")
+              .attr("tabindex", "0")
+              .attr("aria-pressed", (d) =>
+                d.id === competenciaActiva ? "true" : "false",
+              )
+              .on("click", (event, d) => {
+                competenciaActiva = d.id;
+                dibujarAnalisisCompetencias(u);
+              })
+              .on("keydown", (event, d) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  competenciaActiva = d.id;
+                  dibujarAnalisisCompetencias(u);
+                }
+              });
+            card
+              .append("div")
+              .attr(
+                "class",
+                "d-flex align-items-center justify-content-between gap-2",
+              )
+              .html(
+                (d) =>
+                  '<span class="small fw-semibold">' +
+                  d.id +
+                  '</span><i class="bi ' +
+                  d.icono +
+                  ' text-primary"></i>',
+              );
+            card
+              .append("strong")
+              .attr("class", "h3 my-2")
+              .text((d) => d.valor + "%");
+            card
+              .append("span")
+              .attr("class", "small text-secondary")
+              .text((d) => d.detalle);
 
-      // Selección del estudiante y datos guardados en el navegador
-      const llave = "lingo-usuarios";
-      let usuarios = JSON.parse(localStorage.getItem(llave) || "null") ||datos.usuarios;localStorage.setItem(llave,JSON.stringify(usuarios));
-      let activo = localStorage.getItem("lingo-usuario-activo") || "carlos";
-      if (!usuarios.some((u) => u.id === activo)) activo = "carlos";
-      let donut, barras;
-      const guardar = () =>
-        localStorage.setItem(llave, JSON.stringify(usuarios));
-      function dibujarDashboard() {
-        const u = usuarios.find((x) => x.id === activo);
-        document.querySelector("#saludo").textContent =
-          "¡Hola, " + u.nombre.split(" ")[0] + "! 👋";
-        document.querySelector("#vidas").textContent = u.vidas;
-        document.querySelector("#racha").textContent = u.racha;
-        document.querySelector("#xp").textContent = u.xp;
-        document.querySelector("#avance").textContent = u.avance;
-        document.querySelector("#modulosPendientes").innerHTML = [
-          "Saludos y presentaciones",
-          "Verbos cotidianos",
-          "En el restaurante",
-        ]
-          .map(
-            (m, i) =>
-              '<div class="col-md-6 col-lg-4"><article class="card pendiente p-4 h-100"><span class="badge text-bg-primary align-self-start">' +
-              (i === 0 ? "En progreso" : "Pendiente") +
-              ' · A1</span><h3 class="h5 mt-3">' +
-              m +
-              '</h3><p class="text-secondary small">Aprende expresiones útiles y practica con ejercicios breves.</p><a href="leccion.html" class="btn btn-primary mt-auto">' +
-              (i === 0 ? "Continuar lección" : "Empezar módulo") +
-              "</a></article></div>",
-          )
-          .join("");
-        document.querySelector("#modulosCompletos").innerHTML = Array.from(
-          { length: Math.max(1, Math.floor(u.avance / 20)) },
-          (_, i) =>
-            '<div class="col-md-6 col-lg-4"><article class="card completo p-4 h-100"><span class="badge text-bg-success align-self-start">Completado · A1</span><h3 class="h5 mt-3">' +
-            [
-              "Primeros pasos",
-              "Saludos básicos",
-              "Números y horarios",
-              "Vocabulario esencial",
-            ][i % 4] +
-            '</h3><a href="perfil.html" class="btn btn-outline-success mt-auto">Repasar vocabulario</a></article></div>',
-        ).join("");
-        if (donut) donut.destroy();
-        if (barras) barras.destroy();
-        donut = new Chart(document.querySelector("#graficoAvance"), {
-          type: "doughnut",
-          data: {
-            labels: ["Completado", "Pendiente"],
-            datasets: [
-              {
-                data: [u.avance, 100 - u.avance],
-                backgroundColor: ["#2563eb", "#e2e8f0"],
-                borderWidth: 0,
+            const competencia =
+              competenciaActiva === "Todas"
+                ? "Todas las habilidades"
+                : competenciaActiva;
+            document.querySelector("#subtituloEvolucion").textContent =
+              competencia + " · precisión (%) y tiempo (minutos)";
+            const nivelId = (u.nivel || "A1").match(/A1|A2|B1|B2/)?.[0] || "A1";
+            const nivel =
+              datos.niveles.find((n) => n.id === nivelId) || datos.niveles[0];
+            const modulos = nivel.modulos.slice(0, 3);
+            const historial = u.historialSesiones || [];
+            const ajustes = [15, -7, 8];
+            const base =
+              competenciaActiva === "Todas"
+                ? promedio
+                : Number(valores[competenciaActiva]);
+            const minutosTotales = (u.minutos || []).reduce(
+              (a, b) => a + Number(b || 0),
+              0,
+            );
+            let modulosConRegistro = 0;
+            const porModulo = modulos.map((m, i) => {
+              const sesionesModulo = historial.filter((s) => s.modulo === m.id);
+              const mediciones = sesionesModulo
+                .map((s) =>
+                  competenciaActiva === "Todas"
+                    ? s.precision
+                    : s.competencias?.[competenciaActiva]?.precision,
+                )
+                .filter((v) => Number.isFinite(v));
+              if (mediciones.length) modulosConRegistro++;
+              const minutosModulo = sesionesModulo.length
+                ? sesionesModulo.reduce(
+                    (total, s) => total + Number(s.minutos || 0),
+                    0,
+                  )
+                : Math.round(minutosTotales * [0.45, 0.35, 0.2][i]);
+              return {
+                nombre:
+                  m.numero + ": " + m.titulo.split(" ").slice(0, 3).join(" "),
+                corto: m.numero,
+                valor: mediciones.length
+                  ? Math.round(d3.mean(mediciones))
+                  : Math.max(35, Math.min(98, base + ajustes[i])),
+                minutos: minutosModulo,
+                modulo: m,
+                estimado: !mediciones.length,
+              };
+            });
+            document.querySelector("#subtituloModulos").textContent =
+              modulosConRegistro
+                ? "Aciertos registrados por módulo; los módulos sin intentos usan una estimación demostrativa."
+                : "Porcentaje de aciertos por módulo (estimación demostrativa hasta completar lecciones).";
+            dibujarBarras(porModulo, competenciaActiva);
+            const sesionesRegistradas = historial
+              .filter(
+                (s) =>
+                  competenciaActiva === "Todas" ||
+                  s.competencias?.[competenciaActiva],
+              )
+              .slice(-5);
+            const sesiones = sesionesRegistradas.length
+              ? sesionesRegistradas.map((s, i) => ({
+                  sesion: "Sesión " + (i + 1),
+                  precision:
+                    competenciaActiva === "Todas"
+                      ? s.precision
+                      : s.competencias[competenciaActiva].precision,
+                  minutos: s.minutos,
+                  repeticionesAudio: s.repeticionesAudio,
+                }))
+              : [-14, -9, -11, -4, 0].map((delta, i) => ({
+                  sesion: "Sesión " + (i + 1),
+                  precision: Math.max(35, Math.min(98, base + delta)),
+                  minutos: [6, 8, 7, 10, 12][i],
+                  repeticionesAudio: 0,
+                }));
+            document.querySelector("#notaHistorial").textContent =
+              sesionesRegistradas.length
+                ? "Resultados de tus intentos guardados en este navegador."
+                : "Serie ilustrativa basada en tu dominio actual; al completar lecciones se mostrarán resultados reales.";
+            dibujarEvolucion(sesiones);
+            dibujarRepaso(u, competenciaActiva, nivel);
+          }
+          function dibujarBarras(filas, competencia) {
+            const nodo = document.querySelector("#graficoModulos"),
+              ancho = Math.max(280, nodo.clientWidth),
+              alto = 280;
+            const margen = {
+                arriba: 8,
+                derecha: 72,
+                abajo: 30,
+                izquierda: 160,
               },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: "72%",
-            plugins: { legend: { position: "bottom" } },
-          },
+              innerW = ancho - margen.izquierda - margen.derecha;
+            const svg = d3
+              .select(nodo)
+              .html("")
+              .append("svg")
+              .attr("viewBox", "0 0 " + ancho + " " + alto)
+              .attr("width", "100%")
+              .attr("height", alto);
+            const x = d3.scaleLinear().domain([0, 100]).range([0, innerW]);
+            const y = d3
+              .scaleBand()
+              .domain(filas.map((d) => d.corto))
+              .range([margen.arriba, alto - margen.abajo])
+              .padding(0.28);
+            const g = svg
+              .append("g")
+              .attr("transform", "translate(" + margen.izquierda + ",0)");
+            g.append("g")
+              .attr("class", "texto-grafico")
+              .attr("transform", "translate(0," + (alto - margen.abajo) + ")")
+              .call(
+                d3
+                  .axisBottom(x)
+                  .ticks(5)
+                  .tickFormat((d) => d + "%"),
+              );
+            filas.forEach((d) => {
+              const yy = y(d.corto);
+              svg
+                .append("text")
+                .attr("x", margen.izquierda - 10)
+                .attr("y", yy + y.bandwidth() / 2 + 4)
+                .attr("text-anchor", "end")
+                .attr("class", "texto-grafico")
+                .text(d.nombre)
+                .append("title")
+                .text(d.modulo.titulo);
+            });
+            const barras = g
+              .selectAll("rect")
+              .data(filas)
+              .enter()
+              .append("rect")
+              .attr("x", 0)
+              .attr("y", (d) => y(d.corto))
+              .attr("height", y.bandwidth())
+              .attr("rx", 5)
+              .attr("fill", (d) =>
+                d.valor < 60
+                  ? "#ef4444"
+                  : d.valor <= 65
+                    ? "#f59e0b"
+                    : "#2563eb",
+              )
+              .attr("width", 0);
+            barras
+              .transition()
+              .duration(650)
+              .attr("width", (d) => x(d.valor));
+            g.selectAll(".valor-barra")
+              .data(filas)
+              .enter()
+              .append("text")
+              .attr("class", "valor-barra")
+              .attr("x", (d) => x(d.valor) + 7)
+              .attr("y", (d) => y(d.corto) + y.bandwidth() / 2 + 4)
+              .attr("fill", "#334155")
+              .attr("font-size", 12)
+              .text(
+                (d) =>
+                  d.valor +
+                  "%" +
+                  (competencia === "Todas" ? " · " + d.minutos + " min" : ""),
+              )
+              .attr("opacity", 0)
+              .transition()
+              .delay(350)
+              .duration(300)
+              .attr("opacity", 1);
+          }
+          function dibujarEvolucion(sesiones) {
+            const nodo = document.querySelector("#graficoEvolucion"),
+              ancho = Math.max(280, nodo.clientWidth),
+              alto = 280;
+            const margen = {
+                arriba: 12,
+                derecha: 42,
+                abajo: 36,
+                izquierda: 42,
+              },
+              w = ancho - margen.izquierda - margen.derecha,
+              h = alto - margen.arriba - margen.abajo;
+            const svg = d3
+              .select(nodo)
+              .html("")
+              .append("svg")
+              .attr("viewBox", "0 0 " + ancho + " " + alto)
+              .attr("width", "100%")
+              .attr("height", alto);
+            const x = d3
+              .scalePoint()
+              .domain(sesiones.map((d) => d.sesion))
+              .range([0, w]);
+            const y = d3.scaleLinear().domain([0, 100]).range([h, 0]);
+            const yTiempo = d3.scaleLinear().domain([0, 15]).range([h, 0]);
+            const g = svg
+              .append("g")
+              .attr(
+                "transform",
+                "translate(" + margen.izquierda + "," + margen.arriba + ")",
+              );
+            g.append("g")
+              .attr("class", "texto-grafico")
+              .call(
+                d3
+                  .axisLeft(y)
+                  .ticks(5)
+                  .tickFormat((d) => d + "%"),
+              );
+            g.append("g")
+              .attr("class", "texto-grafico")
+              .attr("transform", "translate(" + w + ",0)")
+              .call(d3.axisRight(yTiempo).ticks(4));
+            g.append("g")
+              .attr("class", "texto-grafico")
+              .attr("transform", "translate(0," + h + ")")
+              .call(d3.axisBottom(x));
+            const area = d3
+              .area()
+              .x((d) => x(d.sesion))
+              .y0(h)
+              .y1((d) => yTiempo(d.minutos))
+              .curve(d3.curveMonotoneX);
+            g.append("path")
+              .datum(sesiones)
+              .attr("fill", "rgba(14,165,233,.15)")
+              .attr("d", area);
+            const linea = d3
+              .line()
+              .x((d) => x(d.sesion))
+              .y((d) => y(d.precision))
+              .curve(d3.curveMonotoneX);
+            const path = g
+              .append("path")
+              .datum(sesiones)
+              .attr("fill", "none")
+              .attr("stroke", "#2563eb")
+              .attr("stroke-width", 3)
+              .attr("d", linea);
+            const total = path.node().getTotalLength();
+            path
+              .attr("stroke-dasharray", total + " " + total)
+              .attr("stroke-dashoffset", total)
+              .transition()
+              .duration(750)
+              .attr("stroke-dashoffset", 0);
+            g.selectAll("circle")
+              .data(sesiones)
+              .enter()
+              .append("circle")
+              .attr("cx", (d) => x(d.sesion))
+              .attr("cy", (d) => y(d.precision))
+              .attr("r", 4)
+              .attr("fill", "#2563eb")
+              .append("title")
+              .text((d) => d.precision + "% precisión · " + d.minutos + " min");
+            const leyenda = svg
+              .append("g")
+              .attr(
+                "transform",
+                "translate(" + (margen.izquierda + 4) + "," + (alto - 5) + ")",
+              );
+            leyenda
+              .append("line")
+              .attr("x2", 18)
+              .attr("stroke", "#2563eb")
+              .attr("stroke-width", 3);
+            leyenda
+              .append("text")
+              .attr("x", 23)
+              .attr("y", 4)
+              .attr("class", "texto-grafico")
+              .text("Precisión");
+            leyenda
+              .append("rect")
+              .attr("x", 112)
+              .attr("y", -8)
+              .attr("width", 14)
+              .attr("height", 10)
+              .attr("fill", "rgba(14,165,233,.3)");
+            leyenda
+              .append("text")
+              .attr("x", 132)
+              .attr("y", 4)
+              .attr("class", "texto-grafico")
+              .text("Minutos");
+          }
+          function dibujarRepaso(u, competencia, nivel) {
+            let temas = [];
+            if (competencia === "Vocabulario" || competencia === "Todas") {
+              temas = (u.palabras || [])
+                .filter((p) => p[2] === false)
+                .map((p) => p[0])
+                .slice(0, 3);
+              const catalogoNivel = (datos.vocabulario || [])
+                .filter((v) => v.nivel === nivel.id)
+                .map((v) => v.palabra);
+              temas = [
+                ...temas,
+                ...catalogoNivel.filter((p) => !temas.includes(p)),
+              ].slice(0, 3);
+            } else if (competencia === "Comprensión auditiva") {
+              const ultimaSesionAudio = (u.historialSesiones || [])
+                .filter((s) => s.competencias?.["Comprensión auditiva"])
+                .slice(-1)[0];
+              const repeticiones = ultimaSesionAudio?.repeticionesAudio ?? 0;
+              temas = [
+                "Repeticiones de audio registradas: " + repeticiones,
+                "Identificar palabras clave en un diálogo",
+                "Escuchar la idea principal sin traducir palabra por palabra",
+              ];
+            } else if (competencia === "Pronunciación")
+              temas = [
+                "Nice to meet you",
+                "Daily routine",
+                "Could you repeat that?",
+              ];
+            else
+              temas = [
+                "Presente simple: I/you/we/they + verbo base",
+                "Tercera persona: he/she/it + verbo terminado en -s",
+                "Preguntas: do/does + sujeto + verbo base",
+              ];
+            document.querySelector("#tituloRepaso").textContent =
+              competencia === "Todas"
+                ? "Sugerencias para repasar"
+                : "3 elementos para repasar · " + competencia;
+            document.querySelector("#listaRepaso").textContent = temas
+              .slice(0, 3)
+              .join(" · ");
+          }
+          google.charts.load("current", { packages: ["corechart"] });
+          google.charts.setOnLoadCallback(() => {
+            const u = usuarios.find((x) => x.id === activo);
+            if (u) dibujarActividadSemanal(u);
+          });
+          function dibujarActividadSemanal(u) {
+            const datosGrafico = google.visualization.arrayToDataTable([
+              ["Día", "Minutos estudiados", "Meta diaria"],
+              ["Lun", u.minutos[0], 10],
+              ["Mar", u.minutos[1], 10],
+              ["Mié", u.minutos[2], 10],
+              ["Jue", u.minutos[3], 10],
+              ["Vie", u.minutos[4], 10],
+              ["Sáb", u.minutos[5], 10],
+              ["Dom", u.minutos[6], 10],
+            ]);
+            new google.visualization.ColumnChart(
+              document.querySelector("#graficoMinutos"),
+            ).draw(datosGrafico, {
+              height: 260,
+              legend: { position: "top" },
+              colors: ["#2563eb", "#dbe3ef"],
+              chartArea: { left: 42, top: 35, width: "88%", height: "72%" },
+              vAxis: {
+                minValue: 0,
+                title: "Minutos",
+                gridlines: { color: "#edf1f6" },
+              },
+              hAxis: { textStyle: { fontSize: 11 } },
+              bar: { groupWidth: "60%" },
+            });
+          }
+          document.querySelector("#salir").onclick = () => {
+            localStorage.removeItem("lingo-usuario-activo");
+            location.href = "index.html";
+          };
+          dibujarDashboard();
+          // Panel sencillo de accesibilidad reutilizado en la pantalla
+          const pref = JSON.parse(
+            localStorage.getItem("lingo-accesibilidad") || "{}",
+          );
+          if (pref.contraste) document.body.classList.add("high-contrast");
+          if (pref.foco) document.body.classList.add("keyboard-focus");
+          if (pref.oscuro) document.body.classList.add("modo-oscuro");
+          document.querySelector("#contraste").onclick = () => {
+            document.body.classList.toggle("high-contrast");
+            pref.contraste = document.body.classList.contains("high-contrast");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#foco").onclick = () => {
+            document.body.classList.toggle("keyboard-focus");
+            pref.foco = document.body.classList.contains("keyboard-focus");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#oscuro").onclick = () => {
+            document.body.classList.toggle("modo-oscuro");
+            pref.oscuro = document.body.classList.contains("modo-oscuro");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#mas").onclick = () => tamano(15);
+          document.querySelector("#menos").onclick = () => tamano(-15);
+          function tamano(n) {
+            pref.fuente = Math.max(
+              100,
+              Math.min(130, (pref.fuente || 100) + n),
+            );
+            document.documentElement.style.fontSize = pref.fuente + "%";
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          }
+          document.querySelector("#leer").onclick = () => {
+            const voz = new SpeechSynthesisUtterance(
+              document.querySelector("main").innerText,
+            );
+            voz.lang = "es-ES";
+            speechSynthesis.speak(voz);
+          };
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("No se pudo cargar data.json. Usa Live Server.");
         });
-        barras = new Chart(document.querySelector("#graficoMinutos"), {
-          type: "bar",
-          data: {
-            labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
-            datasets: [
-              {
-                label: "Minutos",
-                data: u.minutos,
-                backgroundColor: u.minutos.map((n) =>
-                  n >= 10 ? "#16803c" : "#60a5fa",
-                ),
-                borderRadius: 7,
-                maxBarThickness: 34,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: {
-                beginAtZero: true,
-                suggestedMax: 16,
-                ticks: { stepSize: 5 },
-              },
-              x: { grid: { display: false } },
-            },
-          },
-        });
-      }
-      const selector = document.querySelector("#usuarioDemo");
-      selector.innerHTML = usuarios
-        .slice(0, 3)
-        .map(
-          (u) =>
-            '<option value="' +
-            u.id +
-            '">' +
-            u.nombre.split(" ")[0] +
-            "</option>",
-        )
-        .join("");
-      selector.value = activo;
-      selector.onchange = () => {
-        activo = selector.value;
-        localStorage.setItem("lingo-usuario-activo", activo);
-        dibujarDashboard();
-      };
-      document.querySelector("#salir").onclick = () => {
-        localStorage.removeItem("lingo-usuario-activo");
-        location.href = "index.html";
-      };
-      dibujarDashboard();
-      // Panel sencillo de accesibilidad reutilizado en la pantalla
-      const pref = JSON.parse(
-        localStorage.getItem("lingo-accesibilidad") || "{}",
-      );
-      if (pref.contraste) document.body.classList.add("high-contrast");
-      if (pref.foco) document.body.classList.add("keyboard-focus");
-      document.querySelector("#contraste").onclick = () => {
-        document.body.classList.toggle("high-contrast");
-        pref.contraste = document.body.classList.contains("high-contrast");
-        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-      };
-      document.querySelector("#foco").onclick = () => {
-        document.body.classList.toggle("keyboard-focus");
-        pref.foco = document.body.classList.contains("keyboard-focus");
-        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-      };
-      document.querySelector("#mas").onclick = () => tamano(15);
-      document.querySelector("#menos").onclick = () => tamano(-15);
-      function tamano(n) {
-        pref.fuente = Math.max(100, Math.min(130, (pref.fuente || 100) + n));
-        document.documentElement.style.fontSize = pref.fuente + "%";
-        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-      }
-      document.querySelector("#leer").onclick = () => {
-        const voz = new SpeechSynthesisUtterance(
-          document.querySelector("main").innerText,
-        );
-        voz.lang = "es-ES";
-        speechSynthesis.speak(voz);
-      };
-    
-}).catch(error=>{console.error(error);alert('No se pudo cargar data.json. Usa Live Server.')});
-</script>
+    </script>
     <style>
       .keyboard-focus :focus-visible {
         outline: 3px solid #f97316 !important;
         outline-offset: 3px;
       }
+      .modo-oscuro {
+        background: #0f172a !important;
+        color: #fff !important;
+      }
+      .modo-oscuro .card,
+      .modo-oscuro nav,
+      .modo-oscuro .offcanvas {
+        background: #1e293b !important;
+        color: #fff !important;
+        border-color: #475569 !important;
+      }
+      .modo-oscuro .text-secondary {
+        color: #cbd5e1 !important;
+      }
     </style>
   </body>
 </html>
-

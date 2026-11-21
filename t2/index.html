@@ -1,14 +1,651 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LingoFlow | Inglés en 10 minutos</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<style>body{background:#f8faff;color:#233144;font-family:system-ui,sans-serif}.navbar,.card{border:1px solid #cbd5e1;box-shadow:0 2px 5px #2331440b}.hero{padding:5rem 0;background:linear-gradient(120deg,#f8faff,#eaf1ff)}.hero h1{font-size:clamp(2.5rem,5vw,4rem);max-width:740px;font-weight:750;letter-spacing:-.04em}.art{min-height:270px;border:2px dashed #94a3b8;border-radius:24px;display:grid;place-items:center;background:#eaf1ff;color:#2563eb;font-size:7rem}.access{position:fixed;right:20px;bottom:20px}.high-contrast{background:#000!important;color:#fff!important}.high-contrast .card,.high-contrast nav,.high-contrast footer{background:#111!important;color:#fff!important;border-color:#ff0!important}.high-contrast a:not(.btn){color:#ff0!important}</style></head>
-<body><nav class="navbar navbar-expand-lg bg-white sticky-top"><div class="container-xl"><a class="navbar-brand fw-bold text-primary" href="index.html"><i class="bi bi-book-half me-2"></i>LingoFlow</a><button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button><div id="nav" class="collapse navbar-collapse"><ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li><li class="nav-item"><a class="nav-link" href="#metodo">Metodología</a></li><li class="nav-item"><a class="nav-link" href="#modulos">Módulos</a></li></ul><a class="btn btn-link" href="login.html">Iniciar sesión</a><a class="btn btn-primary" href="login.html#registro">Comenzar gratis</a></div></div></nav>
-<main><section class="hero"><div class="container-xl"><div class="row align-items-center g-5"><div class="col-lg-7"><span class="badge text-bg-primary mb-3">Inglés básico · Nivel A1</span><h1>Domina el inglés básico en sesiones de 10 minutos al día</h1><p class="lead text-secondary mt-4">Practica a tu ritmo con lecciones interactivas, audio y retroalimentación inmediata. Cada pausa entre clases puede acercarte a tu meta.</p><a class="btn btn-primary btn-lg mt-3 px-4" href="login.html">Comenzar gratis <i class="bi bi-arrow-right ms-2"></i></a></div><div class="col-lg-5"><div class="art" aria-label="Ilustración de aprendizaje"><i class="bi bi-chat-square-heart"></i></div></div></div></div></section>
-<section id="metodo" class="py-5"><div class="container-xl"><h2 class="fw-bold text-center mb-4">Inglés que cabe en tu día</h2><div class="row g-4"><div class="col-md-4"><article class="card p-4 h-100"><i class="bi bi-clock fs-2 text-primary"></i><h3 class="h5 mt-3">Microaprendizaje</h3><p class="text-secondary mb-0">Lecciones de 10 a 15 minutos para tus pausas entre clases.</p></article></div><div class="col-md-4"><article class="card p-4 h-100"><i class="bi bi-volume-up fs-2 text-primary"></i><h3 class="h5 mt-3">Pronunciación guiada</h3><p class="text-secondary mb-0">Escucha palabras y repítelas todas las veces que necesites.</p></article></div><div class="col-md-4"><article class="card p-4 h-100"><i class="bi bi-lightning-charge fs-2 text-primary"></i><h3 class="h5 mt-3">Motivación diaria</h3><p class="text-secondary mb-0">Cuida tus vidas, suma puntos XP y mantén tu racha.</p></article></div></div></div></section>
-<section id="modulos" class="py-5 bg-white"><div class="container-xl"><h2 class="fw-bold mb-4">Empieza por lo esencial</h2><div class="row g-3"><div class="col-md-4"><div class="card p-4"><span class="badge text-bg-primary align-self-start">Módulo 01</span><h3 class="h5 mt-3">Saludos y presentaciones</h3><p class="text-secondary">Saluda y comparte información sobre ti.</p></div></div><div class="col-md-4"><div class="card p-4"><span class="badge text-bg-warning align-self-start">Módulo 02</span><h3 class="h5 mt-3">Verbos cotidianos</h3><p class="text-secondary">Habla de tus actividades y tu rutina.</p></div></div><div class="col-md-4"><div class="card p-4"><span class="badge text-bg-success align-self-start">Módulo 03</span><h3 class="h5 mt-3">En el restaurante</h3><p class="text-secondary">Pide comida y expresa lo que te gusta.</p></div></div></div></div></section></main><footer class="py-4 border-top"><div class="container-xl text-secondary">LingoFlow · Plataforma de práctica de inglés</div></footer>
-<button class="btn btn-primary rounded-circle access" data-bs-toggle="offcanvas" data-bs-target="#accesibilidad" aria-label="Abrir ajustes de accesibilidad"><i class="bi bi-universal-access fs-4"></i></button><div class="offcanvas offcanvas-end" id="accesibilidad"><div class="offcanvas-header"><h2 class="h5">Accesibilidad</h2><button class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button></div><div class="offcanvas-body"><button class="btn btn-outline-primary w-100 mb-2" id="contraste">Activar alto contraste</button><div class="btn-group w-100"><button class="btn btn-outline-secondary" id="menos">A−</button><button class="btn btn-outline-secondary" id="normal">Tamaño normal</button><button class="btn btn-outline-secondary" id="mas">A+</button></div><button class="btn btn-outline-secondary w-100 mt-2" id="foco">Resaltar foco de teclado</button><button class="btn btn-outline-secondary w-100 mt-2" id="leer">Leer pantalla</button></div></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script>
-// Ajustes accesibles de esta página
-const cuerpo=document.body, preferencias=JSON.parse(localStorage.getItem('lingo-accesibilidad')||'{}');let fuente=preferencias.fuente||100;if(preferencias.contraste)cuerpo.classList.add('high-contrast');if(preferencias.foco)cuerpo.classList.add('keyboard-focus');document.documentElement.style.fontSize=fuente+'%';
-document.querySelector('#contraste').onclick=()=>{cuerpo.classList.toggle('high-contrast');preferencias.contraste=cuerpo.classList.contains('high-contrast');localStorage.setItem('lingo-accesibilidad',JSON.stringify(preferencias))};document.querySelector('#foco').onclick=()=>{cuerpo.classList.toggle('keyboard-focus');preferencias.foco=cuerpo.classList.contains('keyboard-focus');localStorage.setItem('lingo-accesibilidad',JSON.stringify(preferencias))};document.querySelector('#mas').onclick=()=>cambiarFuente(15);document.querySelector('#menos').onclick=()=>cambiarFuente(-15);document.querySelector('#normal').onclick=()=>{fuente=100;guardarFuente()};function cambiarFuente(cambio){fuente=Math.max(100,Math.min(130,fuente+cambio));guardarFuente()}function guardarFuente(){document.documentElement.style.fontSize=fuente+'%';preferencias.fuente=fuente;localStorage.setItem('lingo-accesibilidad',JSON.stringify(preferencias))}document.querySelector('#leer').onclick=()=>{if(!window.speechSynthesis)return alert('La lectura de voz no está disponible.');const voz=new SpeechSynthesisUtterance(document.querySelector('main').innerText);voz.lang='es-ES';speechSynthesis.speak(voz)};
-</script><style>.keyboard-focus :focus-visible{outline:3px solid #f97316!important;outline-offset:3px}</style></body></html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LingoFlow | Inglés en micro sesiones</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #172b4d;
+        --blue: #2563eb;
+        --paper: #f7f9fc;
+        --line: #dbe3ef;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: system-ui, sans-serif;
+      }
+      .navbar {
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand-icon {
+        width: 38px;
+        height: 38px;
+        display: inline-grid;
+        place-items: center;
+        background: var(--blue);
+        color: #fff;
+        border-radius: 10px;
+      }
+      .hero {
+        background: linear-gradient(120deg, #f4f7ff, #e7efff 65%, #d9e8ff);
+        padding: 4rem 0 3.5rem;
+      }
+      .hero h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 750;
+        line-height: 1.08;
+        letter-spacing: -0.045em;
+      }
+      .hero .lead {
+        max-width: 660px;
+      }
+      .demo-card {
+        border: 1px solid #d9e2ee;
+        box-shadow: 0 14px 40px #23426c18;
+        border-radius: 18px;
+      }
+      .demo-top {
+        background: #f8fafc;
+        border-bottom: 1px solid var(--line);
+      }
+      .exercise-choice {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.65rem 0.8rem;
+        margin: 0.45rem 0;
+        background: #fff;
+      }
+      .exercise-choice.active {
+        border: 2px solid var(--blue);
+        background: #eff6ff;
+      }
+      .section-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        font-weight: 700;
+        color: #64748b;
+      }
+      .benefit-icon {
+        height: 48px;
+        width: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: #eff4ff;
+        color: var(--blue);
+        font-size: 1.3rem;
+      }
+      .module-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+      }
+      .level-chip {
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+      }
+      .testimonial {
+        background: #102647;
+        color: #fff;
+        border-radius: 18px;
+      }
+      .access {
+        position: fixed;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        z-index: 10;
+        width: 54px;
+        height: 54px;
+      }
+      .high-contrast {
+        background: #000 !important;
+        color: #fff !important;
+      }
+      .high-contrast .card,
+      .high-contrast nav,
+      .high-contrast footer,
+      .high-contrast .offcanvas {
+        background: #111 !important;
+        color: #fff !important;
+        border-color: #ff0 !important;
+      }
+      .high-contrast a:not(.btn) {
+        color: #ff0 !important;
+      }
+      .keyboard-focus :focus-visible {
+        outline: 3px solid #2563eb !important;
+        outline-offset: 2px;
+      }
+      .modo-oscuro {
+        background: #0f172a !important;
+        color: #fff !important;
+      }
+      .modo-oscuro .card,
+      .modo-oscuro nav,
+      .modo-oscuro footer,
+      .modo-oscuro .offcanvas {
+        background: #1e293b !important;
+        color: #fff !important;
+        border-color: #475569 !important;
+      }
+      .modo-oscuro .text-secondary {
+        color: #cbd5e1 !important;
+      }
+      @media (max-width: 767px) {
+        .hero {
+          padding: 3rem 0;
+        }
+        .demo-card {
+          margin-top: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container-xl">
+        <a
+          class="navbar-brand fw-bold d-flex align-items-center gap-2"
+          href="index.html"
+          id="logoLingo"
+          ><span class="brand-icon"><i class="bi bi-book-half"></i></span
+          ><span
+            >LingoFlow<small
+              class="d-block text-secondary"
+              style="font-size: 0.65rem"
+              >PLATAFORMA DE INGLÉS</small
+            ></span
+          ></a
+        >
+        <button
+          class="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-label="Abrir navegación"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav me-auto ms-lg-4" id="menuPublico">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#metodo">Metodología</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#modulos">Módulos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#testimonio">Testimonios</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav me-auto ms-lg-4 d-none" id="menuPrivado">
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.html">Mi progreso</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="perfil.html">Perfil</a>
+            </li>
+          </ul>
+          <div id="accionesPublicas">
+            <a class="btn btn-link text-decoration-none" href="login.html"
+              >Iniciar sesión</a
+            ><a class="btn btn-primary px-3" href="login.html#registro"
+              >Registrarse</a
+            >
+          </div>
+          <div id="accionesPrivadas" class="d-none align-items-center gap-2">
+            <span
+              id="saludoUsuario"
+              class="small fw-semibold text-secondary"
+            ></span
+            ><button id="cerrarSesion" class="btn btn-outline-primary btn-sm">
+              Salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <section class="hero">
+        <div class="container-xl">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+              <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3"
+                >MICRO-LEARNING · 10 MIN/DÍA</span
+              >
+              <h1>Aprende inglés básico en sesiones de 10 minutos al día.</h1>
+              <p class="lead text-secondary mt-4">
+                Practica vocabulario, escucha pronunciación nativa y recibe
+                retroalimentación inmediata sin estrés ni gramática abrumadora.
+                Un ritmo pensado para tu agenda académica.
+              </p>
+              <div class="d-flex flex-wrap gap-3 mt-4">
+                <a class="btn btn-primary btn-lg px-4" href="login.html"
+                  >Empezar lección gratis
+                  <i class="bi bi-arrow-right ms-2"></i></a
+                ><a class="btn btn-outline-primary btn-lg px-4" href="#modulos"
+                  >Ver módulos</a
+                >
+              </div>
+              <div class="d-flex flex-wrap gap-3 text-secondary small mt-3">
+                <span
+                  ><i class="bi bi-check-circle text-success me-1"></i>Sin
+                  tarjeta ni pagos</span
+                ><span
+                  ><i class="bi bi-clock me-1"></i>Pausas de 10 minutos</span
+                ><span
+                  ><i class="bi bi-chat-square-text me-1"></i>Feedback
+                  inmediato</span
+                >
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <article class="demo-card overflow-hidden">
+                <div
+                  class="demo-top d-flex justify-content-between align-items-center px-3 py-2"
+                >
+                  <strong class="small"
+                    ><i class="bi bi-play-circle text-primary me-2"></i>DEMO
+                    LECCIÓN 01</strong
+                  ><span class="badge text-bg-light">09:42</span>
+                </div>
+                <div class="p-4">
+                  <div class="section-label mb-2">
+                    ESCUCHA Y SELECCIONA LA RESPUESTA
+                  </div>
+                  <h2 class="h5 fw-bold">“Nice to meet you!”</h2>
+                  <button
+                    class="btn btn-outline-primary btn-sm my-2"
+                    id="demoAudio"
+                  >
+                    <i class="bi bi-volume-up me-1"></i>Presiona para escuchar
+                    el audio
+                  </button>
+                  <div id="demoStatus" class="small text-secondary">
+                    Pronunciación en inglés · Nice to meet you!
+                  </div>
+                  <div class="mt-3">
+                    <button class="exercise-choice active w-100 text-start">
+                      B) Nice to meet you too!</button
+                    ><button class="exercise-choice w-100 text-start">
+                      A) I am 21 years old.</button
+                    ><button class="exercise-choice w-100 text-start">
+                      C) Good morning, teacher.
+                    </button>
+                  </div>
+                  <a
+                    href="dashboard.html#catalogo"
+                    class="btn btn-primary w-100 mt-2"
+                    >Comprobar respuesta</a
+                  >
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="metodo" class="py-5">
+        <div class="container-xl">
+          <div class="text-center mb-4">
+            <span class="section-label"
+              >MÉTODO LINGOFLOW · EFICIENCIA COGNITIVA</span
+            >
+            <h2 class="fw-bold mt-2">
+              Tres razones para aprender sin quemarte las pestañas
+            </h2>
+            <p class="text-secondary">
+              Sesiones breves y espaciadas para ayudarte a retener mejor con
+              menos esfuerzo.
+            </p>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <article class="card border-0 p-4 h-100">
+                <div class="benefit-icon"><i class="bi bi-clock"></i></div>
+                <span class="small fw-bold text-primary mt-3"
+                  >01 · GESTIÓN TEMPORAL</span
+                >
+                <h3 class="h5 mt-2">Micro-lecciones de 10–15 min</h3>
+                <p class="text-secondary">
+                  Ideales para pausas entre clases o trayectos. Sin sesiones
+                  infinitas ni agotamiento.
+                </p>
+                <span class="small text-secondary mt-auto"
+                  >Tiempo promedio: 09m 35s</span
+                >
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="card border-0 p-4 h-100">
+                <div class="benefit-icon"><i class="bi bi-headphones"></i></div>
+                <span class="small fw-bold text-primary mt-3"
+                  >02 · AUDIO Y PRONUNCIACIÓN</span
+                >
+                <h3 class="h5 mt-2">Escucha y repite a tu ritmo</h3>
+                <p class="text-secondary">
+                  Practica palabras clave con audio repetible y recibe
+                  retroalimentación inmediata.
+                </p>
+                <span class="small text-secondary mt-auto"
+                  ><i class="bi bi-volume-up me-1"></i>Audio nativo · Velocidad
+                  regulable</span
+                >
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="card border-0 p-4 h-100">
+                <div class="benefit-icon">
+                  <i class="bi bi-lightning-charge"></i>
+                </div>
+                <span class="small fw-bold text-primary mt-3"
+                  >03 · REFUERZO POSITIVO</span
+                >
+                <h3 class="h5 mt-2">Gamificación y progreso</h3>
+                <p class="text-secondary">
+                  Conserva tus vidas, suma rachas de días y celebra cada avance
+                  sin castigos estresantes.
+                </p>
+                <span class="small text-secondary mt-auto"
+                  >❤️ 5 vidas · 🔥 7 días · ⚡ +450 XP</span
+                >
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="modulos" class="py-5 bg-white">
+        <div class="container-xl">
+          <div
+            class="d-flex flex-wrap justify-content-between align-items-end mb-4"
+          >
+            <div>
+              <span class="section-label">PLAN DE ESTUDIOS ESTRUCTURADO</span>
+              <h2 class="fw-bold mt-2">Una ruta desde A1 básico hasta B2</h2>
+            </div>
+            <a class="btn btn-outline-primary">Progreso global: 25%</a>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6 col-xl-3">
+              <article class="module-card p-4 h-100">
+                <span class="badge text-bg-success level-chip"
+                  >A1 · MÓDULO 01 · COMPLETADO</span
+                >
+                <h3 class="h5 mt-3">Saludos y presentaciones</h3>
+                <p class="text-secondary">
+                  Frases elementales, “Hello”, “My name is…” y preguntas de
+                  cortesía.
+                </p>
+                <a class="btn btn-outline-success">Repasar · 10 min</a>
+              </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <article class="module-card p-4 h-100">
+                <span class="badge text-bg-primary level-chip"
+                  >A1 · MÓDULO 02 · EN CURSO</span
+                >
+                <h3 class="h5 mt-3">Verbos y rutinas diarias</h3>
+                <p class="text-secondary">
+                  Rutina universitaria, horas del día y verbos simples en
+                  presente.
+                </p>
+                <a class="btn btn-primary">Continuar · 40%</a>
+              </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <article class="module-card p-4 h-100">
+                <span class="badge text-bg-warning level-chip"
+                  >A1 · MÓDULO 03 · DESBLOQUEA A 500 XP</span
+                >
+                <h3 class="h5 mt-3">Pedir comida y bebidas</h3>
+                <p class="text-secondary">
+                  Vocabulario de cafetería, menú, precios y agradecimientos.
+                </p>
+                <button class="btn btn-outline-secondary" disabled>
+                  Necesitas 500 XP
+                </button>
+              </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <article class="module-card p-4 h-100">
+                <span class="badge text-bg-secondary level-chip"
+                  >A1 · MÓDULO 04 · BLOQUEADO</span
+                >
+                <h3 class="h5 mt-3">Direcciones y viajes</h3>
+                <p class="text-secondary">
+                  Lugares del campus, transporte y cómo pedir indicaciones.
+                </p>
+                <button class="btn btn-outline-secondary" disabled>
+                  Requisito: 800 XP
+                </button>
+              </article>
+            </div>
+          </div>
+          <div class="row g-3 mt-1">
+            <div class="col-md-4">
+              <article class="module-card p-3">
+                <span class="badge text-bg-info">A2 · Preintermedio</span>
+                <p class="mb-0 mt-2">
+                  Experiencias pasadas y vida universitaria
+                </p>
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="module-card p-3">
+                <span class="badge text-bg-primary">B1 · Intermedio</span>
+                <p class="mb-0 mt-2">
+                  Opiniones, trabajo en equipo y entrevistas
+                </p>
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="module-card p-3">
+                <span class="badge text-bg-dark">B2 · Avanzado</span>
+                <p class="mb-0 mt-2">
+                  Argumentos académicos y comunicación profesional
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="testimonio" class="py-5">
+        <div class="container-xl">
+          <div class="testimonial p-4 p-lg-5">
+            <div class="row align-items-center g-4">
+              <div class="col-lg-8">
+                <span class="badge text-bg-warning mb-3"
+                  >CASO DE ESTUDIO · ESTUDIANTE UPN</span
+                >
+                <blockquote class="fs-5 mb-3">
+                  “Logré mantener mi racha de 7 días entre mis clases de
+                  cálculo. Las sesiones son cortas y el audio me ayuda a
+                  pronunciar mejor de inmediato.”
+                </blockquote>
+                <strong>Carlos Mendoza</strong>
+                <div class="small text-white-50">
+                  21 años · Estudiante de Ingeniería
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="row text-center">
+                  <div class="col-4">
+                    <strong class="fs-3">7</strong>
+                    <div class="small text-white-50">días de racha</div>
+                  </div>
+                  <div class="col-4">
+                    <strong class="fs-3">85</strong>
+                    <div class="small text-white-50">palabras</div>
+                  </div>
+                  <div class="col-4">
+                    <strong class="fs-3">94%</strong>
+                    <div class="small text-white-50">retención</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-5 bg-primary text-white text-center">
+        <div class="container">
+          <span class="small fw-bold"
+            >ÚNETE A CARLOS Y A 1,200 ESTUDIANTES</span
+          >
+          <h2 class="fw-bold mt-2">
+            ¿Listo para tus primeros 10 minutos de inglés hoy?
+          </h2>
+          <p class="text-white-50">
+            Entra con tu correo y continúa desde donde te quedaste.
+          </p>
+          <a href="login.html#registro" class="btn btn-light btn-lg px-4"
+            >Acceder o crear cuenta gratis</a
+          ><a href="login.html" class="btn btn-outline-light btn-lg ms-2"
+            >Probar una lección</a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="py-4 border-top">
+      <div
+        class="container-xl small text-secondary d-flex flex-wrap justify-content-between gap-2"
+      >
+        <span>LingoFlow © 2026 · Plataforma Educativa de Inglés</span
+        ><span>Accesibilidad WCAG 2.0 AA · GDALA</span>
+      </div>
+    </footer>
+    <button
+      class="btn btn-primary rounded-circle access"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#accesibilidad"
+      aria-label="Menú de Accesibilidad"
+    >
+      <i class="bi bi-universal-access fs-4"></i>
+    </button>
+    <div class="offcanvas offcanvas-end" id="accesibilidad">
+      <div class="offcanvas-header">
+        <h2 class="h5">Accesibilidad</h2>
+        <button
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <button id="contraste" class="btn btn-outline-primary w-100 mb-2">
+          Alto contraste
+        </button>
+        <div class="btn-group w-100">
+          <button id="menos" class="btn btn-outline-secondary">A−</button
+          ><button id="normal" class="btn btn-outline-secondary">Normal</button
+          ><button id="mas" class="btn btn-outline-secondary">A+</button>
+        </div>
+        <button id="foco" class="btn btn-outline-secondary w-100 mt-2">
+          Foco de teclado</button
+        ><button id="oscuro" class="btn btn-outline-secondary w-100 mt-2">
+          Modo oscuro</button
+        ><button id="leer" class="btn btn-outline-secondary w-100 mt-2">
+          Leer pantalla
+        </button>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const usuarioActivoInicio = localStorage.getItem("lingo-usuario-activo");
+      if (usuarioActivoInicio) {
+        document.querySelector("#logoLingo").href = "dashboard.html";
+        document.querySelector("#menuPublico").classList.add("d-none");
+        document.querySelector("#menuPrivado").classList.remove("d-none");
+        document.querySelector("#accionesPublicas").classList.add("d-none");
+        document.querySelector("#accionesPrivadas").classList.remove("d-none");
+        fetch("data.json")
+          .then((r) => r.json())
+          .then((data) => {
+            const usuarios =
+              JSON.parse(localStorage.getItem("lingo-usuarios") || "null") ||
+              data.usuarios;
+            const usuario = usuarios.find((u) => u.id === usuarioActivoInicio);
+            if (usuario)
+              document.querySelector("#saludoUsuario").textContent =
+                "Hola, " + usuario.nombre.split(" ")[0];
+          });
+      }
+      document.querySelector("#cerrarSesion").onclick = () => {
+        localStorage.removeItem("lingo-usuario-activo");
+        location.reload();
+      };
+    </script>
+    <script>
+      const cuerpo = document.body,
+        pref = JSON.parse(localStorage.getItem("lingo-accesibilidad") || "{}");
+      let fuente = pref.fuente || 100;
+      if (pref.contraste) cuerpo.classList.add("high-contrast");
+      if (pref.foco) cuerpo.classList.add("keyboard-focus");
+      if (pref.oscuro) cuerpo.classList.add("modo-oscuro");
+      document.documentElement.style.fontSize = fuente + "%";
+      document.querySelector("#demoAudio").onclick = () => {
+        const voz = new SpeechSynthesisUtterance("Nice to meet you!");
+        voz.lang = "en-US";
+        voz.onstart = () =>
+          (document.querySelector("#demoStatus").textContent =
+            "Reproduciendo audio…");
+        voz.onend = () =>
+          (document.querySelector("#demoStatus").textContent =
+            "Pronunciación en inglés · Nice to meet you!");
+        speechSynthesis.speak(voz);
+      };
+      document.querySelectorAll(".exercise-choice").forEach(
+        (b) =>
+          (b.onclick = () => {
+            document
+              .querySelectorAll(".exercise-choice")
+              .forEach((x) => x.classList.remove("active"));
+            b.classList.add("active");
+          }),
+      );
+      document.querySelector("#contraste").onclick = () => {
+        cuerpo.classList.toggle("high-contrast");
+        pref.contraste = cuerpo.classList.contains("high-contrast");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#foco").onclick = () => {
+        cuerpo.classList.toggle("keyboard-focus");
+        pref.foco = cuerpo.classList.contains("keyboard-focus");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#oscuro").onclick = () => {
+        cuerpo.classList.toggle("modo-oscuro");
+        pref.oscuro = cuerpo.classList.contains("modo-oscuro");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#mas").onclick = () => tamano(15);
+      document.querySelector("#menos").onclick = () => tamano(-15);
+      document.querySelector("#normal").onclick = () => tamano(100 - fuente);
+      function tamano(n) {
+        fuente = Math.max(100, Math.min(150, fuente + n));
+        document.documentElement.style.fontSize = fuente + "%";
+        pref.fuente = fuente;
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      }
+      document.querySelector("#leer").onclick = () => {
+        const voz = new SpeechSynthesisUtterance(
+          document.querySelector("main").innerText,
+        );
+        voz.lang = "es-ES";
+        speechSynthesis.speak(voz);
+      };
+    </script>
+  </body>
+</html>

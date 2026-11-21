@@ -60,11 +60,34 @@
     </style>
   </head>
   <body>
-    <nav class="navbar bg-white">
-      <div class="container">
+    <nav class="navbar navbar-expand-lg bg-white sticky-top">
+      <div class="container-xl">
         <a class="navbar-brand fw-bold text-primary" href="dashboard.html"
           ><i class="bi bi-book-half me-2"></i>LingoFlow</a
-        ><a href="perfil.html" class="nav-link">Mi perfil</a>
+        >
+        <button
+          class="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-label="Abrir navegación"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.html">Mi progreso</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="perfil.html">Perfil</a>
+            </li>
+          </ul>
+          <span class="badge text-bg-light me-2"
+            >🔥 <span id="rachaNav">7</span>d</span
+          ><span class="badge text-bg-primary"
+            ><span id="xpNav">450</span> XP</span
+          >
+        </div>
       </div>
     </nav>
     <main class="container py-4 py-lg-5">
@@ -83,7 +106,9 @@
           <div id="barra" class="progress-bar"></div>
         </div>
         <section class="card p-4 p-md-5">
-          <span class="small text-uppercase fw-bold text-secondary"
+          <span
+            class="small text-uppercase fw-bold text-secondary"
+            id="moduloActual"
             >Saludos y presentaciones · A1</span
           >
           <h1 id="pregunta" class="h3 fw-bold mt-2 mb-4"></h1>
@@ -113,6 +138,31 @@
         </div>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="pausaVidas"
+      tabindex="-1"
+      aria-labelledby="tituloPausa"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title h5" id="tituloPausa">Hagamos una pausa</h2>
+          </div>
+          <div class="modal-body">
+            Te quedaste sin vidas. Puedes repasar tus errores para recuperar un
+            corazón o volver al dashboard.
+          </div>
+          <div class="modal-footer">
+            <button id="recuperarVida" class="btn btn-primary">
+              Practicar errores y recuperar 1 vida</button
+            ><a class="btn btn-outline-secondary" href="dashboard.html"
+              >Volver al dashboard</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
     <button
       class="btn btn-primary rounded-circle access"
       data-bs-toggle="offcanvas"
@@ -136,6 +186,8 @@
         </div>
         <button id="foco" class="btn btn-outline-secondary w-100 mt-2">
           Foco de teclado</button
+        ><button id="oscuro" class="btn btn-outline-secondary w-100 mt-2">
+          Modo oscuro</button
         ><button id="leer" class="btn btn-outline-secondary w-100 mt-2">
           Leer pantalla
         </button>
@@ -143,237 +195,435 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-fetch('data.json').then(respuesta=>respuesta.json()).then(datos=>{
-
-      // Preguntas y datos locales de las tres cuentas demo
-      const llave = "lingo-usuarios";
-      let usuarios = JSON.parse(localStorage.getItem(llave) || "null") ||datos.usuarios;localStorage.setItem(llave,JSON.stringify(usuarios));
-      const id = localStorage.getItem("lingo-usuario-activo") || "carlos";
-      let usuario = usuarios.find((u) => u.id === id) || usuarios[0],
-        actual = 0,
-        elegida = "",
-        aciertos = 0,
-        errores = 0,
-        segundos = 0;
-      const inicio = Date.now(),
-        guardar = () => localStorage.setItem(llave, JSON.stringify(usuarios));
-      const preguntas = [
-        {
-          texto: "Escucha y elige la traducción correcta.",
-          tipo: "audio",
-          frase: "Good morning",
-          traduccion: "Buenos días",
-          opciones: ["Buenas noches", "Buenos días", "Hasta luego"],
-          pista: "Usamos esta frase para saludar por la mañana.",
-        },
-        {
-          texto: "¿Cómo dices “Me llamo Ana” en inglés?",
-          traduccion: "Me llamo Ana",
-          correcta: "My name is Ana",
-          opciones: ["I am fine, Ana", "My name is Ana", "See you, Ana"],
-          pista: "La estructura empieza con “My name is…”.",
-        },
-        {
-          texto: "Ordena las palabras para formar “¿Cómo estás?”",
-          tipo: "orden",
-          palabras: ["are", "How", "you"],
-          respuesta: "How are you",
-          traduccion: "¿Cómo estás?",
-          pista: "Empieza con la palabra interrogativa “How”.",
-        },
-        {
-          texto: "Completa: “I ___ a student.”",
-          traduccion: "Soy estudiante",
-          correcta: "am",
-          opciones: ["am", "is", "are"],
-          pista: "Con “I” usamos el verbo “to be” como “am”.",
-        },
-        {
-          texto: "Ordena las palabras para decir “Muchas gracias”.",
-          tipo: "orden",
-          palabras: ["you", "Thank", "very", "much"],
-          respuesta: "Thank you very much",
-          traduccion: "Muchas gracias",
-          pista: "La expresión comienza con “Thank you”.",
-        },
-      ];
-      function mostrarPregunta() {
-        elegida = "";
-        const q = preguntas[actual],
-          porcentaje = Math.round((actual / preguntas.length) * 100);
-        document.querySelector("#vidas").textContent = usuario.vidas + " / 5";
-        document.querySelector("#numero").textContent =
-          "Pregunta " + (actual + 1) + " de " + preguntas.length;
-        document.querySelector("#porcentaje").textContent =
-          porcentaje + "% completado";
-        document.querySelector("#barra").style.width = porcentaje + "%";
-        document.querySelector("#pregunta").textContent = q.texto;
-        document.querySelector("#feedback").innerHTML = "";
-        document.querySelector("#comprobar").disabled = true;
-        document.querySelector("#comprobar").textContent =
-          "Comprobar respuesta";
-        document.querySelector("#audio").innerHTML =
-          q.tipo === "audio"
-            ? '<div class="d-flex align-items-center gap-3 p-3 rounded bg-light mb-4"><button class="btn btn-primary btn-lg rounded-circle" id="reproducir" aria-label="Reproducir pronunciación"><i class="bi bi-volume-up-fill"></i></button><div><strong>' +
-              q.frase +
-              '</strong><div class="small text-secondary" id="estadoAudio">Pronunciación en inglés · ' +
-              q.frase +
-              '</div><span class="visually-hidden">Transcripción: ' +
-              q.frase +
-              "</span></div></div>"
-            : "";
-        if (q.tipo === "orden") {
-          document.querySelector("#opciones").innerHTML = q.palabras
-            .map(
-              (w) =>
-                '<button class="btn btn-outline-primary me-2 mb-2" data-palabra="' +
-                w +
-                '">' +
-                w +
-                "</button>",
-            )
-            .join("");
-        } else {
-          document.querySelector("#opciones").innerHTML = q.opciones
-            .map(
-              (w, i) =>
-                '<button class="btn opcion w-100 mb-2" data-opcion="' +
-                i +
-                '">' +
-                w +
-                "</button>",
-            )
-            .join("");
-        }
-        document.querySelectorAll("[data-opcion]").forEach(
-          (b) =>
-            (b.onclick = () => {
-              document
-                .querySelectorAll("[data-opcion]")
-                .forEach((x) => x.classList.remove("seleccionada"));
-              b.classList.add("seleccionada");
-              elegida = q.opciones[Number(b.dataset.opcion)];
-              document.querySelector("#comprobar").disabled = false;
-            }),
-        );
-        document.querySelectorAll("[data-palabra]").forEach(
-          (b) =>
-            (b.onclick = () => {
-              b.classList.toggle("active");
-              elegida = [...document.querySelectorAll("[data-palabra].active")]
-                .map((x) => x.dataset.palabra)
-                .join(" ");
-              document.querySelector("#comprobar").disabled = !elegida;
-            }),
-        );
-        if (q.tipo === "audio")
-          document.querySelector("#reproducir").onclick = () =>
-            hablar(q.frase, "en-US", document.querySelector("#estadoAudio"));
-        document.querySelector("#comprobar").onclick = validar;
-      }
-      function validar() {
-        const q = preguntas[actual],
-          respuesta =
-            q.tipo === "orden" ? q.respuesta : q.correcta || q.traduccion,
-          correcto = elegida.toLowerCase() === respuesta.toLowerCase();
-        if (correcto) {
-          aciertos++;
-          document.querySelector("#feedback").innerHTML =
-            '<div class="alert alert-success"><strong><i class="bi bi-check-circle-fill me-1"></i>¡Correcto!</strong> ' +
-            q.traduccion +
-            "</div>";
-        } else {
-          errores++;
-          usuario.vidas = Math.max(0, usuario.vidas - 1);
-          document.querySelector("#vidas").textContent = usuario.vidas + " / 5";
-          guardar();
-          document.querySelector("#feedback").innerHTML =
-            '<div class="alert alert-danger"><strong><i class="bi bi-lightbulb me-1"></i>Pista:</strong> ' +
-            q.pista +
-            "</div>";
-        }
-        const boton = document.querySelector("#comprobar");
-        boton.textContent =
-          actual === preguntas.length - 1 ? "Ver resumen" : "Siguiente";
-        boton.onclick = () => {
-          actual++;
-          if (actual < preguntas.length) mostrarPregunta();
-          else finalizar();
-        };
-      }
-      function finalizar() {
-        const tiempo = Math.floor((Date.now() - inicio) / 1000);
-        usuario.xp += aciertos * 10;
-        usuario.avance = Math.min(100, usuario.avance + 10);
-        usuario.minutos[(new Date().getDay() + 6) % 7] = Math.max(
-          usuario.minutos[(new Date().getDay() + 6) % 7],
-          Math.max(1, Math.round(tiempo / 60)),
-        );
-        guardar();
-        document.querySelector("#detalleResumen").innerHTML =
-          '<div class="text-center mb-3"><div class="display-5 fw-bold text-primary">' +
-          Math.round((aciertos / preguntas.length) * 100) +
-          '%</div>Precisión de esta ronda</div><div class="row text-center"><div class="col">' +
-          Math.floor(tiempo / 60) +
-          ":" +
-          String(tiempo % 60).padStart(2, "0") +
-          '<div class="small text-secondary">Tiempo</div></div><div class="col">+' +
-          aciertos * 10 +
-          ' XP<div class="small text-secondary">Puntos</div></div><div class="col">' +
-          errores +
-          '<div class="small text-secondary">A reforzar</div></div></div><p class="mt-3">' +
-          (errores
-            ? "Vuelve a practicar las pistas cuando quieras."
-            : "¡Excelente! Ya dominas las expresiones de esta ronda.") +
-          "</p>";
-        bootstrap.Modal.getOrCreateInstance(
-          document.querySelector("#resumen"),
-          { backdrop: "static" },
-        ).show();
-      }
-      function hablar(texto, idioma, estado) {
-        speechSynthesis.cancel();
-        const voz = new SpeechSynthesisUtterance(texto);
-        voz.lang = idioma;
-        voz.onstart = () => (estado.textContent = "Reproduciendo…");
-        voz.onend = () =>
-          (estado.textContent = "Pronunciación en inglés · " + texto);
-        speechSynthesis.speak(voz);
-      }
-      document.querySelector("#salir").onclick = () => {
-        if (confirm("¿Salir de esta lección?"))
-          location.href = "dashboard.html";
-      };
-      mostrarPregunta();
-      const pref = JSON.parse(
-        localStorage.getItem("lingo-accesibilidad") || "{}",
-      );
-      if (pref.contraste) document.body.classList.add("high-contrast");
-      document.querySelector("#contraste").onclick = () => {
-        document.body.classList.toggle("high-contrast");
-        pref.contraste = document.body.classList.contains("high-contrast");
-        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-      };
-      document.querySelector("#mas").onclick = () => tamano(15);
-      document.querySelector("#menos").onclick = () => tamano(-15);
-      function tamano(n) {
-        pref.fuente = Math.max(100, Math.min(130, (pref.fuente || 100) + n));
-        document.documentElement.style.fontSize = pref.fuente + "%";
-        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-      }
-      document.querySelector("#foco").onclick = () =>
-        document.body.classList.toggle("keyboard-focus");
-      document.querySelector("#leer").onclick = () => {
-        const voz = new SpeechSynthesisUtterance(
-          document.querySelector("main").innerText,
-        );
-        voz.lang = "es-ES";
-        speechSynthesis.speak(voz);
-      };
-    
-}).catch(error=>{console.error(error);alert('No se pudo cargar data.json. Usa Live Server.')});
-</script>
+      fetch("data.json")
+        .then((respuesta) => respuesta.json())
+        .then((datos) => {
+          if (!localStorage.getItem("lingo-usuario-activo")) {
+            location.href = "login.html";
+            return;
+          }
+          // Preguntas y datos locales de las tres cuentas demo
+          const llave = "lingo-usuarios";
+          let usuarios =
+            JSON.parse(localStorage.getItem(llave) || "null") || datos.usuarios;
+          localStorage.setItem(llave, JSON.stringify(usuarios));
+          const id = localStorage.getItem("lingo-usuario-activo") || "carlos";
+          let usuario = usuarios.find((u) => u.id === id) || usuarios[0],
+            actual = 0,
+            elegida = "",
+            aciertos = 0,
+            errores = 0,
+            segundos = 0;
+          const inicio = Date.now(),
+            guardar = () =>
+              localStorage.setItem(llave, JSON.stringify(usuarios));
+          const parametros = new URLSearchParams(location.search);
+          const moduloId = parametros.get("modulo");
+          if (!moduloId) {
+            location.href = "dashboard.html#catalogo";
+            return;
+          }
+          const esRetoBonus = moduloId === "bonus";
+          const indiceLeccion = Math.min(
+            5,
+            Math.max(1, Number(parametros.get("leccion") || 1)),
+          );
+          const nivelActual = esRetoBonus
+            ? datos.niveles[1]
+            : datos.niveles.find((n) =>
+                n.modulos.some((m) => m.id === moduloId),
+              ) || datos.niveles[0];
+          const moduloActual = esRetoBonus
+            ? { titulo: datos.retoBonus.titulo }
+            : nivelActual.modulos.find((m) => m.id === moduloId) ||
+              nivelActual.modulos[0];
+          const banco = [
+            ...datos.ejerciciosPorNivel[nivelActual.id],
+            ...datos.ejerciciosComplementarios[nivelActual.id],
+          ];
+          const indiceModulo = Math.max(
+            0,
+            nivelActual.modulos.findIndex((m) => m.id === moduloId),
+          );
+          const desplazamiento =
+            ((indiceLeccion - 1) * 2 + indiceModulo * 3) % banco.length;
+          const preguntas = Array.from({ length: 5 }, (_, i) => ({
+            ...banco[(desplazamiento + i) % banco.length],
+            texto: banco[(desplazamiento + i) % banco.length].enunciado,
+          }));
+          const cantidadInicial = preguntas.length;
+          document.querySelector("#moduloActual").textContent =
+            nivelActual.id +
+            " · " +
+            moduloActual.titulo +
+            " · Lección " +
+            indiceLeccion +
+            "/5";
+          document.querySelector("#rachaNav").textContent = usuario.racha;
+          document.querySelector("#xpNav").textContent = usuario.xp;
+          const falladas = [],
+            resultadosSesion = [];
+          let repeticionesAudio = 0;
+          function mostrarPregunta() {
+            elegida = "";
+            const q = preguntas[actual],
+              porcentaje = Math.round((actual / preguntas.length) * 100);
+            document.querySelector("#vidas").textContent =
+              usuario.vidas + " / 5";
+            document.querySelector("#numero").textContent =
+              "Pregunta " + (actual + 1) + " de " + preguntas.length;
+            document.querySelector("#porcentaje").textContent =
+              porcentaje + "% completado";
+            document.querySelector("#barra").style.width = porcentaje + "%";
+            document.querySelector("#pregunta").textContent = q.texto;
+            document.querySelector("#feedback").innerHTML = "";
+            document.querySelector("#comprobar").disabled = true;
+            document.querySelector("#comprobar").textContent =
+              "Comprobar respuesta";
+            document.querySelector("#audio").innerHTML =
+              q.tipo === "audio"
+                ? '<div class="d-flex align-items-center gap-3 p-3 rounded bg-light mb-4"><button class="btn btn-primary btn-lg rounded-circle" id="reproducir" aria-label="Reproducir pronunciación"><i class="bi bi-volume-up-fill"></i></button><div><strong>' +
+                  q.frase +
+                  '</strong><div class="small text-secondary" id="estadoAudio">Listo para reproducir</div></div></div><button class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="collapse" data-bs-target="#transcripcion">Ver transcripción</button><div class="collapse mb-3" id="transcripcion"><div class="alert alert-light mb-0">' +
+                  (q.transcripcion || q.frase) +
+                  "</div></div>"
+                : "";
+            if (q.tipo === "escritura") {
+              document.querySelector("#opciones").innerHTML =
+                '<div class="input-group input-group-lg"><span class="input-group-text">' +
+                q.prefijo +
+                '</span><input id="respuestaTexto" class="form-control" aria-label="Completa la respuesta"><span class="input-group-text">' +
+                q.sufijo +
+                "</span></div>";
+              document.querySelector("#respuestaTexto").oninput = (e) => {
+                elegida = e.target.value.trim();
+                document.querySelector("#comprobar").disabled = !elegida;
+              };
+            } else if (q.tipo === "parejas") {
+              document.querySelector("#opciones").innerHTML =
+                '<div class="row g-2">' +
+                q.pares
+                  .map(
+                    (par, i) =>
+                      '<div class="col-5"><div class="form-control bg-light">' +
+                      par[0] +
+                      '</div></div><div class="col-7"><label class="visually-hidden" for="par' +
+                      i +
+                      '">Significado de ' +
+                      par[0] +
+                      '</label><select id="par' +
+                      i +
+                      '" class="form-select selector-par"><option value="">Elige una respuesta</option>' +
+                      q.pares
+                        .map(
+                          (op, j) =>
+                            '<option value="' + j + '">' + op[1] + "</option>",
+                        )
+                        .join("") +
+                      "</select></div>",
+                  )
+                  .join("") +
+                "</div>";
+              document.querySelectorAll(".selector-par").forEach(
+                (s) =>
+                  (s.onchange = () => {
+                    elegida = [...document.querySelectorAll(".selector-par")]
+                      .map((x) => x.value)
+                      .join(",");
+                    document.querySelector("#comprobar").disabled = [
+                      ...document.querySelectorAll(".selector-par"),
+                    ].some((x) => !x.value);
+                  }),
+              );
+            } else if (q.tipo === "orden") {
+              document.querySelector("#opciones").innerHTML = q.palabras
+                .map(
+                  (w) =>
+                    '<button class="btn btn-outline-primary me-2 mb-2" data-palabra="' +
+                    w +
+                    '">' +
+                    w +
+                    "</button>",
+                )
+                .join("");
+            } else {
+              document.querySelector("#opciones").innerHTML = q.opciones
+                .map(
+                  (w, i) =>
+                    '<button class="btn opcion w-100 mb-2" data-opcion="' +
+                    i +
+                    '">' +
+                    w +
+                    "</button>",
+                )
+                .join("");
+            }
+            document.querySelectorAll("[data-opcion]").forEach(
+              (b) =>
+                (b.onclick = () => {
+                  document
+                    .querySelectorAll("[data-opcion]")
+                    .forEach((x) => x.classList.remove("seleccionada"));
+                  b.classList.add("seleccionada");
+                  elegida = q.opciones[Number(b.dataset.opcion)];
+                  document.querySelector("#comprobar").disabled = false;
+                }),
+            );
+            document.querySelectorAll("[data-palabra]").forEach(
+              (b) =>
+                (b.onclick = () => {
+                  b.classList.toggle("active");
+                  elegida = [
+                    ...document.querySelectorAll("[data-palabra].active"),
+                  ]
+                    .map((x) => x.dataset.palabra)
+                    .join(" ");
+                  document.querySelector("#comprobar").disabled = !elegida;
+                }),
+            );
+            if (q.tipo === "audio")
+              document.querySelector("#reproducir").onclick = () => {
+                repeticionesAudio++;
+                hablar(
+                  q.frase,
+                  "en-US",
+                  document.querySelector("#estadoAudio"),
+                );
+              };
+            document.querySelector("#comprobar").onclick = validar;
+          }
+          function validar() {
+            const q = preguntas[actual];
+            let correcto = false;
+            if (q.tipo === "parejas")
+              correcto = elegida === q.pares.map((_, i) => String(i)).join(",");
+            else if (q.tipo === "audio" || q.tipo === "opcion")
+              correcto = elegida === q.opciones[q.correcta];
+            else
+              correcto =
+                elegida.trim().toLowerCase() === q.correcta.toLowerCase();
+            if (correcto) {
+              aciertos++;
+              document.querySelector("#feedback").innerHTML =
+                '<div class="alert alert-success"><strong><i class="bi bi-check-circle-fill me-1"></i>¡Correcto!</strong> ' +
+                q.traduccion +
+                "</div>";
+            } else {
+              errores++;
+              if (!q.modoRepaso) falladas.push(q);
+              if (!q.modoRepaso) usuario.vidas = Math.max(0, usuario.vidas - 1);
+              document.querySelector("#vidas").textContent =
+                usuario.vidas + " / 5";
+              guardar();
+              document.querySelector("#feedback").innerHTML =
+                '<div class="alert alert-danger"><strong><i class="bi bi-lightbulb me-1"></i>Pista:</strong> ' +
+                q.pista +
+                "</div>";
+              if (usuario.vidas === 0 && !q.modoRepaso)
+                bootstrap.Modal.getOrCreateInstance(
+                  document.querySelector("#pausaVidas"),
+                  { backdrop: "static", keyboard: false },
+                ).show();
+            }
+            resultadosSesion.push({ tipo: q.tipo, correcto, tema: q.texto });
+            const boton = document.querySelector("#comprobar");
+            boton.textContent =
+              actual === preguntas.length - 1 ? "Ver resumen" : "Siguiente";
+            boton.onclick = () => {
+              actual++;
+              if (actual < preguntas.length) mostrarPregunta();
+              else finalizar();
+            };
+          }
+          function finalizar() {
+            const tiempo = Math.floor((Date.now() - inicio) / 1000);
+            const minutosSesion = Math.max(3, Math.round(tiempo / 60));
+            const nombresCompetencia = {
+              audio: "Comprensión auditiva",
+              parejas: "Vocabulario",
+              escritura: "Gramática básica",
+              orden: "Gramática básica",
+              opcion: "Vocabulario",
+            };
+            const conteoCompetencias = {};
+            resultadosSesion.forEach((r) => {
+              const nombre = nombresCompetencia[r.tipo] || "Vocabulario";
+              if (!conteoCompetencias[nombre])
+                conteoCompetencias[nombre] = { correctas: 0, total: 0 };
+              conteoCompetencias[nombre].total++;
+              if (r.correcto) conteoCompetencias[nombre].correctas++;
+            });
+            const resultadosCompetencia = {};
+            Object.entries(conteoCompetencias).forEach(([nombre, r]) => {
+              resultadosCompetencia[nombre] = {
+                ...r,
+                precision: Math.round((r.correctas / r.total) * 100),
+              };
+              const indice = {
+                Vocabulario: 0,
+                "Gramática básica": 2,
+                "Comprensión auditiva": 3,
+              }[nombre];
+              if (indice !== undefined) {
+                const habilidadAnterior = (usuario.habilidades || [
+                  85, 75, 65, 70,
+                ])[indice];
+                usuario.habilidades = usuario.habilidades || [85, 75, 65, 70];
+                usuario.habilidades[indice] = Math.round(
+                  habilidadAnterior * 0.8 +
+                    resultadosCompetencia[nombre].precision * 0.2,
+                );
+              }
+            });
+            usuario.historialSesiones = usuario.historialSesiones || [];
+            usuario.historialSesiones.push({
+              fecha: new Date().toISOString(),
+              modulo: moduloId,
+              precision: Math.round((aciertos / cantidadInicial) * 100),
+              minutos: minutosSesion,
+              repeticionesAudio,
+              competencias: resultadosCompetencia,
+            });
+            usuario.historialSesiones = usuario.historialSesiones.slice(-30);
+            usuario.xp += aciertos * 10;
+            if (!usuario.modulos)
+              usuario.modulos = { "a1-m01": 100, "a1-m02": usuario.avance };
+            usuario.modulos[moduloId] = Math.min(
+              100,
+              (usuario.modulos[moduloId] || 0) + 20,
+            );
+            usuario.avance = Math.min(100, usuario.avance + 2);
+            const indiceDia = (new Date().getDay() + 6) % 7;
+            usuario.minutos[indiceDia] =
+              (usuario.minutos[indiceDia] || 0) + minutosSesion;
+            const fecha = new Date().toISOString().slice(0, 10);
+            if (
+              usuario.diaRacha !== fecha &&
+              usuario.minutos[indiceDia] >= 10
+            ) {
+              usuario.racha++;
+              usuario.diaRacha = fecha;
+            }
+            guardar();
+            document.querySelector("#detalleResumen").innerHTML =
+              '<div class="text-center mb-3"><div class="display-5 fw-bold text-primary">' +
+              Math.round((aciertos / cantidadInicial) * 100) +
+              '%</div>Precisión de esta ronda</div><div class="row text-center"><div class="col">' +
+              Math.floor(tiempo / 60) +
+              ":" +
+              String(tiempo % 60).padStart(2, "0") +
+              '<div class="small text-secondary">Tiempo</div></div><div class="col">+' +
+              aciertos * 10 +
+              ' XP<div class="small text-secondary">Puntos</div></div><div class="col">' +
+              errores +
+              '<div class="small text-secondary">A reforzar</div></div></div><p class="mt-3">' +
+              (errores
+                ? "Palabras para repasar: " +
+                  [
+                    ...new Set(
+                      falladas.map((q) => q.frase || q.correcta || q.texto),
+                    ),
+                  ].join(", ")
+                : "¡Excelente! Ya dominas las expresiones de esta ronda.") +
+              "</p>";
+            bootstrap.Modal.getOrCreateInstance(
+              document.querySelector("#resumen"),
+              { backdrop: "static" },
+            ).show();
+          }
+          document.querySelector("#recuperarVida").onclick = () => {
+            usuario.vidas = 1;
+            guardar();
+            preguntas.splice(
+              actual + 1,
+              0,
+              ...falladas.map((q) => ({ ...q, modoRepaso: true })),
+            );
+            bootstrap.Modal.getInstance(
+              document.querySelector("#pausaVidas"),
+            ).hide();
+            document.querySelector("#vidas").textContent = "1 / 5";
+            document.querySelector("#feedback").innerHTML =
+              '<div class="alert alert-info">Repasa la pista y continúa sin penalización.</div>';
+            const boton = document.querySelector("#comprobar");
+            boton.textContent = "Continuar";
+            boton.disabled = false;
+            boton.onclick = () => {
+              actual++;
+              if (actual < preguntas.length) mostrarPregunta();
+              else finalizar();
+            };
+          };
+          function hablar(texto, idioma, estado) {
+            speechSynthesis.cancel();
+            const voz = new SpeechSynthesisUtterance(texto);
+            voz.lang = idioma;
+            voz.onstart = () => (estado.textContent = "Reproduciendo…");
+            voz.onend = () =>
+              (estado.textContent = "Pronunciación en inglés · " + texto);
+            speechSynthesis.speak(voz);
+          }
+          document.querySelector("#salir").onclick = () => {
+            if (confirm("¿Salir de esta lección?"))
+              location.href = "dashboard.html";
+          };
+          mostrarPregunta();
+          const pref = JSON.parse(
+            localStorage.getItem("lingo-accesibilidad") || "{}",
+          );
+          if (pref.contraste) document.body.classList.add("high-contrast");
+          if (pref.oscuro) document.body.classList.add("modo-oscuro");
+          document.querySelector("#contraste").onclick = () => {
+            document.body.classList.toggle("high-contrast");
+            pref.contraste = document.body.classList.contains("high-contrast");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#oscuro").onclick = () => {
+            document.body.classList.toggle("modo-oscuro");
+            pref.oscuro = document.body.classList.contains("modo-oscuro");
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          };
+          document.querySelector("#mas").onclick = () => tamano(15);
+          document.querySelector("#menos").onclick = () => tamano(-15);
+          function tamano(n) {
+            pref.fuente = Math.max(
+              100,
+              Math.min(130, (pref.fuente || 100) + n),
+            );
+            document.documentElement.style.fontSize = pref.fuente + "%";
+            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+          }
+          document.querySelector("#foco").onclick = () =>
+            document.body.classList.toggle("keyboard-focus");
+          document.querySelector("#leer").onclick = () => {
+            const voz = new SpeechSynthesisUtterance(
+              document.querySelector("main").innerText,
+            );
+            voz.lang = "es-ES";
+            speechSynthesis.speak(voz);
+          };
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("No se pudo cargar data.json. Usa Live Server.");
+        });
+    </script>
     <style>
+      .modo-oscuro {
+        background: #0f172a !important;
+        color: #fff !important;
+      }
+      .modo-oscuro .card,
+      .modo-oscuro nav,
+      .modo-oscuro .offcanvas,
+      .modo-oscuro .modal-content {
+        background: #1e293b !important;
+        color: #fff !important;
+        border-color: #475569 !important;
+      }
+      .modo-oscuro .text-secondary {
+        color: #cbd5e1 !important;
+      }
       .keyboard-focus :focus-visible {
         outline: 3px solid #f97316 !important;
         outline-offset: 3px;
@@ -381,4 +631,3 @@ fetch('data.json').then(respuesta=>respuesta.json()).then(datos=>{
     </style>
   </body>
 </html>
-
