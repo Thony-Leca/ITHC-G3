@@ -52,6 +52,10 @@
         color: #fff !important;
         border-color: #ff0 !important;
       }
+      .keyboard-focus :focus-visible {
+        outline: 3px solid #f97316 !important;
+        outline-offset: 3px;
+      }
       .modo-oscuro {
         background: #0f172a !important;
         color: #fff !important;
@@ -98,7 +102,8 @@
       <div class="container-xl">
         <a class="navbar-brand fw-bold text-primary" href="dashboard.html"
           ><i class="bi bi-book-half me-2"></i>LingoFlow</a
-        ><button
+        >
+        <button
           class="navbar-toggler"
           data-bs-toggle="collapse"
           data-bs-target="#menu"
@@ -107,26 +112,41 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="menu">
-          <ul class="navbar-nav me-auto">
+          <ul class="navbar-nav me-auto ms-lg-4">
             <li class="nav-item">
               <a class="nav-link active" href="dashboard.html">Mi progreso</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard-analitico.html">Analítica</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Landing Estudiantes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="landing-universidades.html"
+                >Landing Campus</a
+              >
             </li>
             <li class="nav-item">
               <a class="nav-link" href="perfil.html">Perfil</a>
             </li>
           </ul>
-          <div class="d-flex align-items-center gap-2">
-            <span
-              id="saludoCabecera"
-              class="small fw-semibold text-secondary"
-            ></span
-            ><button class="btn btn-outline-primary btn-sm" id="salir">
+          <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+            <span class="small fw-bold text-primary" id="saludoCabecera"
+              >Hola</span
+            >
+            <button
+              class="btn btn-outline-danger btn-sm"
+              id="salir"
+              type="button"
+            >
               Salir
             </button>
           </div>
         </div>
       </div>
     </nav>
+
     <main class="container-xl py-4 py-lg-5">
       <div
         class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"
@@ -145,6 +165,7 @@
           ><i class="bi bi-play-fill me-1"></i>Continuar lección</a
         >
       </div>
+
       <div class="row g-3 mb-4">
         <div class="col-6 col-lg">
           <div class="card stat p-3">
@@ -193,6 +214,7 @@
           </div>
         </div>
       </div>
+
       <section class="card p-3 p-lg-4 mb-4 border-primary-subtle">
         <div class="row align-items-center g-3">
           <div class="col-lg-8">
@@ -219,6 +241,7 @@
           </div>
         </div>
       </section>
+
       <div class="row g-4 mb-5">
         <div class="col-lg-5">
           <section class="card p-3 p-lg-4 h-100">
@@ -250,6 +273,7 @@
           </section>
         </div>
       </div>
+
       <section class="card p-3 p-lg-4 mb-5" aria-labelledby="tituloAnalisis">
         <div class="mb-3">
           <span class="small text-uppercase fw-bold text-secondary"
@@ -302,6 +326,7 @@
           <div id="listaRepaso" class="small mt-1"></div>
         </div>
       </section>
+
       <section class="mb-5">
         <div
           id="catalogo"
@@ -324,6 +349,7 @@
         <div class="card p-3 mt-4 border-warning-subtle" id="retoBonus"></div>
       </section>
     </main>
+
     <button
       class="btn btn-primary rounded-circle access"
       data-bs-toggle="offcanvas"
@@ -343,6 +369,7 @@
         </button>
         <div class="btn-group w-100">
           <button id="menos" class="btn btn-outline-secondary">A−</button
+          ><button id="normal" class="btn btn-outline-secondary">Normal</button
           ><button id="mas" class="btn btn-outline-secondary">A+</button>
         </div>
         <button id="foco" class="btn btn-outline-secondary w-100 mt-2">
@@ -354,770 +381,908 @@
         </button>
       </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
     <script>
-      fetch("data.json")
-        .then((respuesta) => respuesta.json())
-        .then((datos) => {
-          if (!localStorage.getItem("lingo-usuario-activo")) {
-            location.href = "login.html";
-            return;
-          }
-          // Selección del estudiante y datos guardados en el navegador
-          const llave = "lingo-usuarios";
-          let usuarios =
-            JSON.parse(localStorage.getItem(llave) || "null") || datos.usuarios;
-          localStorage.setItem(llave, JSON.stringify(usuarios));
-          let activo = localStorage.getItem("lingo-usuario-activo") || "carlos";
-          if (!usuarios.some((u) => u.id === activo)) activo = "carlos";
-          let donut, barras;
-          let competenciaActiva = "Todas";
-          const guardar = () =>
-            localStorage.setItem(llave, JSON.stringify(usuarios));
-          function tarjetasModule(nivel, modulo, u) {
-            const progreso = u.modulos[modulo.id] || 0;
-            const desbloqueado = u.xp >= modulo.xpRequerido;
-            const completo = progreso >= 100;
-            const lecciones = modulo.lecciones
-              .map(
-                (titulo, i) =>
-                  '<a class="list-group-item list-group-item-action" href="leccion.html?modulo=' +
-                  modulo.id +
-                  "&leccion=" +
-                  (i + 1) +
-                  '"><span class="badge text-bg-light me-2">' +
-                  (i + 1) +
-                  "</span>" +
-                  titulo +
-                  '<i class="bi bi-arrow-right float-end"></i></a>',
-              )
-              .join("");
-            return (
-              '<div class="col-lg-6"><article class="card ' +
-              (completo ? "completo" : "pendiente") +
-              ' p-4 h-100"><div class="d-flex justify-content-between"><span class="badge ' +
-              (completo
-                ? "text-bg-success"
-                : desbloqueado
-                  ? "text-bg-primary"
-                  : "text-bg-secondary") +
-              '">' +
-              modulo.numero +
-              " · " +
-              (completo
-                ? "Completado"
-                : desbloqueado
-                  ? "Disponible"
-                  : "Bloqueado") +
-              '</span><span class="badge text-bg-light">' +
-              nivel.id +
-              '</span></div><h4 class="h5 mt-3">' +
-              modulo.titulo +
-              '</h4><p class="text-secondary small">' +
-              modulo.descripcion +
-              '</p><div class="d-flex justify-content-between small"><span>' +
-              (desbloqueado
-                ? "Progreso del módulo"
-                : "Desbloquea al alcanzar " + modulo.xpRequerido + " XP") +
-              "</span><strong>" +
-              (desbloqueado ? progreso + "%" : "🔒") +
-              '</strong></div><div class="progress my-2" style="height:8px"><div class="progress-bar ' +
-              (completo ? "bg-success" : "") +
-              '" style="width:' +
-              (desbloqueado ? progreso : 0) +
-              '%"></div></div><p class="small text-secondary">5 lecciones · 10–15 min</p>' +
-              (desbloqueado
-                ? '<div class="accordion accordion-flush"><div class="accordion-item"><h5 class="accordion-header"><button class="accordion-button collapsed py-2" data-bs-toggle="collapse" data-bs-target="#lecciones-' +
-                  modulo.id +
-                  '">Ver las 5 lecciones</button></h5><div id="lecciones-' +
-                  modulo.id +
-                  '" class="accordion-collapse collapse"><div class="list-group list-group-flush">' +
-                  lecciones +
-                  "</div></div></div></div>"
-                : '<div class="alert alert-light small mb-0">Te faltan ' +
-                  Math.max(0, modulo.xpRequerido - u.xp) +
-                  " XP para desbloquear.</div>") +
-              "</article></div>"
-            );
-          }
-          function dibujarDashboard() {
-            const u = usuarios.find((x) => x.id === activo);
-            const claveVida = "lingo-ultima-vida-" + u.id;
-            const ahora = Date.now();
-            let marcaVida = Number(localStorage.getItem(claveVida)) || ahora;
-            const vidasRecuperadas = Math.floor((ahora - marcaVida) / 900000);
-            if (vidasRecuperadas > 0) {
-              u.vidas = Math.min(5, u.vidas + vidasRecuperadas);
-              marcaVida += vidasRecuperadas * 900000;
-              localStorage.setItem(claveVida, String(marcaVida));
-              guardar();
-            } else if (!localStorage.getItem(claveVida))
-              localStorage.setItem(claveVida, String(ahora));
-            if (!u.modulos)
-              u.modulos = {
-                "a1-m01": 100,
-                "a1-m02": u.avance,
-                "a1-m03": 0,
-                "a1-m04": 0,
-              };
-            document.querySelector("#saludo").textContent =
-              "¡Hola, " +
-              u.nombre.split(" ")[0] +
-              "! Listo para practicar hoy?";
-            document.querySelector("#saludoCabecera").textContent =
-              "Hola, " + u.nombre.split(" ")[0];
-            document.querySelector("#vidas").textContent = u.vidas;
-            document.querySelector("#racha").textContent = u.racha;
-            document.querySelector("#xp").textContent = u.xp;
-            document.querySelector("#nivelUsuario").textContent =
-              Math.floor((Number(u.xp) || 0) / 250) + 1;
-            document.querySelector("#avance").textContent = u.avance;
-            const hoy = (new Date().getDay() + 6) % 7;
-            const minutosHoy = u.minutos[hoy] || 0;
-            document.querySelector("#minutosHoy").textContent = minutosHoy;
-            document.querySelector("#diasMeta").textContent = u.minutos.filter(
-              (n) => n >= 10,
-            ).length;
-            document.querySelector("#nombreDia").textContent = [
-              "Lun",
-              "Mar",
-              "Mié",
-              "Jue",
-              "Vie",
-              "Sáb",
-              "Dom",
-            ][hoy];
-            document.querySelector("#leccionesHoy").textContent = Math.min(
-              4,
-              Math.floor(minutosHoy / 3),
-            );
-            document.querySelector("#barraMeta").style.width =
-              Math.min(100, minutosHoy * 10) + "%";
-            document.querySelector("#iniciarMeta").href =
-              "leccion.html?modulo=a1-m02&leccion=1";
-            const tabs = document.querySelector("#nivelesTabs");
-            const contenido = document.querySelector("#nivelesContenido");
-            tabs.innerHTML = datos.niveles
-              .map(
-                (nivel, i) =>
-                  '<li class="nav-item"><button class="nav-link ' +
-                  (i === 0 ? "active" : "") +
-                  '" data-bs-toggle="pill" data-bs-target="#nivel-' +
-                  nivel.id +
-                  '" type="button">' +
-                  nivel.id +
-                  " · " +
-                  nivel.nombre +
-                  "</button></li>",
-              )
-              .join("");
-            contenido.innerHTML = datos.niveles
-              .map((nivel, ni) => {
-                const modules = nivel.modulos;
-                const pending = modules.filter(
-                  (m) => (u.modulos[m.id] || 0) < 100,
-                );
-                const done = modules.filter(
-                  (m) => (u.modulos[m.id] || 0) >= 100,
-                );
-                return (
-                  '<div class="tab-pane fade ' +
-                  (ni === 0 ? "show active" : "") +
-                  '" id="nivel-' +
-                  nivel.id +
-                  '"><p class="text-secondary">' +
-                  nivel.descripcion +
-                  '</p><section class="mb-4"><h3 class="h5 fw-bold">Pendientes / En curso</h3><div class="row g-3">' +
-                  (pending.length
-                    ? pending.map((m) => tarjetasModule(nivel, m, u)).join("")
-                    : '<p class="text-secondary">¡Completaste este nivel!</p>') +
-                  '</div></section><section><h3 class="h5 fw-bold">Completados</h3><div class="row g-3">' +
-                  (done.length
-                    ? done.map((m) => tarjetasModule(nivel, m, u)).join("")
-                    : '<p class="text-secondary">Los módulos completados aparecerán aquí.</p>') +
-                  "</div></section></div>"
-                );
-              })
-              .join("");
-            const reto = datos.retoBonus;
-            document.querySelector("#retoBonus").innerHTML =
-              '<div class="d-flex flex-wrap justify-content-between align-items-center gap-3"><div><span class="badge text-bg-warning">RETO BONUS · 600 XP</span><h3 class="h5 mt-2 mb-1">' +
-              reto.titulo +
-              '</h3><p class="text-secondary small mb-0">' +
-              reto.descripcion +
-              "</p></div>" +
-              (u.xp >= reto.xpRequerido
-                ? '<a class="btn btn-warning" href="leccion.html?modulo=bonus&leccion=1">Empezar reto</a>'
-                : '<button class="btn btn-outline-secondary" disabled>Desbloquea con ' +
-                  reto.xpRequerido +
-                  " XP</button>") +
-              "</div>";
-            if (donut) donut.destroy();
-            if (barras) barras.destroy();
-            donut = new Chart(document.querySelector("#graficoAvance"), {
-              type: "doughnut",
-              data: {
-                labels: ["Completado", "Pendiente"],
-                datasets: [
-                  {
-                    data: [u.avance, 100 - u.avance],
-                    backgroundColor: ["#2563eb", "#e2e8f0"],
-                    borderWidth: 0,
-                  },
+      const datosRespaldo = {
+        usuarios: [
+          {
+            id: "carlos",
+            nombre: "Carlos Mendoza",
+            vidas: 5,
+            racha: 7,
+            xp: 450,
+            avance: 60,
+            nivel: "A1",
+            minutos: [12, 10, 15, 8, 14, 0, 4],
+            habilidades: [85, 75, 65, 70],
+            modulos: {
+              "a1-m01": 100,
+              "a1-m02": 40,
+              "a1-m03": 0,
+              "a1-m04": 0,
+            },
+            palabras: [
+              ["Schedule", "Horario", false],
+              ["Deadline", "Fecha límite", false],
+              ["Nice to meet you", "Mucho gusto", true],
+            ],
+            historialSesiones: [],
+          },
+        ],
+        niveles: [
+          {
+            id: "A1",
+            nombre: "Básico",
+            descripcion:
+              "Fundamentos esenciales de vocabulario y gramática cotidiana.",
+            modulos: [
+              {
+                id: "a1-m01",
+                numero: "MÓDULO 01",
+                titulo: "Saludos y presentaciones",
+                descripcion:
+                  "Frases elementales, presentaciones y preguntas de cortesía.",
+                xpRequerido: 0,
+                lecciones: [
+                  "Saludos formales e informales",
+                  "Presentarte en clase",
+                  "Preguntar cómo estás",
+                  "Deletrear nombres",
+                  "Despedidas cotidianas",
                 ],
               },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: "72%",
-                plugins: { legend: { position: "bottom" } },
+              {
+                id: "a1-m02",
+                numero: "MÓDULO 02",
+                titulo: "Verbos y rutinas diarias",
+                descripcion:
+                  "Rutina universitaria, horas del día y verbos en presente.",
+                xpRequerido: 100,
+                lecciones: [
+                  "Horarios de clase",
+                  "Verbos de rutina",
+                  "Días de la semana",
+                  "Transporte al campus",
+                  "Repaso práctico",
+                ],
               },
-            });
-            if (google.visualization) dibujarActividadSemanal(u);
-            dibujarAnalisisCompetencias(u);
+              {
+                id: "a1-m03",
+                numero: "MÓDULO 03",
+                titulo: "Pedir comida y bebidas",
+                descripcion:
+                  "Vocabulario de cafetería, menú, precios y agradecimientos.",
+                xpRequerido: 500,
+                lecciones: [
+                  "En la cafetería",
+                  "Comidas y bebidas",
+                  "Preguntar precios",
+                  "Ordenar un menú",
+                  "Agradecimientos",
+                ],
+              },
+            ],
+          },
+        ],
+        retoBonus: {
+          titulo: "Desafío Express de Vocabulario Técnico A1",
+          descripcion:
+            "Completa 10 términos universitarios sin perder vidas para ganar +150 XP.",
+          xpRequerido: 600,
+        },
+        vocabulario: [
+          { palabra: "Nice to meet you", nivel: "A1" },
+          { palabra: "Daily routine", nivel: "A1" },
+          { palabra: "Schedule", nivel: "A1" },
+        ],
+      };
+
+      function iniciarAppDashboard(datos, esRespaldo = false) {
+        const llave = "lingo-usuarios";
+        const guardados = JSON.parse(localStorage.getItem(llave) || "[]");
+
+        // Combina siempre todos los usuarios de data.json con el progreso guardado en localStorage
+        let usuarios = datos.usuarios.map((uJson) => {
+          const uGuardado = guardados.find((g) => g.id === uJson.id);
+          return uGuardado ? { ...uJson, ...uGuardado } : uJson;
+        });
+
+        // Conserva también usuarios nuevos creados en login.html#registro
+        guardados.forEach((g) => {
+          if (!usuarios.some((u) => u.id === g.id)) {
+            usuarios.push(g);
           }
-          function dibujarAnalisisCompetencias(u) {
-            const h = u.habilidades || [85, 75, 65, 70];
-            const valores = {
-              Vocabulario: h[0] ?? 85,
-              Pronunciación: h[1] ?? 75,
-              "Comprensión auditiva": h[3] ?? 70,
-              "Gramática básica": h[2] ?? 65,
+        });
+
+        if (!esRespaldo) {
+          localStorage.setItem(llave, JSON.stringify(usuarios));
+        }
+
+        // Identifica el usuario que inició sesión (por id o correo)
+        let activo = localStorage.getItem("lingo-usuario-activo");
+        if (!activo) {
+          location.href = "login.html";
+          return;
+        }
+
+        const encontrado = usuarios.find(
+          (u) =>
+            u.id === activo ||
+            (u.correo && u.correo.toLowerCase() === activo.toLowerCase()),
+        );
+        activo = encontrado ? encontrado.id : usuarios[0].id;
+
+        let donut, barras;
+        let competenciaActiva = "Todas";
+        const guardar = () =>
+          localStorage.setItem(llave, JSON.stringify(usuarios));
+
+        function tarjetasModule(nivel, modulo, u) {
+          const progreso = u.modulos[modulo.id] || 0;
+          const desbloqueado = u.xp >= modulo.xpRequerido;
+          const completo = progreso >= 100;
+          const lecciones = modulo.lecciones
+            .map(
+              (titulo, i) =>
+                '<a class="list-group-item list-group-item-action" href="leccion.html?modulo=' +
+                modulo.id +
+                "&leccion=" +
+                (i + 1) +
+                '"><span class="badge text-bg-light me-2">' +
+                (i + 1) +
+                "</span>" +
+                titulo +
+                '<i class="bi bi-arrow-right float-end"></i></a>',
+            )
+            .join("");
+          return (
+            '<div class="col-lg-6"><article class="card ' +
+            (completo ? "completo" : "pendiente") +
+            ' p-4 h-100"><div class="d-flex justify-content-between"><span class="badge ' +
+            (completo
+              ? "text-bg-success"
+              : desbloqueado
+                ? "text-bg-primary"
+                : "text-bg-secondary") +
+            '">' +
+            modulo.numero +
+            " · " +
+            (completo
+              ? "Completado"
+              : desbloqueado
+                ? "Disponible"
+                : "Bloqueado") +
+            '</span><span class="badge text-bg-light">' +
+            nivel.id +
+            '</span></div><h4 class="h5 mt-3">' +
+            modulo.titulo +
+            '</h4><p class="text-secondary small">' +
+            modulo.descripcion +
+            '</p><div class="d-flex justify-content-between small"><span>' +
+            (desbloqueado
+              ? "Progreso del módulo"
+              : "Desbloquea al alcanzar " + modulo.xpRequerido + " XP") +
+            "</span><strong>" +
+            (desbloqueado ? progreso + "%" : "🔒") +
+            '</strong></div><div class="progress my-2" style="height:8px"><div class="progress-bar ' +
+            (completo ? "bg-success" : "") +
+            '" style="width:' +
+            (desbloqueado ? progreso : 0) +
+            '%"></div></div><p class="small text-secondary">5 lecciones · 10–15 min</p>' +
+            (desbloqueado
+              ? '<div class="accordion accordion-flush"><div class="accordion-item"><h5 class="accordion-header"><button class="accordion-button collapsed py-2" data-bs-toggle="collapse" data-bs-target="#lecciones-' +
+                modulo.id +
+                '">Ver las 5 lecciones</button></h5><div id="lecciones-' +
+                modulo.id +
+                '" class="accordion-collapse collapse"><div class="list-group list-group-flush">' +
+                lecciones +
+                "</div></div></div></div>"
+              : '<div class="alert alert-light small mb-0">Te faltan ' +
+                Math.max(0, modulo.xpRequerido - u.xp) +
+                " XP para desbloquear.</div>") +
+            "</article></div>"
+          );
+        }
+
+        function dibujarDashboard() {
+          const u = usuarios.find((x) => x.id === activo) || usuarios[0];
+          const claveVida = "lingo-ultima-vida-" + u.id;
+          const ahora = Date.now();
+          let marcaVida = Number(localStorage.getItem(claveVida)) || ahora;
+          const vidasRecuperadas = Math.floor((ahora - marcaVida) / 900000);
+          if (vidasRecuperadas > 0) {
+            u.vidas = Math.min(5, u.vidas + vidasRecuperadas);
+            marcaVida += vidasRecuperadas * 900000;
+            localStorage.setItem(claveVida, String(marcaVida));
+            guardar();
+          } else if (!localStorage.getItem(claveVida)) {
+            localStorage.setItem(claveVida, String(ahora));
+          }
+
+          if (!u.modulos) {
+            u.modulos = {
+              "a1-m01": 100,
+              "a1-m02": u.avance,
+              "a1-m03": 0,
+              "a1-m04": 0,
             };
-            const habilidades = [
-              {
-                id: "Vocabulario",
-                icono: "bi-book",
-                detalle: (datos.vocabulario || []).length + " palabras",
-              },
-              {
-                id: "Comprensión auditiva",
-                icono: "bi-headphones",
-                detalle: "18 audios de práctica",
-              },
-              {
-                id: "Gramática básica",
-                icono: "bi-braces",
-                detalle:
-                  valores["Gramática básica"] <= 65
-                    ? "Requiere refuerzo"
-                    : "En progreso",
-              },
-              {
-                id: "Pronunciación",
-                icono: "bi-mic",
-                detalle: "Práctica oral",
-              },
-            ];
-            const promedio = Math.round(
-              Object.values(valores).reduce((a, b) => a + Number(b), 0) / 4,
-            );
-            const tarjetas = [
-              {
-                id: "Todas",
-                icono: "bi-grid",
-                valor: promedio,
-                detalle: "Promedio global",
-              },
-              ...habilidades.map((x) => ({
-                ...x,
-                valor: Number(valores[x.id]),
-              })),
-            ];
-            const contenedor = d3.select("#tarjetasCompetencias");
-            contenedor.selectAll("*").remove();
-            const cols = contenedor
-              .selectAll(".competencia-col")
-              .data(tarjetas)
-              .enter()
-              .append("div")
-              .attr("class", "col-6 col-lg");
-            const card = cols
-              .append("div")
-              .attr(
-                "class",
-                (d) =>
-                  "card tarjeta-competencia p-3 h-100 " +
-                  (d.id === competenciaActiva ? "seleccionada" : ""),
-              )
-              .attr("role", "button")
-              .attr("tabindex", "0")
-              .attr("aria-pressed", (d) =>
-                d.id === competenciaActiva ? "true" : "false",
-              )
-              .on("click", (event, d) => {
+          }
+
+          const primerNombre = u.nombre.split(" ")[0];
+          const saludoEl = document.querySelector("#saludo");
+          const cabeceraEl = document.querySelector("#saludoCabecera");
+          if (saludoEl)
+            saludoEl.textContent =
+              "¡Hola, " + primerNombre + "! Listo para practicar hoy?";
+          if (cabeceraEl) cabeceraEl.textContent = "Hola, " + primerNombre;
+
+          document.querySelector("#vidas").textContent = u.vidas;
+          document.querySelector("#racha").textContent = u.racha;
+          document.querySelector("#xp").textContent = u.xp;
+          document.querySelector("#nivelUsuario").textContent =
+            Math.floor((Number(u.xp) || 0) / 250) + 1;
+          document.querySelector("#avance").textContent = u.avance;
+
+          const hoy = (new Date().getDay() + 6) % 7;
+          const minutosHoy = u.minutos[hoy] || 0;
+          document.querySelector("#minutosHoy").textContent = minutosHoy;
+          document.querySelector("#diasMeta").textContent = u.minutos.filter(
+            (n) => n >= 10,
+          ).length;
+          document.querySelector("#nombreDia").textContent = [
+            "Lun",
+            "Mar",
+            "Mié",
+            "Jue",
+            "Vie",
+            "Sáb",
+            "Dom",
+          ][hoy];
+          document.querySelector("#leccionesHoy").textContent = Math.min(
+            4,
+            Math.floor(minutosHoy / 3),
+          );
+          document.querySelector("#barraMeta").style.width =
+            Math.min(100, minutosHoy * 10) + "%";
+          document.querySelector("#iniciarMeta").href =
+            "leccion.html?modulo=a1-m02&leccion=1";
+
+          const tabs = document.querySelector("#nivelesTabs");
+          const contenido = document.querySelector("#nivelesContenido");
+          tabs.innerHTML = datos.niveles
+            .map(
+              (nivel, i) =>
+                '<li class="nav-item"><button class="nav-link ' +
+                (i === 0 ? "active" : "") +
+                '" data-bs-toggle="pill" data-bs-target="#nivel-' +
+                nivel.id +
+                '" type="button">' +
+                nivel.id +
+                " · " +
+                nivel.nombre +
+                "</button></li>",
+            )
+            .join("");
+
+          contenido.innerHTML = datos.niveles
+            .map((nivel, ni) => {
+              const modules = nivel.modulos;
+              const pending = modules.filter(
+                (m) => (u.modulos[m.id] || 0) < 100,
+              );
+              const done = modules.filter((m) => (u.modulos[m.id] || 0) >= 100);
+              return (
+                '<div class="tab-pane fade ' +
+                (ni === 0 ? "show active" : "") +
+                '" id="nivel-' +
+                nivel.id +
+                '"><p class="text-secondary">' +
+                nivel.descripcion +
+                '</p><section class="mb-4"><h3 class="h5 fw-bold">Pendientes / En curso</h3><div class="row g-3">' +
+                (pending.length
+                  ? pending.map((m) => tarjetasModule(nivel, m, u)).join("")
+                  : '<p class="text-secondary">¡Completaste este nivel!</p>') +
+                '</div></section><section><h3 class="h5 fw-bold">Completados</h3><div class="row g-3">' +
+                (done.length
+                  ? done.map((m) => tarjetasModule(nivel, m, u)).join("")
+                  : '<p class="text-secondary">Los módulos completados aparecerán aquí.</p>') +
+                "</div></section></div>"
+              );
+            })
+            .join("");
+
+          const reto = datos.retoBonus;
+          document.querySelector("#retoBonus").innerHTML =
+            '<div class="d-flex flex-wrap justify-content-between align-items-center gap-3"><div><span class="badge text-bg-warning">RETO BONUS · ' +
+            reto.xpRequerido +
+            ' XP</span><h3 class="h5 mt-2 mb-1">' +
+            reto.titulo +
+            '</h3><p class="text-secondary small mb-0">' +
+            reto.descripcion +
+            "</p></div>" +
+            (u.xp >= reto.xpRequerido
+              ? '<a class="btn btn-warning" href="leccion.html?modulo=bonus&leccion=1">Empezar reto</a>'
+              : '<button class="btn btn-outline-secondary" disabled>Desbloquea con ' +
+                reto.xpRequerido +
+                " XP</button>") +
+            "</div>";
+
+          if (donut) donut.destroy();
+          if (barras) barras.destroy();
+          donut = new Chart(document.querySelector("#graficoAvance"), {
+            type: "doughnut",
+            data: {
+              labels: ["Completado", "Pendiente"],
+              datasets: [
+                {
+                  data: [u.avance, 100 - u.avance],
+                  backgroundColor: ["#2563eb", "#e2e8f0"],
+                  borderWidth: 0,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "72%",
+              plugins: { legend: { position: "bottom" } },
+            },
+          });
+
+          if (typeof google !== "undefined" && google.visualization) {
+            dibujarActividadSemanal(u);
+          }
+          dibujarAnalisisCompetencias(u);
+        }
+
+        function dibujarAnalisisCompetencias(u) {
+          const h = u.habilidades || [85, 75, 65, 70];
+          const valores = {
+            Vocabulario: h[0] ?? 85,
+            Pronunciación: h[1] ?? 75,
+            "Comprensión auditiva": h[3] ?? 70,
+            "Gramática básica": h[2] ?? 65,
+          };
+          const habilidades = [
+            {
+              id: "Vocabulario",
+              icono: "bi-book",
+              detalle: (datos.vocabulario || []).length + " palabras",
+            },
+            {
+              id: "Comprensión auditiva",
+              icono: "bi-headphones",
+              detalle: "18 audios de práctica",
+            },
+            {
+              id: "Gramática básica",
+              icono: "bi-braces",
+              detalle:
+                valores["Gramática básica"] <= 65
+                  ? "Requiere refuerzo"
+                  : "En progreso",
+            },
+            {
+              id: "Pronunciación",
+              icono: "bi-mic",
+              detalle: "Práctica oral",
+            },
+          ];
+          const promedio = Math.round(
+            Object.values(valores).reduce((a, b) => a + Number(b), 0) / 4,
+          );
+          const tarjetas = [
+            {
+              id: "Todas",
+              icono: "bi-grid",
+              valor: promedio,
+              detalle: "Promedio global",
+            },
+            ...habilidades.map((x) => ({
+              ...x,
+              valor: Number(valores[x.id]),
+            })),
+          ];
+
+          const contenedor = d3.select("#tarjetasCompetencias");
+          contenedor.selectAll("*").remove();
+          const cols = contenedor
+            .selectAll(".competencia-col")
+            .data(tarjetas)
+            .enter()
+            .append("div")
+            .attr("class", "col-6 col-lg");
+          const card = cols
+            .append("div")
+            .attr(
+              "class",
+              (d) =>
+                "card tarjeta-competencia p-3 h-100 " +
+                (d.id === competenciaActiva ? "seleccionada" : ""),
+            )
+            .attr("role", "button")
+            .attr("tabindex", "0")
+            .attr("aria-pressed", (d) =>
+              d.id === competenciaActiva ? "true" : "false",
+            )
+            .on("click", (event, d) => {
+              competenciaActiva = d.id;
+              dibujarAnalisisCompetencias(u);
+            })
+            .on("keydown", (event, d) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
                 competenciaActiva = d.id;
                 dibujarAnalisisCompetencias(u);
-              })
-              .on("keydown", (event, d) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  competenciaActiva = d.id;
-                  dibujarAnalisisCompetencias(u);
-                }
-              });
-            card
-              .append("div")
-              .attr(
-                "class",
-                "d-flex align-items-center justify-content-between gap-2",
-              )
-              .html(
-                (d) =>
-                  '<span class="small fw-semibold">' +
-                  d.id +
-                  '</span><i class="bi ' +
-                  d.icono +
-                  ' text-primary"></i>',
-              );
-            card
-              .append("strong")
-              .attr("class", "h3 my-2")
-              .text((d) => d.valor + "%");
-            card
-              .append("span")
-              .attr("class", "small text-secondary")
-              .text((d) => d.detalle);
-
-            const competencia =
-              competenciaActiva === "Todas"
-                ? "Todas las habilidades"
-                : competenciaActiva;
-            document.querySelector("#subtituloEvolucion").textContent =
-              competencia + " · precisión (%) y tiempo (minutos)";
-            const nivelId = (u.nivel || "A1").match(/A1|A2|B1|B2/)?.[0] || "A1";
-            const nivel =
-              datos.niveles.find((n) => n.id === nivelId) || datos.niveles[0];
-            const modulos = nivel.modulos.slice(0, 3);
-            const historial = u.historialSesiones || [];
-            const ajustes = [15, -7, 8];
-            const base =
-              competenciaActiva === "Todas"
-                ? promedio
-                : Number(valores[competenciaActiva]);
-            const minutosTotales = (u.minutos || []).reduce(
-              (a, b) => a + Number(b || 0),
-              0,
+              }
+            });
+          card
+            .append("div")
+            .attr(
+              "class",
+              "d-flex align-items-center justify-content-between gap-2",
+            )
+            .html(
+              (d) =>
+                '<span class="small fw-semibold">' +
+                d.id +
+                '</span><i class="bi ' +
+                d.icono +
+                ' text-primary"></i>',
             );
-            let modulosConRegistro = 0;
-            const porModulo = modulos.map((m, i) => {
-              const sesionesModulo = historial.filter((s) => s.modulo === m.id);
-              const mediciones = sesionesModulo
-                .map((s) =>
+          card
+            .append("strong")
+            .attr("class", "h3 my-2")
+            .text((d) => d.valor + "%");
+          card
+            .append("span")
+            .attr("class", "small text-secondary")
+            .text((d) => d.detalle);
+
+          const competencia =
+            competenciaActiva === "Todas"
+              ? "Todas las habilidades"
+              : competenciaActiva;
+          document.querySelector("#subtituloEvolucion").textContent =
+            competencia + " · precisión (%) y tiempo (minutos)";
+
+          const nivelId = (u.nivel || "A1").match(/A1|A2|B1|B2/)?.[0] || "A1";
+          const nivel =
+            datos.niveles.find((n) => n.id === nivelId) || datos.niveles[0];
+          const modulos = nivel.modulos.slice(0, 3);
+          const historial = u.historialSesiones || [];
+          const ajustes = [15, -7, 8];
+          const base =
+            competenciaActiva === "Todas"
+              ? promedio
+              : Number(valores[competenciaActiva]);
+          const minutosTotales = (u.minutos || []).reduce(
+            (a, b) => a + Number(b || 0),
+            0,
+          );
+          let modulosConRegistro = 0;
+
+          const porModulo = modulos.map((m, i) => {
+            const sesionesModulo = historial.filter((s) => s.modulo === m.id);
+            const mediciones = sesionesModulo
+              .map((s) =>
+                competenciaActiva === "Todas"
+                  ? s.precision
+                  : s.competencias?.[competenciaActiva]?.precision,
+              )
+              .filter((v) => Number.isFinite(v));
+            if (mediciones.length) modulosConRegistro++;
+            const minutosModulo = sesionesModulo.length
+              ? sesionesModulo.reduce(
+                  (total, s) => total + Number(s.minutos || 0),
+                  0,
+                )
+              : Math.round(minutosTotales * [0.45, 0.35, 0.2][i]);
+            return {
+              nombre:
+                m.numero + ": " + m.titulo.split(" ").slice(0, 3).join(" "),
+              corto: m.numero,
+              valor: mediciones.length
+                ? Math.round(d3.mean(mediciones))
+                : Math.max(35, Math.min(98, base + ajustes[i])),
+              minutos: minutosModulo,
+              modulo: m,
+              estimado: !mediciones.length,
+            };
+          });
+
+          document.querySelector("#subtituloModulos").textContent =
+            modulosConRegistro
+              ? "Aciertos registrados por módulo; los módulos sin intentos usan una estimación demostrativa."
+              : "Porcentaje de aciertos por módulo (estimación demostrativa hasta completar lecciones).";
+          dibujarBarras(porModulo, competenciaActiva);
+
+          const sesionesRegistradas = historial
+            .filter(
+              (s) =>
+                competenciaActiva === "Todas" ||
+                s.competencias?.[competenciaActiva],
+            )
+            .slice(-5);
+          const sesiones = sesionesRegistradas.length
+            ? sesionesRegistradas.map((s, i) => ({
+                sesion: "Sesión " + (i + 1),
+                precision:
                   competenciaActiva === "Todas"
                     ? s.precision
-                    : s.competencias?.[competenciaActiva]?.precision,
-                )
-                .filter((v) => Number.isFinite(v));
-              if (mediciones.length) modulosConRegistro++;
-              const minutosModulo = sesionesModulo.length
-                ? sesionesModulo.reduce(
-                    (total, s) => total + Number(s.minutos || 0),
-                    0,
-                  )
-                : Math.round(minutosTotales * [0.45, 0.35, 0.2][i]);
-              return {
-                nombre:
-                  m.numero + ": " + m.titulo.split(" ").slice(0, 3).join(" "),
-                corto: m.numero,
-                valor: mediciones.length
-                  ? Math.round(d3.mean(mediciones))
-                  : Math.max(35, Math.min(98, base + ajustes[i])),
-                minutos: minutosModulo,
-                modulo: m,
-                estimado: !mediciones.length,
-              };
-            });
-            document.querySelector("#subtituloModulos").textContent =
-              modulosConRegistro
-                ? "Aciertos registrados por módulo; los módulos sin intentos usan una estimación demostrativa."
-                : "Porcentaje de aciertos por módulo (estimación demostrativa hasta completar lecciones).";
-            dibujarBarras(porModulo, competenciaActiva);
-            const sesionesRegistradas = historial
-              .filter(
-                (s) =>
-                  competenciaActiva === "Todas" ||
-                  s.competencias?.[competenciaActiva],
-              )
-              .slice(-5);
-            const sesiones = sesionesRegistradas.length
-              ? sesionesRegistradas.map((s, i) => ({
-                  sesion: "Sesión " + (i + 1),
-                  precision:
-                    competenciaActiva === "Todas"
-                      ? s.precision
-                      : s.competencias[competenciaActiva].precision,
-                  minutos: s.minutos,
-                  repeticionesAudio: s.repeticionesAudio,
-                }))
-              : [-14, -9, -11, -4, 0].map((delta, i) => ({
-                  sesion: "Sesión " + (i + 1),
-                  precision: Math.max(35, Math.min(98, base + delta)),
-                  minutos: [6, 8, 7, 10, 12][i],
-                  repeticionesAudio: 0,
-                }));
-            document.querySelector("#notaHistorial").textContent =
-              sesionesRegistradas.length
-                ? "Resultados de tus intentos guardados en este navegador."
-                : "Serie ilustrativa basada en tu dominio actual; al completar lecciones se mostrarán resultados reales.";
-            dibujarEvolucion(sesiones);
-            dibujarRepaso(u, competenciaActiva, nivel);
-          }
-          function dibujarBarras(filas, competencia) {
-            const nodo = document.querySelector("#graficoModulos"),
-              ancho = Math.max(280, nodo.clientWidth),
-              alto = 280;
-            const margen = {
-                arriba: 8,
-                derecha: 72,
-                abajo: 30,
-                izquierda: 160,
-              },
-              innerW = ancho - margen.izquierda - margen.derecha;
-            const svg = d3
-              .select(nodo)
-              .html("")
-              .append("svg")
-              .attr("viewBox", "0 0 " + ancho + " " + alto)
-              .attr("width", "100%")
-              .attr("height", alto);
-            const x = d3.scaleLinear().domain([0, 100]).range([0, innerW]);
-            const y = d3
-              .scaleBand()
-              .domain(filas.map((d) => d.corto))
-              .range([margen.arriba, alto - margen.abajo])
-              .padding(0.28);
-            const g = svg
-              .append("g")
-              .attr("transform", "translate(" + margen.izquierda + ",0)");
-            g.append("g")
-              .attr("class", "texto-grafico")
-              .attr("transform", "translate(0," + (alto - margen.abajo) + ")")
-              .call(
-                d3
-                  .axisBottom(x)
-                  .ticks(5)
-                  .tickFormat((d) => d + "%"),
-              );
-            filas.forEach((d) => {
-              const yy = y(d.corto);
-              svg
-                .append("text")
-                .attr("x", margen.izquierda - 10)
-                .attr("y", yy + y.bandwidth() / 2 + 4)
-                .attr("text-anchor", "end")
-                .attr("class", "texto-grafico")
-                .text(d.nombre)
-                .append("title")
-                .text(d.modulo.titulo);
-            });
-            const barras = g
-              .selectAll("rect")
-              .data(filas)
-              .enter()
-              .append("rect")
-              .attr("x", 0)
-              .attr("y", (d) => y(d.corto))
-              .attr("height", y.bandwidth())
-              .attr("rx", 5)
-              .attr("fill", (d) =>
-                d.valor < 60
-                  ? "#ef4444"
-                  : d.valor <= 65
-                    ? "#f59e0b"
-                    : "#2563eb",
-              )
-              .attr("width", 0);
-            barras
-              .transition()
-              .duration(650)
-              .attr("width", (d) => x(d.valor));
-            g.selectAll(".valor-barra")
-              .data(filas)
-              .enter()
+                    : s.competencias[competenciaActiva].precision,
+                minutos: s.minutos,
+                repeticionesAudio: s.repeticionesAudio,
+              }))
+            : [-14, -9, -11, -4, 0].map((delta, i) => ({
+                sesion: "Sesión " + (i + 1),
+                precision: Math.max(35, Math.min(98, base + delta)),
+                minutos: [6, 8, 7, 10, 12][i],
+                repeticionesAudio: 0,
+              }));
+
+          document.querySelector("#notaHistorial").textContent =
+            sesionesRegistradas.length
+              ? "Resultados de tus intentos guardados en este navegador."
+              : "Serie ilustrativa basada en tu dominio actual; al completar lecciones se mostrarán resultados reales.";
+          dibujarEvolucion(sesiones);
+          dibujarRepaso(u, competenciaActiva, nivel);
+        }
+
+        function dibujarBarras(filas, competencia) {
+          const nodo = document.querySelector("#graficoModulos"),
+            ancho = Math.max(280, nodo.clientWidth),
+            alto = 280;
+          const margen = {
+              arriba: 8,
+              derecha: 72,
+              abajo: 30,
+              izquierda: 160,
+            },
+            innerW = ancho - margen.izquierda - margen.derecha;
+          const svg = d3
+            .select(nodo)
+            .html("")
+            .append("svg")
+            .attr("viewBox", "0 0 " + ancho + " " + alto)
+            .attr("width", "100%")
+            .attr("height", alto);
+          const x = d3.scaleLinear().domain([0, 100]).range([0, innerW]);
+          const y = d3
+            .scaleBand()
+            .domain(filas.map((d) => d.corto))
+            .range([margen.arriba, alto - margen.abajo])
+            .padding(0.28);
+          const g = svg
+            .append("g")
+            .attr("transform", "translate(" + margen.izquierda + ",0)");
+          g.append("g")
+            .attr("class", "texto-grafico")
+            .attr("transform", "translate(0," + (alto - margen.abajo) + ")")
+            .call(
+              d3
+                .axisBottom(x)
+                .ticks(5)
+                .tickFormat((d) => d + "%"),
+            );
+          filas.forEach((d) => {
+            const yy = y(d.corto);
+            svg
               .append("text")
-              .attr("class", "valor-barra")
-              .attr("x", (d) => x(d.valor) + 7)
-              .attr("y", (d) => y(d.corto) + y.bandwidth() / 2 + 4)
-              .attr("fill", "#334155")
-              .attr("font-size", 12)
-              .text(
-                (d) =>
-                  d.valor +
-                  "%" +
-                  (competencia === "Todas" ? " · " + d.minutos + " min" : ""),
-              )
-              .attr("opacity", 0)
-              .transition()
-              .delay(350)
-              .duration(300)
-              .attr("opacity", 1);
-          }
-          function dibujarEvolucion(sesiones) {
-            const nodo = document.querySelector("#graficoEvolucion"),
-              ancho = Math.max(280, nodo.clientWidth),
-              alto = 280;
-            const margen = {
-                arriba: 12,
-                derecha: 42,
-                abajo: 36,
-                izquierda: 42,
-              },
-              w = ancho - margen.izquierda - margen.derecha,
-              h = alto - margen.arriba - margen.abajo;
-            const svg = d3
-              .select(nodo)
-              .html("")
-              .append("svg")
-              .attr("viewBox", "0 0 " + ancho + " " + alto)
-              .attr("width", "100%")
-              .attr("height", alto);
-            const x = d3
-              .scalePoint()
-              .domain(sesiones.map((d) => d.sesion))
-              .range([0, w]);
-            const y = d3.scaleLinear().domain([0, 100]).range([h, 0]);
-            const yTiempo = d3.scaleLinear().domain([0, 15]).range([h, 0]);
-            const g = svg
-              .append("g")
-              .attr(
-                "transform",
-                "translate(" + margen.izquierda + "," + margen.arriba + ")",
-              );
-            g.append("g")
+              .attr("x", margen.izquierda - 10)
+              .attr("y", yy + y.bandwidth() / 2 + 4)
+              .attr("text-anchor", "end")
               .attr("class", "texto-grafico")
-              .call(
-                d3
-                  .axisLeft(y)
-                  .ticks(5)
-                  .tickFormat((d) => d + "%"),
-              );
-            g.append("g")
-              .attr("class", "texto-grafico")
-              .attr("transform", "translate(" + w + ",0)")
-              .call(d3.axisRight(yTiempo).ticks(4));
-            g.append("g")
-              .attr("class", "texto-grafico")
-              .attr("transform", "translate(0," + h + ")")
-              .call(d3.axisBottom(x));
-            const area = d3
-              .area()
-              .x((d) => x(d.sesion))
-              .y0(h)
-              .y1((d) => yTiempo(d.minutos))
-              .curve(d3.curveMonotoneX);
-            g.append("path")
-              .datum(sesiones)
-              .attr("fill", "rgba(14,165,233,.15)")
-              .attr("d", area);
-            const linea = d3
-              .line()
-              .x((d) => x(d.sesion))
-              .y((d) => y(d.precision))
-              .curve(d3.curveMonotoneX);
-            const path = g
-              .append("path")
-              .datum(sesiones)
-              .attr("fill", "none")
-              .attr("stroke", "#2563eb")
-              .attr("stroke-width", 3)
-              .attr("d", linea);
-            const total = path.node().getTotalLength();
-            path
-              .attr("stroke-dasharray", total + " " + total)
-              .attr("stroke-dashoffset", total)
-              .transition()
-              .duration(750)
-              .attr("stroke-dashoffset", 0);
-            g.selectAll("circle")
-              .data(sesiones)
-              .enter()
-              .append("circle")
-              .attr("cx", (d) => x(d.sesion))
-              .attr("cy", (d) => y(d.precision))
-              .attr("r", 4)
-              .attr("fill", "#2563eb")
+              .text(d.nombre)
               .append("title")
-              .text((d) => d.precision + "% precisión · " + d.minutos + " min");
-            const leyenda = svg
-              .append("g")
-              .attr(
-                "transform",
-                "translate(" + (margen.izquierda + 4) + "," + (alto - 5) + ")",
-              );
-            leyenda
-              .append("line")
-              .attr("x2", 18)
-              .attr("stroke", "#2563eb")
-              .attr("stroke-width", 3);
-            leyenda
-              .append("text")
-              .attr("x", 23)
-              .attr("y", 4)
-              .attr("class", "texto-grafico")
-              .text("Precisión");
-            leyenda
-              .append("rect")
-              .attr("x", 112)
-              .attr("y", -8)
-              .attr("width", 14)
-              .attr("height", 10)
-              .attr("fill", "rgba(14,165,233,.3)");
-            leyenda
-              .append("text")
-              .attr("x", 132)
-              .attr("y", 4)
-              .attr("class", "texto-grafico")
-              .text("Minutos");
+              .text(d.modulo.titulo);
+          });
+          const barrasD3 = g
+            .selectAll("rect")
+            .data(filas)
+            .enter()
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", (d) => y(d.corto))
+            .attr("height", y.bandwidth())
+            .attr("rx", 5)
+            .attr("fill", (d) =>
+              d.valor < 60 ? "#ef4444" : d.valor <= 65 ? "#f59e0b" : "#2563eb",
+            )
+            .attr("width", 0);
+          barrasD3
+            .transition()
+            .duration(650)
+            .attr("width", (d) => x(d.valor));
+          g.selectAll(".valor-barra")
+            .data(filas)
+            .enter()
+            .append("text")
+            .attr("class", "valor-barra")
+            .attr("x", (d) => x(d.valor) + 7)
+            .attr("y", (d) => y(d.corto) + y.bandwidth() / 2 + 4)
+            .attr("fill", "#334155")
+            .attr("font-size", 12)
+            .text(
+              (d) =>
+                d.valor +
+                "%" +
+                (competencia === "Todas" ? " · " + d.minutos + " min" : ""),
+            )
+            .attr("opacity", 0)
+            .transition()
+            .delay(350)
+            .duration(300)
+            .attr("opacity", 1);
+        }
+
+        function dibujarEvolucion(sesiones) {
+          const nodo = document.querySelector("#graficoEvolucion"),
+            ancho = Math.max(280, nodo.clientWidth),
+            alto = 280;
+          const margen = {
+              arriba: 12,
+              derecha: 42,
+              abajo: 36,
+              izquierda: 42,
+            },
+            w = ancho - margen.izquierda - margen.derecha,
+            h = alto - margen.arriba - margen.abajo;
+          const svg = d3
+            .select(nodo)
+            .html("")
+            .append("svg")
+            .attr("viewBox", "0 0 " + ancho + " " + alto)
+            .attr("width", "100%")
+            .attr("height", alto);
+          const x = d3
+            .scalePoint()
+            .domain(sesiones.map((d) => d.sesion))
+            .range([0, w]);
+          const y = d3.scaleLinear().domain([0, 100]).range([h, 0]);
+          const yTiempo = d3.scaleLinear().domain([0, 15]).range([h, 0]);
+          const g = svg
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" + margen.izquierda + "," + margen.arriba + ")",
+            );
+          g.append("g")
+            .attr("class", "texto-grafico")
+            .call(
+              d3
+                .axisLeft(y)
+                .ticks(5)
+                .tickFormat((d) => d + "%"),
+            );
+          g.append("g")
+            .attr("class", "texto-grafico")
+            .attr("transform", "translate(" + w + ",0)")
+            .call(d3.axisRight(yTiempo).ticks(4));
+          g.append("g")
+            .attr("class", "texto-grafico")
+            .attr("transform", "translate(0," + h + ")")
+            .call(d3.axisBottom(x));
+          const area = d3
+            .area()
+            .x((d) => x(d.sesion))
+            .y0(h)
+            .y1((d) => yTiempo(d.minutos))
+            .curve(d3.curveMonotoneX);
+          g.append("path")
+            .datum(sesiones)
+            .attr("fill", "rgba(14,165,233,.15)")
+            .attr("d", area);
+          const linea = d3
+            .line()
+            .x((d) => x(d.sesion))
+            .y((d) => y(d.precision))
+            .curve(d3.curveMonotoneX);
+          const path = g
+            .append("path")
+            .datum(sesiones)
+            .attr("fill", "none")
+            .attr("stroke", "#2563eb")
+            .attr("stroke-width", 3)
+            .attr("d", linea);
+          const total = path.node().getTotalLength();
+          path
+            .attr("stroke-dasharray", total + " " + total)
+            .attr("stroke-dashoffset", total)
+            .transition()
+            .duration(750)
+            .attr("stroke-dashoffset", 0);
+          g.selectAll("circle")
+            .data(sesiones)
+            .enter()
+            .append("circle")
+            .attr("cx", (d) => x(d.sesion))
+            .attr("cy", (d) => y(d.precision))
+            .attr("r", 4)
+            .attr("fill", "#2563eb")
+            .append("title")
+            .text((d) => d.precision + "% precisión · " + d.minutos + " min");
+          const leyenda = svg
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" + (margen.izquierda + 4) + "," + (alto - 5) + ")",
+            );
+          leyenda
+            .append("line")
+            .attr("x2", 18)
+            .attr("stroke", "#2563eb")
+            .attr("stroke-width", 3);
+          leyenda
+            .append("text")
+            .attr("x", 23)
+            .attr("y", 4)
+            .attr("class", "texto-grafico")
+            .text("Precisión");
+          leyenda
+            .append("rect")
+            .attr("x", 112)
+            .attr("y", -8)
+            .attr("width", 14)
+            .attr("height", 10)
+            .attr("fill", "rgba(14,165,233,.3)");
+          leyenda
+            .append("text")
+            .attr("x", 132)
+            .attr("y", 4)
+            .attr("class", "texto-grafico")
+            .text("Minutos");
+        }
+
+        function dibujarRepaso(u, competencia, nivel) {
+          let temas = [];
+          if (competencia === "Vocabulario" || competencia === "Todas") {
+            temas = (u.palabras || [])
+              .filter((p) => p[2] === false)
+              .map((p) => p[0])
+              .slice(0, 3);
+            const catalogoNivel = (datos.vocabulario || [])
+              .filter((v) => v.nivel === nivel.id)
+              .map((v) => v.palabra);
+            temas = [
+              ...temas,
+              ...catalogoNivel.filter((p) => !temas.includes(p)),
+            ].slice(0, 3);
+          } else if (competencia === "Comprensión auditiva") {
+            const ultimaSesionAudio = (u.historialSesiones || [])
+              .filter((s) => s.competencias?.["Comprensión auditiva"])
+              .slice(-1)[0];
+            const repeticiones = ultimaSesionAudio?.repeticionesAudio ?? 0;
+            temas = [
+              "Repeticiones de audio registradas: " + repeticiones,
+              "Identificar palabras clave en un diálogo",
+              "Escuchar la idea principal sin traducir palabra por palabra",
+            ];
+          } else if (competencia === "Pronunciación") {
+            temas = [
+              "Nice to meet you",
+              "Daily routine",
+              "Could you repeat that?",
+            ];
+          } else {
+            temas = [
+              "Presente simple: I/you/we/they + verbo base",
+              "Tercera persona: he/she/it + verbo terminado en -s",
+              "Preguntas: do/does + sujeto + verbo base",
+            ];
           }
-          function dibujarRepaso(u, competencia, nivel) {
-            let temas = [];
-            if (competencia === "Vocabulario" || competencia === "Todas") {
-              temas = (u.palabras || [])
-                .filter((p) => p[2] === false)
-                .map((p) => p[0])
-                .slice(0, 3);
-              const catalogoNivel = (datos.vocabulario || [])
-                .filter((v) => v.nivel === nivel.id)
-                .map((v) => v.palabra);
-              temas = [
-                ...temas,
-                ...catalogoNivel.filter((p) => !temas.includes(p)),
-              ].slice(0, 3);
-            } else if (competencia === "Comprensión auditiva") {
-              const ultimaSesionAudio = (u.historialSesiones || [])
-                .filter((s) => s.competencias?.["Comprensión auditiva"])
-                .slice(-1)[0];
-              const repeticiones = ultimaSesionAudio?.repeticionesAudio ?? 0;
-              temas = [
-                "Repeticiones de audio registradas: " + repeticiones,
-                "Identificar palabras clave en un diálogo",
-                "Escuchar la idea principal sin traducir palabra por palabra",
-              ];
-            } else if (competencia === "Pronunciación")
-              temas = [
-                "Nice to meet you",
-                "Daily routine",
-                "Could you repeat that?",
-              ];
-            else
-              temas = [
-                "Presente simple: I/you/we/they + verbo base",
-                "Tercera persona: he/she/it + verbo terminado en -s",
-                "Preguntas: do/does + sujeto + verbo base",
-              ];
-            document.querySelector("#tituloRepaso").textContent =
-              competencia === "Todas"
-                ? "Sugerencias para repasar"
-                : "3 elementos para repasar · " + competencia;
-            document.querySelector("#listaRepaso").textContent = temas
-              .slice(0, 3)
-              .join(" · ");
-          }
+          document.querySelector("#tituloRepaso").textContent =
+            competencia === "Todas"
+              ? "Sugerencias para repasar"
+              : "3 elementos para repasar · " + competencia;
+          document.querySelector("#listaRepaso").textContent = temas
+            .slice(0, 3)
+            .join(" · ");
+        }
+
+        function dibujarActividadSemanal(u) {
+          if (typeof google === "undefined" || !google.visualization) return;
+          const datosGrafico = google.visualization.arrayToDataTable([
+            ["Día", "Minutos estudiados", "Meta diaria"],
+            ["Lun", u.minutos[0], 10],
+            ["Mar", u.minutos[1], 10],
+            ["Mié", u.minutos[2], 10],
+            ["Jue", u.minutos[3], 10],
+            ["Vie", u.minutos[4], 10],
+            ["Sáb", u.minutos[5], 10],
+            ["Dom", u.minutos[6], 10],
+          ]);
+          new google.visualization.ColumnChart(
+            document.querySelector("#graficoMinutos"),
+          ).draw(datosGrafico, {
+            height: 260,
+            legend: { position: "top" },
+            colors: ["#2563eb", "#dbe3ef"],
+            chartArea: { left: 42, top: 35, width: "88%", height: "72%" },
+            vAxis: {
+              minValue: 0,
+              title: "Minutos",
+              gridlines: { color: "#edf1f6" },
+            },
+            hAxis: { textStyle: { fontSize: 11 } },
+            bar: { groupWidth: "60%" },
+          });
+        }
+
+        if (typeof google !== "undefined" && google.charts) {
           google.charts.load("current", { packages: ["corechart"] });
           google.charts.setOnLoadCallback(() => {
-            const u = usuarios.find((x) => x.id === activo);
+            const u = usuarios.find((x) => x.id === activo) || usuarios[0];
             if (u) dibujarActividadSemanal(u);
           });
-          function dibujarActividadSemanal(u) {
-            const datosGrafico = google.visualization.arrayToDataTable([
-              ["Día", "Minutos estudiados", "Meta diaria"],
-              ["Lun", u.minutos[0], 10],
-              ["Mar", u.minutos[1], 10],
-              ["Mié", u.minutos[2], 10],
-              ["Jue", u.minutos[3], 10],
-              ["Vie", u.minutos[4], 10],
-              ["Sáb", u.minutos[5], 10],
-              ["Dom", u.minutos[6], 10],
-            ]);
-            new google.visualization.ColumnChart(
-              document.querySelector("#graficoMinutos"),
-            ).draw(datosGrafico, {
-              height: 260,
-              legend: { position: "top" },
-              colors: ["#2563eb", "#dbe3ef"],
-              chartArea: { left: 42, top: 35, width: "88%", height: "72%" },
-              vAxis: {
-                minValue: 0,
-                title: "Minutos",
-                gridlines: { color: "#edf1f6" },
-              },
-              hAxis: { textStyle: { fontSize: 11 } },
-              bar: { groupWidth: "60%" },
-            });
-          }
-          document.querySelector("#salir").onclick = () => {
+        }
+
+        const btnSalir = document.querySelector("#salir");
+        if (btnSalir) {
+          btnSalir.onclick = () => {
             localStorage.removeItem("lingo-usuario-activo");
             location.href = "index.html";
           };
-          dibujarDashboard();
-          // Panel sencillo de accesibilidad reutilizado en la pantalla
-          const pref = JSON.parse(
-            localStorage.getItem("lingo-accesibilidad") || "{}",
-          );
-          if (pref.contraste) document.body.classList.add("high-contrast");
-          if (pref.foco) document.body.classList.add("keyboard-focus");
-          if (pref.oscuro) document.body.classList.add("modo-oscuro");
-          document.querySelector("#contraste").onclick = () => {
-            document.body.classList.toggle("high-contrast");
-            pref.contraste = document.body.classList.contains("high-contrast");
-            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-          };
-          document.querySelector("#foco").onclick = () => {
-            document.body.classList.toggle("keyboard-focus");
-            pref.foco = document.body.classList.contains("keyboard-focus");
-            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-          };
-          document.querySelector("#oscuro").onclick = () => {
-            document.body.classList.toggle("modo-oscuro");
-            pref.oscuro = document.body.classList.contains("modo-oscuro");
-            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-          };
-          document.querySelector("#mas").onclick = () => tamano(15);
-          document.querySelector("#menos").onclick = () => tamano(-15);
-          function tamano(n) {
-            pref.fuente = Math.max(
-              100,
-              Math.min(130, (pref.fuente || 100) + n),
-            );
-            document.documentElement.style.fontSize = pref.fuente + "%";
-            localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
-          }
-          document.querySelector("#leer").onclick = () => {
-            const voz = new SpeechSynthesisUtterance(
-              document.querySelector("main").innerText,
-            );
-            voz.lang = "es-ES";
-            speechSynthesis.speak(voz);
-          };
+        }
+
+        dibujarDashboard();
+      }
+
+      // Cargar data.json con respaldo automático si falla
+      fetch("data.json")
+        .then((respuesta) => {
+          if (!respuesta.ok) throw new Error("HTTP " + respuesta.status);
+          return respuesta.json();
         })
+        .then((datos) => iniciarAppDashboard(datos, false))
         .catch((error) => {
-          console.error(error);
-          alert("No se pudo cargar data.json. Usa Live Server.");
+          console.warn("Usando datos de respaldo local:", error);
+          iniciarAppDashboard(datosRespaldo, true);
         });
+
+      // Panel de accesibilidad
+      const pref = JSON.parse(
+        localStorage.getItem("lingo-accesibilidad") || "{}",
+      );
+      if (pref.contraste) document.body.classList.add("high-contrast");
+      if (pref.foco) document.body.classList.add("keyboard-focus");
+      if (pref.oscuro) document.body.classList.add("modo-oscuro");
+      if (pref.fuente)
+        document.documentElement.style.fontSize = pref.fuente + "%";
+
+      document.querySelector("#contraste").onclick = () => {
+        document.body.classList.toggle("high-contrast");
+        pref.contraste = document.body.classList.contains("high-contrast");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#foco").onclick = () => {
+        document.body.classList.toggle("keyboard-focus");
+        pref.foco = document.body.classList.contains("keyboard-focus");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#oscuro").onclick = () => {
+        document.body.classList.toggle("modo-oscuro");
+        pref.oscuro = document.body.classList.contains("modo-oscuro");
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
+      document.querySelector("#mas").onclick = () => tamano(15);
+      document.querySelector("#menos").onclick = () => tamano(-15);
+      function tamano(n) {
+        pref.fuente = Math.max(100, Math.min(130, (pref.fuente || 100) + n));
+        document.documentElement.style.fontSize = pref.fuente + "%";
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      }
+      document.querySelector("#leer").onclick = () => {
+        const voz = new SpeechSynthesisUtterance(
+          document.querySelector("main").innerText,
+        );
+        voz.lang = "es-ES";
+        speechSynthesis.speak(voz);
+      };
     </script>
-    <style>
-      .keyboard-focus :focus-visible {
-        outline: 3px solid #f97316 !important;
-        outline-offset: 3px;
-      }
-      .modo-oscuro {
-        background: #0f172a !important;
-        color: #fff !important;
-      }
-      .modo-oscuro .card,
-      .modo-oscuro nav,
-      .modo-oscuro .offcanvas {
-        background: #1e293b !important;
-        color: #fff !important;
-        border-color: #475569 !important;
-      }
-      .modo-oscuro .text-secondary {
-        color: #cbd5e1 !important;
-      }
-    </style>
   </body>
 </html>

@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LingoFlow — Panel Analítico de Rendimiento y Vocabulario</title>
+    <style>
+      :root {
+        --primary: #1d4ed8;
+        --primary-dark: #1e40af;
+        --primary-soft: #eff6ff;
+        --primary-border: #dbeafe;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --success: #16a34a;
+        --success-soft: #dcfce7;
+        --amber: #d97706;
+        --amber-soft: #fef3c7;
+        --danger: #dc2626;
+        --danger-soft: #fee2e2;
+        --radius: 16px;
+      }
+
+      /* Modo Alto Contraste (Accesibilidad MIIAU) */
+      body.high-contrast {
+        --bg: #000000;
+        --card: #111827;
+        --text: #ffff00;
+        --muted: #f8fafc;
+        --border: #ffff00;
+        --primary: #ffff00;
+        --primary-dark: #fde047;
+        --primary-soft: #1f2937;
+        --primary-border: #ffff00;
+        --success: #4ade80;
+        --success-soft: #064e3b;
+        --amber: #fbbf24;
+        --amber-soft: #451a03;
+        --danger: #f87171;
+        --danger-soft: #450a0a;
+      }
+
+      body.high-contrast .btn-primary,
+      body.high-contrast .filter-btn.active,
+      body.high-contrast .bar-fill {
+        background: #ffff00 !important;
+        color: #000000 !important;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.45;
+        padding-bottom: 84px;
+      }
+
+      /* Cabecera idéntica a dashboard.html */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      .hud {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hud-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        border: 1px solid var(--border);
+        background: var(--card);
+      }
+
+      .hud-xp {
+        background: var(--amber-soft);
+        color: var(--amber);
+        border-color: transparent;
+      }
+
+      .avatar-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      /* Contenedor Principal */
+      .container {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      }
+
+      /* Encabezado y Selector de Periodo */
+      .header-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .badge-soft {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 6px;
+        background: var(--bg);
+        padding: 4px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .filter-btn {
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 0.78rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .filter-btn.active {
+        background: var(--primary);
+        color: #ffffff;
+      }
+
+      /* Grid de 4 KPIs */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .kpi-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .kpi-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+
+      .kpi-val {
+        font-size: 1.05rem;
+        font-weight: 800;
+      }
+
+      .kpi-lbl {
+        font-size: 0.72rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      /* Grid de Gráficos */
+      .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .card-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .card-title-row h2 {
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      /* Barras de Competencias */
+      .skill-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .skill-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .bar-track {
+        width: 100%;
+        height: 10px;
+        background: var(--primary-soft);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 999px;
+        transition: width 0.4s ease;
+      }
+
+      /* Gráfico Comparativo de Módulos */
+      .module-bars {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        height: 155px;
+        padding-top: 22px;
+        border-bottom: 1px dashed var(--border);
+        gap: 8px;
+      }
+
+      .m-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+      }
+
+      .m-bar {
+        width: 34px;
+        border-radius: 8px 8px 0 0;
+        background: var(--primary);
+        position: relative;
+        transition: height 0.4s ease;
+        display: flex;
+        justify-content: center;
+      }
+
+      .m-bar span {
+        position: absolute;
+        top: -18px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+
+      .m-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      /* Glosario Interactivo */
+      .vocab-controls {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+
+      .vocab-controls input {
+        flex: 1;
+        min-width: 180px;
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.85rem;
+      }
+
+      .vocab-controls select {
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .vocab-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .vocab-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg);
+      }
+
+      .vocab-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .icon-btn {
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 6px 9px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .icon-btn.audio {
+        background: var(--primary-soft);
+        color: var(--primary);
+        border-color: var(--primary-border);
+      }
+
+      .status-tag {
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 999px;
+      }
+
+      .status-ok {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+
+      .status-pending {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+
+      /* Accesibilidad Flotante */
+      .a11y-fab {
+        position: fixed;
+        right: 16px;
+        bottom: 78px;
+        z-index: 50;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-size: 1.25rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .a11y-menu {
+        position: fixed;
+        right: 16px;
+        bottom: 132px;
+        z-index: 50;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        width: 220px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .a11y-menu.open {
+        display: flex;
+      }
+
+      .a11y-menu button {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--primary-soft);
+        color: var(--text);
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        text-align: left;
+      }
+
+      /* Navegación Inferior */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        background: var(--card);
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        padding: 6px 4px;
+      }
+
+      .bottom-nav a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 4px 2px;
+      }
+
+      .bottom-nav a.active {
+        color: var(--primary);
+        font-weight: 800;
+      }
+
+      @media (max-width: 640px) {
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .charts-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cabecera Superior -->
+    <header class="topbar">
+      <a href="dashboard.html" class="brand">
+        <span>🎓</span>
+        <span>LingoFlow</span>
+      </a>
+      <div class="hud">
+        <span class="hud-pill" style="color: var(--danger)">❤️ 5</span>
+        <span class="hud-pill hud-xp" id="xpBadge">⚡ 450</span>
+        <a href="perfil.html" class="avatar-btn" title="Perfil de Carlos">👤</a>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Encabezado Analítico + Filtro de Periodo -->
+      <section class="card header-card">
+        <div class="header-top">
+          <div>
+            <span class="badge-soft"
+              >📊 Analítica de Aprendizaje • Nivel A1</span
+            >
+            <h1 style="font-size: 1.35rem; font-weight: 800; margin-top: 6px">
+              Rendimiento y Vocabulario
+            </h1>
+            <p style="font-size: 0.84rem; color: var(--muted)">
+              Diagnóstico detallado de aciertos, habilidades lingüísticas y
+              palabras repasadas de <strong>Carlos</strong>.
+            </p>
+          </div>
+          <a
+            href="dashboard.html"
+            class="badge-soft"
+            style="
+              text-decoration: none;
+              border: 1px solid var(--primary-border);
+            "
+          >
+            ← Ver Dashboard Diario
+          </a>
+        </div>
+
+        <div
+          class="filter-group"
+          role="tablist"
+          aria-label="Filtrar métricas por periodo"
+        >
+          <button
+            class="filter-btn active"
+            onclick="cambiarPeriodo('semana', this)"
+          >
+            Últimos 7 días
+          </button>
+          <button class="filter-btn" onclick="cambiarPeriodo('mes', this)">
+            Último mes
+          </button>
+          <button class="filter-btn" onclick="cambiarPeriodo('total', this)">
+            Todo el curso A1
+          </button>
+        </div>
+      </section>
+
+      <!-- 4 KPIs Analíticos -->
+      <section class="kpi-grid" aria-label="Indicadores clave de rendimiento">
+        <div class="kpi-box">
+          <div
+            class="kpi-icon"
+            style="background: var(--success-soft); color: var(--success)"
+          >
+            🎯
+          </div>
+          <span class="kpi-val" id="kpiPrecision" style="color: var(--success)"
+            >89%</span
+          >
+          <span class="kpi-lbl">Precisión</span>
+        </div>
+        <div class="kpi-box">
+          <div
+            class="kpi-icon"
+            style="background: var(--primary-soft); color: var(--primary)"
+          >
+            📚
+          </div>
+          <span class="kpi-val" id="kpiPalabras" style="color: var(--primary)"
+            >64</span
+          >
+          <span class="kpi-lbl">Palabras</span>
+        </div>
+        <div class="kpi-box">
+          <div
+            class="kpi-icon"
+            style="background: var(--amber-soft); color: var(--amber)"
+          >
+            ⏱️
+          </div>
+          <span class="kpi-val" id="kpiTiempo" style="color: var(--amber)"
+            >73 min</span
+          >
+          <span class="kpi-lbl">Estudio</span>
+        </div>
+        <div class="kpi-box">
+          <div
+            class="kpi-icon"
+            style="background: var(--danger-soft); color: var(--danger)"
+          >
+            🏅
+          </div>
+          <span class="kpi-val" id="kpiEjercicios">48</span>
+          <span class="kpi-lbl">Ejercicios</span>
+        </div>
+      </section>
+
+      <!-- Gráficos de Rendimiento -->
+      <section class="charts-grid">
+        <!-- Gráfico 1: Dominio por Habilidad -->
+        <article class="card">
+          <div class="card-title-row">
+            <h2>Dominio por Habilidad</h2>
+            <span class="badge-soft">MCER A1</span>
+          </div>
+          <div class="skill-list">
+            <div>
+              <div class="skill-head">
+                <span>Vocabulario Cotidiano</span><span id="lblVocab">92%</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" id="barVocab" style="width: 92%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="skill-head">
+                <span>Pronunciación y Escucha</span
+                ><span id="lblAudio">86%</span>
+              </div>
+              <div class="bar-track">
+                <div
+                  class="bar-fill"
+                  id="barAudio"
+                  style="width: 86%; background: #0284c7"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="skill-head">
+                <span>Gramática Elemental</span><span id="lblGram">81%</span>
+              </div>
+              <div class="bar-track">
+                <div
+                  class="bar-fill"
+                  id="barGram"
+                  style="width: 81%; background: #d97706"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="skill-head">
+                <span>Lectura Rápida</span><span id="lblRead">94%</span>
+              </div>
+              <div class="bar-track">
+                <div
+                  class="bar-fill"
+                  id="barRead"
+                  style="width: 94%; background: #16a34a"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gráfico 2: Precisión por Módulo -->
+        <article class="card">
+          <div class="card-title-row">
+            <h2>Precisión por Módulo</h2>
+            <span
+              class="badge-soft"
+              style="background: var(--success-soft); color: var(--success)"
+              >+6% vs ant.</span
+            >
+          </div>
+          <div class="module-bars">
+            <div class="m-col">
+              <div
+                class="m-bar"
+                id="mod1Bar"
+                style="height: 105px; background: #16a34a"
+              >
+                <span id="mod1Val">95%</span>
+              </div>
+              <span class="m-label">Mód. 01<br />Saludos</span>
+            </div>
+            <div class="m-col">
+              <div class="m-bar" id="mod2Bar" style="height: 88px">
+                <span id="mod2Val">84%</span>
+              </div>
+              <span class="m-label">Mód. 02<br />Rutinas</span>
+            </div>
+            <div class="m-col">
+              <div
+                class="m-bar"
+                id="mod3Bar"
+                style="height: 64px; background: #d97706"
+              >
+                <span id="mod3Val">72%</span>
+              </div>
+              <span class="m-label">Mód. 03<br />Comida</span>
+            </div>
+            <div class="m-col">
+              <div class="m-bar" id="mod4Bar" style="height: 96px">
+                <span id="mod4Val">88%</span>
+              </div>
+              <span class="m-label">Repaso<br />Express</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Glosario Inteligente con Audio Nativo (RF-04 y RF-08) -->
+      <section class="card">
+        <div class="card-title-row">
+          <div>
+            <h2>Glosario de Vocabulario Personalizado</h2>
+            <p style="font-size: 0.8rem; color: var(--muted)">
+              Escucha la pronunciación en inglés y marca palabras repasadas (+5
+              XP).
+            </p>
+          </div>
+          <span class="badge-soft" id="contadorGlosario">5 palabras</span>
+        </div>
+
+        <div class="vocab-controls">
+          <input
+            type="text"
+            id="buscarPalabra"
+            placeholder="Buscar término en inglés o español..."
+            oninput="filtrarGlosario()"
+            aria-label="Buscar palabra"
+          />
+          <select
+            id="filtroEstado"
+            onchange="filtrarGlosario()"
+            aria-label="Filtrar por estado"
+          >
+            <option value="todos">Todos los estados</option>
+            <option value="dominada">Dominadas</option>
+            <option value="repasar">Por repasar</option>
+          </select>
+        </div>
+
+        <div id="listaGlosario" class="vocab-list"></div>
+      </section>
+    </main>
+
+    <!-- Accesibilidad Flotante -->
+    <button
+      class="a11y-fab"
+      onclick="toggleA11y()"
+      aria-label="Opciones de accesibilidad"
+      title="Accesibilidad"
+    >
+      ♿
+    </button>
+    <div
+      id="a11yMenu"
+      class="a11y-menu"
+      role="dialog"
+      aria-label="Panel de accesibilidad"
+    >
+      <strong style="font-size: 0.82rem">Accesibilidad Visual</strong>
+      <button type="button" onclick="toggleContrast()">
+        🌓 Alternar Alto Contraste
+      </button>
+      <button type="button" onclick="changeFontSize(112)">
+        🔍 Aumentar Texto (112%)
+      </button>
+      <button type="button" onclick="changeFontSize(100)">
+        ↺ Restaurar Texto (100%)
+      </button>
+    </div>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <a href="dashboard.html"><span>🏠</span><span>Inicio</span></a>
+      <a href="dashboard-analitico.html" class="active"
+        ><span>📊</span><span>Analítica</span></a
+      >
+      <a href="index.html"><span>🎓</span><span>Aprender</span></a>
+      <a href="landing-universidades.html"
+        ><span>🏛️</span><span>Campus</span></a
+      >
+      <a href="leccion.html"><span>▶️</span><span>Lección</span></a>
+      <a href="perfil.html"><span>👤</span><span>Perfil</span></a>
+    </nav>
+
+    <script>
+      let xpActual = 450;
+      let metricasPorPeriodo = {
+        semana: {
+          precision: "89%",
+          palabras: "64",
+          tiempo: "73 min",
+          ejercicios: "48",
+          skills: [92, 86, 81, 94],
+          modulos: [95, 84, 72, 88],
+        },
+        mes: {
+          precision: "86%",
+          palabras: "142",
+          tiempo: "245 min",
+          ejercicios: "165",
+          skills: [89, 83, 79, 91],
+          modulos: [96, 88, 76, 85],
+        },
+        total: {
+          precision: "91%",
+          palabras: "210",
+          tiempo: "410 min",
+          ejercicios: "290",
+          skills: [95, 90, 85, 96],
+          modulos: [98, 91, 82, 92],
+        },
+      };
+
+      const vocabulario = [
+        {
+          en: "Nice to meet you",
+          es: "Mucho gusto en conocerte",
+          modulo: "Módulo 01",
+          estado: "dominada",
+        },
+        {
+          en: "Daily routine",
+          es: "Rutina diaria",
+          modulo: "Módulo 02",
+          estado: "dominada",
+        },
+        {
+          en: "How much is it?",
+          es: "¿Cuánto cuesta?",
+          modulo: "Módulo 03",
+          estado: "repasar",
+        },
+        {
+          en: "Schedule",
+          es: "Horario / Agenda",
+          modulo: "Módulo 02",
+          estado: "repasar",
+        },
+        {
+          en: "Deadline",
+          es: "Fecha límite de entrega",
+          modulo: "Técnico A1",
+          estado: "dominada",
+        },
+      ];
+
+      function cambiarPeriodo(periodo, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const d = metricasPorPeriodo[periodo];
+        document.getElementById("kpiPrecision").textContent = d.precision;
+        document.getElementById("kpiPalabras").textContent = d.palabras;
+        document.getElementById("kpiTiempo").textContent = d.tiempo;
+        document.getElementById("kpiEjercicios").textContent = d.ejercicios;
+
+        const skillIds = ["Vocab", "Audio", "Gram", "Read"];
+        skillIds.forEach((id, idx) => {
+          document.getElementById("lbl" + id).textContent = d.skills[idx] + "%";
+          document.getElementById("bar" + id).style.width = d.skills[idx] + "%";
+        });
+
+        d.modulos.forEach((val, idx) => {
+          const n = idx + 1;
+          document.getElementById(`mod${n}Val`).textContent = val + "%";
+          document.getElementById(`mod${n}Bar`).style.height =
+            Math.round(val * 1.1) + "px";
+        });
+      }
+
+      function pronunciar(texto) {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(texto);
+          utterance.lang = "en-US";
+          utterance.rate = 0.9;
+          window.speechSynthesis.speak(utterance);
+        }
+      }
+
+      function marcarDominada(index) {
+        if (vocabulario[index].estado !== "dominada") {
+          vocabulario[index].estado = "dominada";
+          xpActual += 5;
+          document.getElementById("xpBadge").textContent = "⚡ " + xpActual;
+          filtrarGlosario();
+        }
+      }
+
+      function filtrarGlosario() {
+        const q = document.getElementById("buscarPalabra").value.toLowerCase();
+        const est = document.getElementById("filtroEstado").value;
+        const contenedor = document.getElementById("listaGlosario");
+        contenedor.innerHTML = "";
+
+        const filtradas = vocabulario
+          .map((item, idx) => ({ ...item, idx }))
+          .filter((item) => {
+            const coincideTexto =
+              item.en.toLowerCase().includes(q) ||
+              item.es.toLowerCase().includes(q);
+            const coincideEstado = est === "todos" || item.estado === est;
+            return coincideTexto && coincideEstado;
+          });
+
+        document.getElementById("contadorGlosario").textContent =
+          `${filtradas.length} palabras`;
+
+        filtradas.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "vocab-item";
+          div.innerHTML = `
+          <div>
+            <strong style="font-size:0.92rem;">${item.en}</strong>
+            <div style="font-size:0.78rem; color:var(--muted);">${item.es} • <em>${item.modulo}</em></div>
+          </div>
+          <div class="vocab-actions">
+            <span class="status-tag ${item.estado === "dominada" ? "status-ok" : "status-pending"}">
+              ${item.estado === "dominada" ? "Dominada" : "Por repasar"}
+            </span>
+            <button type="button" class="icon-btn audio" onclick="pronunciar('${item.en.replace(/'/g, "\\'")}')" title="Escuchar pronunciación">
+              🔊
+            </button>
+            ${
+              item.estado === "repasar"
+                ? `<button type="button" class="icon-btn" onclick="marcarDominada(${item.idx})" title="Marcar como dominada">✓</button>`
+                : ""
+            }
+          </div>
+        `;
+          contenedor.appendChild(div);
+        });
+      }
+
+      // Sincronizar con el usuario activo de data.json / localStorage
+      fetch("data.json")
+        .then((r) => r.json())
+        .then((data) => {
+          const guardados = JSON.parse(
+            localStorage.getItem("lingo-usuarios") || "[]",
+          );
+          const usuarios = data.usuarios.map((uJson) => {
+            const uG = guardados.find((g) => g.id === uJson.id);
+            return uG ? { ...uJson, ...uG } : uJson;
+          });
+          guardados.forEach((g) => {
+            if (!usuarios.some((u) => u.id === g.id)) usuarios.push(g);
+          });
+
+          const activo = localStorage.getItem("lingo-usuario-activo");
+          const u =
+            usuarios.find(
+              (x) =>
+                x.id === activo ||
+                (x.correo &&
+                  x.correo.toLowerCase() === (activo || "").toLowerCase()),
+            ) || usuarios[0];
+          if (!u) return;
+
+          xpActual = u.xp || 450;
+          document.getElementById("xpBadge").textContent = "⚡ " + xpActual;
+          document.querySelector(".hud-pill").textContent =
+            "❤️ " + (u.vidas ?? 5);
+          document.querySelector(".header-top strong").textContent =
+            u.nombre.split(" ")[0];
+
+          const h = u.habilidades || [85, 75, 65, 70];
+          const minSem = (u.minutos || [10, 10, 10, 10, 10, 0, 0]).reduce(
+            (a, b) => a + Number(b || 0),
+            0,
+          );
+          const prom = Math.round((h[0] + h[1] + h[2] + h[3]) / 4);
+
+          metricasPorPeriodo.semana.precision = prom + "%";
+          metricasPorPeriodo.semana.tiempo = minSem + " min";
+          metricasPorPeriodo.semana.skills = [h[0], h[1], h[2], h[3]];
+
+          const btnInicial = document.querySelector(".filter-btn.active");
+          if (btnInicial) cambiarPeriodo("semana", btnInicial);
+        })
+        .catch(() => {});
+
+      function toggleA11y() {
+        document.getElementById("a11yMenu").classList.toggle("open");
+      }
+
+      function toggleContrast() {
+        document.body.classList.toggle("high-contrast");
+      }
+
+      function changeFontSize(pct) {
+        document.documentElement.style.fontSize = pct + "%";
+      }
+
+      filtrarGlosario();
+    </script>
+  </body>
+</html>

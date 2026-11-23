@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LingoFlow Campus — Inglés Académico para Universidades</title>
+    <style>
+      :root {
+        --primary: #1d4ed8;
+        --primary-dark: #1e40af;
+        --primary-soft: #eff6ff;
+        --primary-border: #dbeafe;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --success: #16a34a;
+        --success-soft: #dcfce7;
+        --amber: #d97706;
+        --amber-soft: #fef3c7;
+        --danger: #dc2626;
+        --radius: 16px;
+      }
+
+      /* Modo Alto Contraste (Accesibilidad MIIAU) */
+      body.high-contrast {
+        --bg: #000000;
+        --card: #111827;
+        --text: #ffff00;
+        --muted: #f8fafc;
+        --border: #ffff00;
+        --primary: #ffff00;
+        --primary-dark: #fde047;
+        --primary-soft: #1f2937;
+        --primary-border: #ffff00;
+        --success: #4ade80;
+        --success-soft: #064e3b;
+        --amber: #fbbf24;
+        --amber-soft: #451a03;
+      }
+
+      body.high-contrast .btn-primary,
+      body.high-contrast .cta-banner {
+        color: #000000 !important;
+        background: #ffff00 !important;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        padding-bottom: 84px;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+
+      /* Cabecera Superior */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pill-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        background: var(--card);
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .pill-switch {
+        background: var(--primary-soft);
+        color: var(--primary);
+        border-color: var(--primary-border);
+      }
+
+      /* Contenedor Principal */
+      .container {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 18px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      /* Hero Institucional */
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        border: 1px solid var(--primary-border);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        width: fit-content;
+      }
+
+      .hero h1 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-top: 10px;
+        letter-spacing: -0.02em;
+      }
+
+      .hero p {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 8px;
+      }
+
+      .hero-media {
+        margin-top: 14px;
+        border-radius: var(--radius);
+        background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+        color: #ffffff;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0 8px 20px rgba(29, 78, 216, 0.18);
+      }
+
+      .hero-media-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 6px;
+      }
+
+      .mini-stat {
+        background: rgba(255, 255, 255, 0.16);
+        padding: 10px 8px;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .mini-stat strong {
+        display: block;
+        font-size: 1.15rem;
+        font-weight: 800;
+      }
+
+      .mini-stat span {
+        font-size: 0.72rem;
+        opacity: 0.92;
+      }
+
+      /* Botones */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 13px 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          transform 0.1s,
+          background 0.2s;
+      }
+
+      .btn:active {
+        transform: scale(0.99);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #ffffff;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: var(--primary-soft);
+        color: var(--primary);
+        border: 1px solid var(--primary-border);
+      }
+
+      /* Tarjetas Generales */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      }
+
+      .section-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .section-sub {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      /* Simulador Interactivo de Meta Universitaria */
+      .calc-box {
+        background: var(--primary-soft);
+        border: 1px solid var(--primary-border);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+
+      .calc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .tag-amber {
+        background: var(--amber-soft);
+        color: var(--amber);
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 8px;
+      }
+
+      .calc-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .field-group label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--muted);
+      }
+
+      .field-group select,
+      .field-group input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+
+      .calc-result {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .calc-result strong {
+        color: var(--primary);
+        font-size: 1.05rem;
+      }
+
+      /* Comparativa de Planes */
+      .plans-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .plan-item {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        background: var(--card);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .plan-item.featured {
+        border: 2px solid var(--primary);
+        background: var(--primary-soft);
+      }
+
+      .plan-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--success-soft);
+        color: var(--success);
+        width: fit-content;
+      }
+
+      .plan-list {
+        list-style: none;
+        font-size: 0.82rem;
+        color: var(--muted);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      /* Pilares */
+      .pillar-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .pillar-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      .pillar-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+
+      /* Formulario CTA Azul */
+      .cta-banner {
+        background: var(--primary);
+        color: #ffffff;
+        border-radius: var(--radius);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .cta-banner input,
+      .cta-banner select {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: none;
+        font-size: 0.9rem;
+        color: #0f172a;
+        background: #ffffff;
+      }
+
+      .btn-white {
+        background: #ffffff;
+        color: var(--primary);
+        font-weight: 800;
+      }
+
+      .feedback-msg {
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.18);
+        display: none;
+      }
+
+      /* Botón Flotante de Accesibilidad */
+      .a11y-fab {
+        position: fixed;
+        right: 16px;
+        bottom: 78px;
+        z-index: 50;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-size: 1.25rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .a11y-menu {
+        position: fixed;
+        right: 16px;
+        bottom: 132px;
+        z-index: 50;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        width: 220px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .a11y-menu.open {
+        display: flex;
+      }
+
+      .a11y-menu button {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--primary-soft);
+        color: var(--text);
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        text-align: left;
+      }
+
+      /* Barra de Navegación Inferior */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        background: var(--card);
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        padding: 6px 4px;
+      }
+
+      .bottom-nav a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 4px 2px;
+      }
+
+      .bottom-nav a.active {
+        color: var(--primary);
+        font-weight: 800;
+      }
+
+      @media (max-width: 560px) {
+        .calc-controls,
+        .plans-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Barra Superior -->
+    <header class="topbar">
+      <a
+        href="landing-universidades.html"
+        class="brand"
+        aria-label="LingoFlow Campus Inicio"
+      >
+        <span>🎓</span>
+        <span
+          >LingoFlow
+          <small style="font-size: 0.72rem; font-weight: 700; opacity: 0.85"
+            >Campus</small
+          ></span
+        >
+      </a>
+      <div class="top-actions">
+        <a
+          href="index.html"
+          class="pill-badge pill-switch"
+          title="Ir a Landing Estudiantes"
+          >Landing 1</a
+        >
+        <a
+          href="dashboard-analitico.html"
+          class="pill-badge"
+          title="Ir a Dashboard Analítico"
+          >📊 Analítica</a
+        >
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Hero Section -->
+      <section class="hero">
+        <span class="hero-tag"
+          >🏛️ Programa de Convenios Universitarios & Certificación A1</span
+        >
+        <h1>
+          Valida el inglés técnico de tu facultad con micro-sesiones diarias.
+        </h1>
+        <p>
+          Solución diseñada para centros de idiomas universitarios y estudiantes
+          de ingeniería o ciencias que necesitan aprobar su requisito de idioma
+          sin cruzar horarios de laboratorio.
+        </p>
+
+        <div class="hero-media">
+          <div style="font-size: 0.82rem; font-weight: 700; opacity: 0.9">
+            📈 Impacto comprobado en estudiantes universitarios (MCER A1)
+          </div>
+          <div class="hero-media-stats">
+            <div class="mini-stat">
+              <strong>92%</strong>
+              <span>Retención semanal</span>
+            </div>
+            <div class="mini-stat">
+              <strong>10 min</strong>
+              <span>Sesión diaria</span>
+            </div>
+            <div class="mini-stat">
+              <strong>+350</strong>
+              <span>Términos técnicos</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 14px;
+          "
+        >
+          <a href="#registro-campus" class="btn btn-primary"
+            >Activar Convenio Universitario →</a
+          >
+          <a href="dashboard-analitico.html" class="btn btn-secondary"
+            >📊 Ver Panel Analítico de Resultados</a
+          >
+        </div>
+      </section>
+
+      <!-- Simulador Interactivo de Plan de Estudio -->
+      <section class="calc-box" aria-labelledby="simulador-titulo">
+        <div class="calc-header">
+          <span
+            style="font-weight: 800; font-size: 0.85rem; color: var(--amber)"
+            >🧮 CALCULADORA DE CERTIFICACIÓN</span
+          >
+          <span class="tag-amber">Simulador A1</span>
+        </div>
+        <h2 id="simulador-titulo" class="section-title" style="font-size: 1rem">
+          Calcula tu tiempo para completar el Nivel A1
+        </h2>
+        <p class="section-sub">
+          Selecciona tu disponibilidad diaria y tu especialidad académica:
+        </p>
+
+        <div class="calc-controls">
+          <div class="field-group">
+            <label for="minutosDia">Tiempo diario disponible</label>
+            <select id="minutosDia" onchange="calcularMeta()">
+              <option value="10" selected>10 minutos / día (Express)</option>
+              <option value="15">15 minutos / día (Estándar)</option>
+              <option value="20">20 minutos / día (Intensivo)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="enfoqueCarrera">Enfoque de vocabulario</label>
+            <select id="enfoqueCarrera" onchange="calcularMeta()">
+              <option value="Ingeniería y Tecnología">
+                Ingeniería y Tecnología
+              </option>
+              <option value="Ciencias de la Salud">Ciencias de la Salud</option>
+              <option value="Negocios y Gestión">Negocios y Gestión</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-result" role="status" aria-live="polite">
+          <div>
+            <div style="font-size: 0.78rem; color: var(--muted)">
+              Tiempo estimado de certificación:
+            </div>
+            <strong id="resultadoSemanas">6 semanas (42 sesiones)</strong>
+            <div
+              id="resultadoEnfoque"
+              style="font-size: 0.76rem; color: var(--muted); margin-top: 2px"
+            >
+              Incluye glosario de Ingeniería y Tecnología
+            </div>
+          </div>
+          <span style="font-size: 1.6rem">🎯</span>
+        </div>
+      </section>
+
+      <!-- Comparativa de Modalidades -->
+      <section class="card">
+        <h2 class="section-title">Modalidades de Acceso LingoFlow</h2>
+        <p class="section-sub">
+          Elige entre el acceso individual gratuito o la licencia institucional
+          con seguimiento.
+        </p>
+
+        <div class="plans-grid">
+          <article class="plan-item">
+            <div>
+              <span class="plan-badge">100% Gratis</span>
+              <h3 style="font-size: 1rem; font-weight: 800; margin-top: 6px">
+                Plan Estudiante Libre
+              </h3>
+              <p
+                style="font-size: 0.8rem; color: var(--muted); margin-top: 2px"
+              >
+                Ideal para práctica autónoma diaria.
+              </p>
+            </div>
+            <ul class="plan-list">
+              <li>✓ 3 módulos básicos nivel A1</li>
+              <li>✓ Sistema de 5 vidas y racha diaria</li>
+              <li>✓ Audios de pronunciación nativa</li>
+            </ul>
+            <a
+              href="dashboard.html"
+              class="btn btn-secondary"
+              style="padding: 9px; font-size: 0.82rem"
+              >Ir a mi Dashboard</a
+            >
+          </article>
+
+          <article class="plan-item featured">
+            <div>
+              <span
+                class="plan-badge"
+                style="background: var(--primary); color: #fff"
+                >Convenio Campus</span
+              >
+              <h3 style="font-size: 1rem; font-weight: 800; margin-top: 6px">
+                Plan Facultad & Tutoría
+              </h3>
+              <p
+                style="font-size: 0.8rem; color: var(--muted); margin-top: 2px"
+              >
+                Para grupos académicos y centros de idiomas.
+              </p>
+            </div>
+            <ul class="plan-list">
+              <li>✓ 12 módulos A1–A2 + inglés técnico</li>
+              <li>✓ Vidas ilimitadas en modo repaso</li>
+              <li>✓ Reporte analítico exportable para docentes</li>
+            </ul>
+            <a
+              href="#registro-campus"
+              class="btn btn-primary"
+              style="padding: 9px; font-size: 0.82rem"
+              >Solicitar Acceso Campus</a
+            >
+          </article>
+        </div>
+      </section>
+
+      <!-- Pilares Institucionales -->
+      <section class="card">
+        <h2 class="section-title">¿Por qué las facultades eligen LingoFlow?</h2>
+        <p class="section-sub">
+          Diseñado bajo principios de Interacción Humano-Computador y
+          accesibilidad.
+        </p>
+
+        <div class="pillar-list">
+          <div class="pillar-row">
+            <div class="pillar-icon">📊</div>
+            <div>
+              <strong style="font-size: 0.92rem"
+                >Analítica de progreso por competencia</strong
+              >
+              <p style="font-size: 0.82rem; color: var(--muted)">
+                Monitoreo en tiempo real de vocabulario dominado, comprensión
+                auditiva y constancia semanal.
+              </p>
+            </div>
+          </div>
+          <div class="pillar-row">
+            <div class="pillar-icon">♿</div>
+            <div>
+              <strong style="font-size: 0.92rem"
+                >Accesibilidad Universal (WCAG 2.1)</strong
+              >
+              <p style="font-size: 0.82rem; color: var(--muted)">
+                Soporte para alto contraste, escalado tipográfico y lectura en
+                voz alta sin instalar programas externos.
+              </p>
+            </div>
+          </div>
+          <div class="pillar-row">
+            <div class="pillar-icon">⚡</div>
+            <div>
+              <strong style="font-size: 0.92rem"
+                >Cero fricción en dispositivos móviles</strong
+              >
+              <p style="font-size: 0.82rem; color: var(--muted)">
+                Carga instantánea en navegadores móviles para estudiar en
+                traslados o entre clases.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonio Coordinador / Estudiante -->
+      <section class="card">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: 50%;
+              background: var(--primary);
+              color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 800;
+            "
+          >
+            MV
+          </div>
+          <div>
+            <strong style="font-size: 0.95rem">Mg. Mariana Valdivia</strong>
+            <div style="font-size: 0.78rem; color: var(--muted)">
+              Coordinadora de Idiomas • Facultad de Ingeniería
+            </div>
+          </div>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--muted); font-style: italic">
+          "Implementar micro-sesiones de 10 minutos redujo la deserción en
+          nuestro curso de inglés técnico A1. Los alumnos llegan a clase con el
+          vocabulario base ya dominado."
+        </p>
+      </section>
+
+      <!-- Formulario de Solicitud de Convenio -->
+      <section id="registro-campus" class="cta-banner">
+        <span style="font-size: 0.76rem; font-weight: 700; opacity: 0.9"
+          >🏛️ Activación inmediata con correo .edu</span
+        >
+        <h2 style="font-size: 1.35rem; font-weight: 800">
+          Activa tu cuenta universitaria hoy
+        </h2>
+        <p style="font-size: 0.86rem; opacity: 0.92">
+          Ingresa tu correo institucional y selecciona tu perfil para
+          desbloquear el glosario técnico de tu carrera.
+        </p>
+
+        <form
+          id="formCampus"
+          onsubmit="registrarCampus(event)"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+          "
+        >
+          <input
+            type="email"
+            id="correoEdu"
+            placeholder="nombre.apellido@universidad.edu.pe"
+            required
+            aria-label="Correo institucional"
+          />
+          <select id="rolCampus" aria-label="Seleccionar rol">
+            <option value="Estudiante Universitario">
+              Soy Estudiante Universitario
+            </option>
+            <option value="Docente / Coordinador">
+              Soy Docente o Coordinador Académico
+            </option>
+          </select>
+          <button type="submit" class="btn btn-white">
+            Activar Beneficio Universitario →
+          </button>
+        </form>
+        <div id="campusFeedback" class="feedback-msg" role="alert"></div>
+      </section>
+    </main>
+
+    <!-- Botón y Menú de Accesibilidad -->
+    <button
+      class="a11y-fab"
+      onclick="toggleA11y()"
+      aria-label="Opciones de accesibilidad"
+      title="Accesibilidad"
+    >
+      ♿
+    </button>
+    <div
+      id="a11yMenu"
+      class="a11y-menu"
+      role="dialog"
+      aria-label="Panel de accesibilidad"
+    >
+      <strong style="font-size: 0.82rem">Accesibilidad Visual</strong>
+      <button type="button" onclick="toggleContrast()">
+        🌓 Alternar Alto Contraste
+      </button>
+      <button type="button" onclick="changeFontSize(112)">
+        🔍 Aumentar Texto (112%)
+      </button>
+      <button type="button" onclick="changeFontSize(100)">
+        ↺ Restaurar Texto (100%)
+      </button>
+    </div>
+
+    <!-- Barra de Navegación Inferior -->
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <a href="dashboard.html"><span>🏠</span><span>Inicio</span></a>
+      <a href="dashboard-analitico.html"
+        ><span>📊</span><span>Analítica</span></a
+      >
+      <a href="index.html"><span>🎓</span><span>Aprender</span></a>
+      <a href="landing-universidades.html" class="active"
+        ><span>🏛️</span><span>Campus</span></a
+      >
+      <a href="leccion.html"><span>▶️</span><span>Lección</span></a>
+      <a href="perfil.html"><span>👤</span><span>Perfil</span></a>
+    </nav>
+
+    <script>
+      function calcularMeta() {
+        const mins = parseInt(document.getElementById("minutosDia").value, 10);
+        const enfoque = document.getElementById("enfoqueCarrera").value;
+        const totalMinutosA1 = 420; // 42 micro-sesiones de 10 min
+        const dias = Math.ceil(totalMinutosA1 / mins);
+        const semanas = Math.max(2, Math.round(dias / 7));
+
+        document.getElementById("resultadoSemanas").textContent =
+          `${semanas} semanas (${dias} días de práctica)`;
+        document.getElementById("resultadoEnfoque").textContent =
+          `Incluye glosario de ${enfoque}`;
+      }
+
+      function registrarCampus(e) {
+        e.preventDefault();
+        const correo = document.getElementById("correoEdu").value.trim();
+        const rol = document.getElementById("rolCampus").value;
+        const box = document.getElementById("campusFeedback");
+
+        box.style.display = "block";
+        box.textContent = `✅ ¡Listo! Acceso "${rol}" vinculado a ${correo}. Redirigiendo a tu panel...`;
+
+        setTimeout(() => {
+          window.location.href = "dashboard-analitico.html";
+        }, 1500);
+      }
+
+      function toggleA11y() {
+        document.getElementById("a11yMenu").classList.toggle("open");
+      }
+
+      function toggleContrast() {
+        document.body.classList.toggle("high-contrast");
+      }
+
+      function changeFontSize(pct) {
+        document.documentElement.style.fontSize = pct + "%";
+      }
+    </script>
+  </body>
+</html>
