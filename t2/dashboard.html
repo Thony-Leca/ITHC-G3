@@ -39,7 +39,7 @@
         position: fixed;
         right: 20px;
         bottom: 20px;
-        z-index: 10;
+        z-index: 1050;
       }
       .high-contrast {
         background: #000 !important;
@@ -51,6 +51,9 @@
         background: #111 !important;
         color: #fff !important;
         border-color: #ff0 !important;
+      }
+      .high-contrast .text-secondary {
+        color: #ff0 !important;
       }
       .keyboard-focus :focus-visible {
         outline: 3px solid #f97316 !important;
@@ -98,11 +101,14 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-white sticky-top">
+    <nav
+      class="navbar navbar-expand-lg bg-white sticky-top"
+      aria-label="Navegación principal"
+    >
       <div class="container-xl">
-        <a class="navbar-brand fw-bold text-primary" href="dashboard.html"
-          ><i class="bi bi-book-half me-2"></i>LingoFlow</a
-        >
+        <a class="navbar-brand fw-bold text-primary" href="dashboard.html">
+          <i class="bi bi-book-half me-2" aria-hidden="true"></i>LingoFlow
+        </a>
         <button
           class="navbar-toggler"
           data-bs-toggle="collapse"
@@ -161,56 +167,60 @@
             un paso.
           </p>
         </div>
-        <a class="btn btn-primary" href="#catalogo"
-          ><i class="bi bi-play-fill me-1"></i>Continuar lección</a
-        >
+        <a class="btn btn-primary" href="#catalogo">
+          <i class="bi bi-play-fill me-1" aria-hidden="true"></i>Continuar
+          lección
+        </a>
       </div>
 
       <div class="row g-3 mb-4">
         <div class="col-6 col-lg">
           <div class="card stat p-3">
-            <span class="small text-secondary">Vidas</span
-            ><strong class="h3 mt-2"
-              ><i class="bi bi-heart-fill text-danger"></i>
+            <span class="small text-secondary">Vidas</span>
+            <strong class="h3 mt-2">
+              <i class="bi bi-heart-fill text-danger" aria-hidden="true"></i>
               <span id="vidas"></span
-              ><small class="fs-6 text-secondary"> / 5</small></strong
-            >
+              ><small class="fs-6 text-secondary"> / 5</small>
+            </strong>
           </div>
         </div>
         <div class="col-6 col-lg">
           <div class="card stat p-3">
-            <span class="small text-secondary">Racha diaria</span
-            ><strong class="h3 mt-2"
-              ><i class="bi bi-fire text-warning"></i>
-              <span id="racha"></span> días</strong
-            >
+            <span class="small text-secondary">Racha diaria</span>
+            <strong class="h3 mt-2">
+              <i class="bi bi-fire text-warning" aria-hidden="true"></i>
+              <span id="racha"></span> días
+            </strong>
           </div>
         </div>
         <div class="col-6 col-lg">
           <div class="card stat p-3">
-            <span class="small text-secondary">Puntos XP</span
-            ><strong class="h3 mt-2"
-              ><i class="bi bi-lightning-charge text-primary"></i>
-              <span id="xp"></span
-            ></strong>
+            <span class="small text-secondary">Puntos XP</span>
+            <strong class="h3 mt-2">
+              <i
+                class="bi bi-lightning-charge text-primary"
+                aria-hidden="true"
+              ></i>
+              <span id="xp"></span>
+            </strong>
           </div>
         </div>
         <div class="col-6 col-lg">
           <div class="card stat p-3">
-            <span class="small text-secondary">Curso completado</span
-            ><strong class="h3 mt-2"
-              ><i class="bi bi-mortarboard text-primary"></i>
-              <span id="avance"></span>%</strong
-            >
+            <span class="small text-secondary">Curso completado</span>
+            <strong class="h3 mt-2">
+              <i class="bi bi-mortarboard text-primary" aria-hidden="true"></i>
+              <span id="avance"></span>%
+            </strong>
           </div>
         </div>
         <div class="col-6 col-lg">
           <div class="card stat p-3">
             <span class="small text-secondary">Nivel</span>
-            <strong class="h3 mt-2"
-              ><i class="bi bi-award text-warning"></i>
-              <span id="nivelUsuario"></span
-            ></strong>
+            <strong class="h3 mt-2">
+              <i class="bi bi-award text-warning" aria-hidden="true"></i>
+              <span id="nivelUsuario"></span>
+            </strong>
           </div>
         </div>
       </div>
@@ -235,17 +245,22 @@
             </div>
           </div>
           <div class="col-lg-4 text-lg-end">
-            <a id="iniciarMeta" class="btn btn-primary btn-lg" href="#catalogo"
-              ><i class="bi bi-play-fill me-1"></i>Iniciar sesión de 10 min</a
-            >
+            <a id="iniciarMeta" class="btn btn-primary btn-lg" href="#catalogo">
+              <i class="bi bi-play-fill me-1" aria-hidden="true"></i>Iniciar
+              sesión de 10 min
+            </a>
           </div>
         </div>
       </section>
 
+      <!-- FILA DE GRÁFICOS: CHART.JS + GOOGLE CHARTS + CONVERSIÓN -->
       <div class="row g-4 mb-5">
-        <div class="col-lg-5">
+        <div class="col-lg-4">
           <section class="card p-3 p-lg-4 h-100">
-            <h2 class="h5 fw-bold">Avance del curso</h2>
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="h5 fw-bold mb-0">Avance del curso</h2>
+              <span class="badge text-bg-light border">Chart.js</span>
+            </div>
             <p class="small text-secondary">Tu ruta de inglés básico A1</p>
             <div class="chart">
               <canvas
@@ -256,9 +271,13 @@
             </div>
           </section>
         </div>
-        <div class="col-lg-7">
+
+        <div class="col-lg-4">
           <section class="card p-3 p-lg-4 h-100">
-            <h2 class="h5 fw-bold">Minutos de práctica</h2>
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="h5 fw-bold mb-0">Minutos de práctica</h2>
+              <span class="badge text-bg-light border">Google Charts</span>
+            </div>
             <p class="small text-secondary">
               Meta diaria: 10 minutos · Esta semana
             </p>
@@ -272,8 +291,28 @@
             </div>
           </section>
         </div>
+
+        <div class="col-lg-4">
+          <section class="card p-3 p-lg-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="h5 fw-bold mb-0">Conversión de clientes</h2>
+              <span class="badge text-bg-success">Chart.js</span>
+            </div>
+            <p class="small text-secondary">
+              Embudo desde Landing hasta Usuario Activo
+            </p>
+            <div class="chart">
+              <canvas
+                id="graficoConversion"
+                aria-label="Gráfico de barras de conversión de clientes desde visitas hasta estudiantes activos"
+                role="img"
+              ></canvas>
+            </div>
+          </section>
+        </div>
       </div>
 
+      <!-- ANÁLISIS INTERACTIVO POR COMPETENCIA (D3.JS CONSERVADO) -->
       <section class="card p-3 p-lg-4 mb-5" aria-labelledby="tituloAnalisis">
         <div class="mb-3">
           <span class="small text-uppercase fw-bold text-secondary"
@@ -355,29 +394,67 @@
       data-bs-toggle="offcanvas"
       data-bs-target="#accesibilidad"
       aria-label="Abrir accesibilidad"
+      accesskey="a"
     >
-      <i class="bi bi-universal-access fs-4"></i>
+      <i class="bi bi-universal-access fs-4" aria-hidden="true"></i>
     </button>
-    <div class="offcanvas offcanvas-end" id="accesibilidad">
+    <div
+      class="offcanvas offcanvas-end"
+      id="accesibilidad"
+      tabindex="-1"
+      aria-labelledby="tituloAcc"
+    >
       <div class="offcanvas-header">
-        <h2 class="h5">Accesibilidad</h2>
-        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+        <h2 class="h5 mb-0" id="tituloAcc">Accesibilidad e Inclusión</h2>
+        <button
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Cerrar panel"
+        ></button>
       </div>
       <div class="offcanvas-body">
-        <button id="contraste" class="btn btn-outline-primary w-100 mb-2">
-          Alto contraste
+        <button
+          id="contraste"
+          type="button"
+          class="btn btn-outline-primary w-100 mb-2"
+          accesskey="c"
+        >
+          Alto contraste (Alt + C)
         </button>
-        <div class="btn-group w-100">
-          <button id="menos" class="btn btn-outline-secondary">A−</button
-          ><button id="normal" class="btn btn-outline-secondary">Normal</button
-          ><button id="mas" class="btn btn-outline-secondary">A+</button>
+        <div class="btn-group w-100" role="group" aria-label="Tamaño de letra">
+          <button id="menos" type="button" class="btn btn-outline-secondary">
+            A−
+          </button>
+          <button id="normal" type="button" class="btn btn-outline-secondary">
+            Normal
+          </button>
+          <button id="mas" type="button" class="btn btn-outline-secondary">
+            A+
+          </button>
         </div>
-        <button id="foco" class="btn btn-outline-secondary w-100 mt-2">
-          Foco de teclado</button
-        ><button id="oscuro" class="btn btn-outline-secondary w-100 mt-2">
-          Modo oscuro</button
-        ><button id="leer" class="btn btn-outline-secondary w-100 mt-2">
-          Leer pantalla
+        <button
+          id="foco"
+          type="button"
+          class="btn btn-outline-secondary w-100 mt-2"
+          accesskey="f"
+        >
+          Foco de teclado (Alt + F)
+        </button>
+        <button
+          id="oscuro"
+          type="button"
+          class="btn btn-outline-secondary w-100 mt-2"
+          accesskey="o"
+        >
+          Modo oscuro (Alt + O)
+        </button>
+        <button
+          id="leer"
+          type="button"
+          class="btn btn-outline-secondary w-100 mt-2"
+          accesskey="l"
+        >
+          Leer pantalla (Alt + L)
         </button>
       </div>
     </div>
@@ -485,13 +562,11 @@
         const llave = "lingo-usuarios";
         const guardados = JSON.parse(localStorage.getItem(llave) || "[]");
 
-        // Combina siempre todos los usuarios de data.json con el progreso guardado en localStorage
         let usuarios = datos.usuarios.map((uJson) => {
           const uGuardado = guardados.find((g) => g.id === uJson.id);
           return uGuardado ? { ...uJson, ...uGuardado } : uJson;
         });
 
-        // Conserva también usuarios nuevos creados en login.html#registro
         guardados.forEach((g) => {
           if (!usuarios.some((u) => u.id === g.id)) {
             usuarios.push(g);
@@ -502,7 +577,6 @@
           localStorage.setItem(llave, JSON.stringify(usuarios));
         }
 
-        // Identifica el usuario que inició sesión (por id o correo)
         let activo = localStorage.getItem("lingo-usuario-activo");
         if (!activo) {
           location.href = "login.html";
@@ -516,7 +590,7 @@
         );
         activo = encontrado ? encontrado.id : usuarios[0].id;
 
-        let donut, barras;
+        let donut, chartConversion;
         let competenciaActiva = "Todas";
         const guardar = () =>
           localStorage.setItem(llave, JSON.stringify(usuarios));
@@ -711,8 +785,8 @@
                 " XP</button>") +
             "</div>";
 
+          // 1. Gráfico Chart.js: Avance del curso
           if (donut) donut.destroy();
-          if (barras) barras.destroy();
           donut = new Chart(document.querySelector("#graficoAvance"), {
             type: "doughnut",
             data: {
@@ -733,9 +807,43 @@
             },
           });
 
+          // 2. Gráfico Chart.js: Conversión de clientes (Requerido por rúbrica)
+          if (chartConversion) chartConversion.destroy();
+          chartConversion = new Chart(
+            document.querySelector("#graficoConversion"),
+            {
+              type: "bar",
+              data: {
+                labels: ["Visitantes", "Registros", "1ra Lección", "Activos"],
+                datasets: [
+                  {
+                    label: "Usuarios",
+                    data: [1400, 780, 460, 315],
+                    backgroundColor: [
+                      "#93c5fd",
+                      "#60a5fa",
+                      "#2563eb",
+                      "#16a34a",
+                    ],
+                    borderRadius: 6,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { display: false } },
+              },
+            },
+          );
+
+          // 3. Gráfico Google Charts: Minutos de práctica semanal
           if (typeof google !== "undefined" && google.visualization) {
             dibujarActividadSemanal(u);
           }
+
+          // 4 y 5. Gráficos D3.js: Rendimiento por módulo y Evolución
           dibujarAnalisisCompetencias(u);
         }
 
@@ -1232,7 +1340,6 @@
         dibujarDashboard();
       }
 
-      // Cargar data.json con respaldo automático si falla
       fetch("data.json")
         .then((respuesta) => {
           if (!respuesta.ok) throw new Error("HTTP " + respuesta.status);
@@ -1271,17 +1378,23 @@
       };
       document.querySelector("#mas").onclick = () => tamano(15);
       document.querySelector("#menos").onclick = () => tamano(-15);
+      document.querySelector("#normal").onclick = () => {
+        pref.fuente = 100;
+        document.documentElement.style.fontSize = "100%";
+        localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
+      };
       function tamano(n) {
         pref.fuente = Math.max(100, Math.min(130, (pref.fuente || 100) + n));
         document.documentElement.style.fontSize = pref.fuente + "%";
         localStorage.setItem("lingo-accesibilidad", JSON.stringify(pref));
       }
       document.querySelector("#leer").onclick = () => {
+        window.speechSynthesis.cancel();
         const voz = new SpeechSynthesisUtterance(
           document.querySelector("main").innerText,
         );
         voz.lang = "es-ES";
-        speechSynthesis.speak(voz);
+        window.speechSynthesis.speak(voz);
       };
     </script>
   </body>
